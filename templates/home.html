@@ -1,4 +1,3 @@
-
 {% load static %}
 
 <!DOCTYPE html>
@@ -7,376 +6,726 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>FoodHouse | Delicious Food</title>
+    <title>Foodie Restaurant</title>
 
-    <link rel="stylesheet" href="{% static 'restaurant/css/style.css' %}">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
 
-    <!-- ================= NAVBAR ================= -->
+<!-- ================= HEADER ================= -->
 
-    <header class="navbar">
-        <div class="container nav-content">
+<header class="header">
 
-            <a href="#" class="logo">
-                Food<span>House</span>
-            </a>
+    <div class="logo">
+        🍴 Foodie
+    </div>
 
-            <nav>
-                <a href="#home">Home</a>
-                <a href="#menu">Menu</a>
-                <a href="#about">About</a>
-                <a href="#contact">Contact</a>
-            </nav>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+    </nav>
 
-            <a href="#menu" class="nav-btn">
-                Order Now
-            </a>
+    <button class="cart-button" onclick="openCart()">
+        🛒 Cart
+        <span id="cart-count">0</span>
+    </button>
 
-        </div>
-    </header>
-
-
-    <!-- ================= HERO ================= -->
-
-    <section class="hero" id="home">
-
-        <div class="container hero-content">
-
-            <div class="hero-text">
-
-                <p class="small-title">
-                    WELCOME TO FOODHOUSE
-                </p>
-
-                <h1>
-                    Delicious Food,<br>
-                    <span>Made With Love.</span>
-                </h1>
-
-                <p class="hero-description">
-                    Enjoy delicious meals prepared with fresh ingredients,
-                    authentic flavors and a lot of passion.
-                </p>
-
-                <div class="hero-buttons">
-                    <a href="#menu" class="primary-btn">
-                        Explore Menu
-                    </a>
-
-                    <a href="#about" class="secondary-btn">
-                        Learn More
-                    </a>
-                </div>
-
-            </div>
-
-            <div class="hero-image">
-
-                <img src="{% static 'restaurant/images/hero-food.jpg' %}"
-                     alt="Delicious restaurant food">
-
-            </div>
-
-        </div>
-
-    </section>
+</header>
 
 
-    <!-- ================= FEATURES ================= -->
+<!-- ================= HERO ================= -->
 
-    <section class="features">
+<section class="hero" id="home">
 
-        <div class="container features-grid">
+    <div class="hero-content">
 
-            <div class="feature">
-                <div class="feature-icon">🍽️</div>
-                <h3>Fresh Food</h3>
-                <p>Fresh ingredients prepared every day.</p>
-            </div>
+        <span class="hero-small">WELCOME TO FOODIE</span>
 
-            <div class="feature">
-                <div class="feature-icon">👨‍🍳</div>
-                <h3>Expert Chefs</h3>
-                <p>Meals prepared by experienced chefs.</p>
-            </div>
+        <h1>
+            Delicious Food,
+            <span>Made With Love.</span>
+        </h1>
 
-            <div class="feature">
-                <div class="feature-icon">🚚</div>
-                <h3>Fast Delivery</h3>
-                <p>Get your favorite food delivered quickly.</p>
-            </div>
+        <p>
+            Enjoy delicious meals prepared with fresh ingredients
+            and served with love.
+        </p>
 
-            <div class="feature">
-                <div class="feature-icon">❤️</div>
-                <h3>Made With Love</h3>
-                <p>Every dish is prepared with passion.</p>
-            </div>
+        <a href="#menu" class="hero-button">
+            Explore Menu
+        </a>
 
-        </div>
+    </div>
 
-    </section>
+</section>
 
 
-    <!-- ================= MENU ================= -->
+<!-- ================= CATEGORIES ================= -->
 
-    <section class="menu-section" id="menu">
+<section class="categories">
 
-        <div class="container">
+    <h2>Explore Categories</h2>
 
-            <div class="section-heading">
+    <div class="category-container">
 
-                <p>OUR MENU</p>
+        <button class="category active" onclick="filterFood('all', this)">
+            🍽️ All
+        </button>
 
-                <h2>Popular Dishes</h2>
+        <button class="category" onclick="filterFood('pizza', this)">
+            🍕 Pizza
+        </button>
 
-                <span>
-                    Discover some of our most loved dishes.
-                </span>
+        <button class="category" onclick="filterFood('burger', this)">
+            🍔 Burger
+        </button>
+
+        <button class="category" onclick="filterFood('chicken', this)">
+            🍗 Chicken
+        </button>
+
+        <button class="category" onclick="filterFood('drinks', this)">
+            🥤 Drinks
+        </button>
+
+        <button class="category" onclick="filterFood('dessert', this)">
+            🍰 Dessert
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MENU ================= -->
+
+<section class="menu" id="menu">
+
+    <div class="section-title">
+        <span>OUR MENU</span>
+        <h2>Popular Dishes</h2>
+        <p>
+            Choose from our delicious selection of freshly prepared food.
+        </p>
+    </div>
+
+
+    <div class="food-grid" id="food-grid">
+
+
+        <!-- FOOD 1 -->
+
+        <div class="food-card" data-category="pizza">
+
+            <div class="food-image">
+
+                <img src="{% static 'images/pizza.jpg' %}"
+                     alt="Margherita Pizza">
+
+                <span class="popular">Popular</span>
 
             </div>
 
+            <div class="food-info">
 
-            <div class="food-grid">
+                <div class="food-title">
 
-                <!-- FOOD 1 -->
+                    <h3>Margherita Pizza</h3>
 
-                <div class="food-card">
-
-                    <img src="{% static 'restaurant/images/burger.jpg' %}"
-                         alt="Classic Burger">
-
-                    <div class="food-info">
-
-                        <h3>Classic Burger</h3>
-
-                        <p>
-                            Juicy beef patty with fresh vegetables
-                            and special sauce.
-                        </p>
-
-                        <div class="food-bottom">
-
-                            <strong>Rs. 350</strong>
-
-                            <a href="#" class="order-btn">
-                                Order
-                            </a>
-
-                        </div>
-
-                    </div>
+                    <span class="price">$12.99</span>
 
                 </div>
 
-
-                <!-- FOOD 2 -->
-
-                <div class="food-card">
-
-                    <img src="{% static 'restaurant/images/pizza.jpg' %}"
-                         alt="Cheese Pizza">
-
-                    <div class="food-info">
-
-                        <h3>Cheese Pizza</h3>
-
-                        <p>
-                            Freshly baked pizza with mozzarella
-                            cheese and delicious toppings.
-                        </p>
-
-                        <div class="food-bottom">
-
-                            <strong>Rs. 550</strong>
-
-                            <a href="#" class="order-btn">
-                                Order
-                            </a>
-
-                        </div>
-
-                    </div>
-
+                <div class="rating">
+                    ⭐⭐⭐⭐⭐
+                    <span>4.9</span>
                 </div>
-
-
-                <!-- FOOD 3 -->
-
-                <div class="food-card">
-
-                    <img src="{% static 'restaurant/images/momo.jpg' %}"
-                         alt="Chicken Momo">
-
-                    <div class="food-info">
-
-                        <h3>Chicken Momo</h3>
-
-                        <p>
-                            Delicious steamed chicken momos
-                            served with spicy chutney.
-                        </p>
-
-                        <div class="food-bottom">
-
-                            <strong>Rs. 180</strong>
-
-                            <a href="#" class="order-btn">
-                                Order
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="menu-button">
-
-                <a href="#" class="primary-btn">
-                    View Full Menu
-                </a>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= ABOUT ================= -->
-
-    <section class="about" id="about">
-
-        <div class="container about-content">
-
-            <div class="about-image">
-
-                <img src="{% static 'restaurant/images/restaurant.jpg' %}"
-                     alt="Our restaurant">
-
-            </div>
-
-
-            <div class="about-text">
-
-                <p class="small-title">
-                    ABOUT US
-                </p>
-
-                <h2>
-                    Good Food Brings<br>
-                    People Together.
-                </h2>
 
                 <p>
-                    At FoodHouse, we believe that food is more than
-                    just a meal. It is an experience that brings
-                    friends and families together.
+                    Fresh mozzarella, tomato sauce, basil and
+                    delicious Italian herbs.
                 </p>
 
-                <p>
-                    Our chefs use fresh ingredients and carefully
-                    selected spices to create delicious dishes
-                    that everyone can enjoy.
-                </p>
+                <button
+                    class="add-cart"
+                    onclick="addToCart(
+                        'Margherita Pizza',
+                        12.99,
+                        '{% static 'images/pizza.jpg' %}'
+                    )">
 
-                <a href="#contact" class="primary-btn">
-                    Contact Us
-                </a>
+                    + Add to Cart
+
+                </button>
 
             </div>
 
         </div>
 
-    </section>
+
+        <!-- FOOD 2 -->
+
+        <div class="food-card" data-category="burger">
+
+            <div class="food-image">
+
+                <img src="{% static 'images/burger.jpg' %}"
+                     alt="Classic Burger">
+
+            </div>
+
+            <div class="food-info">
+
+                <div class="food-title">
+
+                    <h3>Classic Burger</h3>
+
+                    <span class="price">$9.99</span>
+
+                </div>
+
+                <div class="rating">
+                    ⭐⭐⭐⭐⭐
+                    <span>4.8</span>
+                </div>
+
+                <p>
+                    Juicy beef patty with fresh lettuce, tomato,
+                    cheese and special sauce.
+                </p>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart(
+                        'Classic Burger',
+                        9.99,
+                        '{% static 'images/burger.jpg' %}'
+                    )">
+
+                    + Add to Cart
+
+                </button>
+
+            </div>
+
+        </div>
 
 
-    <!-- ================= CTA ================= -->
+        <!-- FOOD 3 -->
 
-    <section class="cta">
+        <div class="food-card" data-category="chicken">
 
-        <div class="container">
+            <div class="food-image">
 
-            <h2>
-                Hungry? Let's Fix That.
-            </h2>
+                <img src="{% static 'images/chicken.jpg' %}"
+                     alt="Fried Chicken">
 
-            <p>
-                Order your favorite food today.
+            </div>
+
+            <div class="food-info">
+
+                <div class="food-title">
+
+                    <h3>Crispy Chicken</h3>
+
+                    <span class="price">$11.50</span>
+
+                </div>
+
+                <div class="rating">
+                    ⭐⭐⭐⭐☆
+                    <span>4.6</span>
+                </div>
+
+                <p>
+                    Crispy golden chicken served with our
+                    signature spicy sauce.
+                </p>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart(
+                        'Crispy Chicken',
+                        11.50,
+                        '{% static 'images/chicken.jpg' %}'
+                    )">
+
+                    + Add to Cart
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- FOOD 4 -->
+
+        <div class="food-card" data-category="pizza">
+
+            <div class="food-image">
+
+                <img src="{% static 'images/pepperoni.jpg' %}"
+                     alt="Pepperoni Pizza">
+
+            </div>
+
+            <div class="food-info">
+
+                <div class="food-title">
+
+                    <h3>Pepperoni Pizza</h3>
+
+                    <span class="price">$14.99</span>
+
+                </div>
+
+                <div class="rating">
+                    ⭐⭐⭐⭐⭐
+                    <span>4.9</span>
+                </div>
+
+                <p>
+                    Loaded with premium pepperoni, mozzarella
+                    cheese and rich tomato sauce.
+                </p>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart(
+                        'Pepperoni Pizza',
+                        14.99,
+                        '{% static 'images/pepperoni.jpg' %}'
+                    )">
+
+                    + Add to Cart
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- FOOD 5 -->
+
+        <div class="food-card" data-category="drinks">
+
+            <div class="food-image">
+
+                <img src="{% static 'images/drink.jpg' %}"
+                    alt="Fresh Drink">
+
+            </div>
+
+            <div class="food-info">
+
+                <div class="food-title">
+
+                    <h3>Fresh Lemonade</h3>
+
+                    <span class="price">$4.50</span>
+
+                </div>
+
+                <div class="rating">
+                    ⭐⭐⭐⭐⭐
+                    <span>4.7</span>
+                </div>
+
+                <p>
+                    Refreshing homemade lemonade made with
+                    fresh lemons.
+                </p>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart(
+                        'Fresh Lemonade',
+                        4.50,
+                        '{% static 'images/drink.jpg' %}'
+                    )">
+
+                    + Add to Cart
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- FOOD 6 -->
+
+        <div class="food-card" data-category="dessert">
+
+            <div class="food-image">
+
+                <img src="{% static 'images/cake.jpg' %}"
+                     alt="Chocolate Cake">
+
+            </div>
+
+            <div class="food-info">
+
+                <div class="food-title">
+
+                    <h3>Chocolate Cake</h3>
+
+                    <span class="price">$6.99</span>
+
+                </div>
+
+                <div class="rating">
+                    ⭐⭐⭐⭐⭐
+                    <span>4.9</span>
+                </div>
+
+                <p>
+                    Soft chocolate cake topped with rich
+                    chocolate cream.
+                </p>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart(
+                        'Chocolate Cake',
+                        6.99,
+                        '{% static 'images/cake.jpg' %}'
+                    )">
+
+                    + Add to Cart
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CART SIDEBAR ================= -->
+
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+
+<div class="cart-sidebar" id="cart-sidebar">
+
+    <div class="cart-header">
+
+        <h2>🛒 Your Cart</h2>
+
+        <button onclick="closeCart()">✕</button>
+
+    </div>
+
+
+    <div id="cart-items" class="cart-items">
+
+        <p class="empty-cart">
+            Your cart is empty.
+        </p>
+
+    </div>
+
+
+    <div class="cart-bottom">
+
+        <div class="subtotal">
+
+            <span>Subtotal</span>
+
+            <strong>
+                $<span id="cart-total">0.00</span>
+            </strong>
+
+        </div>
+
+        <button class="checkout-button" onclick="checkout()">
+            Proceed to Checkout →
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h2>🍴 Foodie Restaurant</h2>
+
+    <p>
+        Delicious food made fresh every day.
+    </p>
+
+    <p class="copyright">
+        © 2026 Foodie Restaurant. All rights reserved.
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+let cart = [];
+
+
+/* ================= ADD TO CART ================= */
+
+function addToCart(name, price, image) {
+
+    const existingItem = cart.find(item => item.name === name);
+
+    if (existingItem) {
+
+        existingItem.quantity++;
+
+    } else {
+
+        cart.push({
+            name: name,
+            price: price,
+            image: image,
+            quantity: 1
+        });
+
+    }
+
+    updateCart();
+
+    openCart();
+}
+
+
+/* ================= UPDATE CART ================= */
+
+function updateCart() {
+
+    const cartItems = document.getElementById("cart-items");
+
+    const cartCount = document.getElementById("cart-count");
+
+    const cartTotal = document.getElementById("cart-total");
+
+
+    cartItems.innerHTML = "";
+
+    let total = 0;
+
+    let count = 0;
+
+
+    if (cart.length === 0) {
+
+        cartItems.innerHTML = `
+            <p class="empty-cart">
+                Your cart is empty.
             </p>
+        `;
 
-            <a href="#menu" class="cta-btn">
-                Order Now
-            </a>
-
-        </div>
-
-    </section>
+    }
 
 
-    <!-- ================= FOOTER ================= -->
+    cart.forEach((item, index) => {
 
-    <footer id="contact">
+        total += item.price * item.quantity;
 
-        <div class="container footer-grid">
-
-            <div>
-
-                <h2 class="footer-logo">
-                    Food<span>House</span>
-                </h2>
-
-                <p>
-                    Delicious food, fresh ingredients,
-                    and unforgettable experiences.
-                </p>
-
-            </div>
+        count += item.quantity;
 
 
-            <div>
+        cartItems.innerHTML += `
 
-                <h3>Quick Links</h3>
+            <div class="cart-item">
 
-                <a href="#home">Home</a>
-                <a href="#menu">Menu</a>
-                <a href="#about">About</a>
-                <a href="#contact">Contact</a>
+                <img src="${item.image}" alt="${item.name}">
 
-            </div>
+                <div class="cart-item-info">
 
+                    <h4>${item.name}</h4>
 
-            <div>
+                    <p>$${item.price.toFixed(2)}</p>
 
-                <h3>Contact</h3>
+                    <div class="quantity">
 
-                <p>📍 Kathmandu, Nepal</p>
-                <p>📞 +977 9800000000</p>
-                <p>✉️ info@foodhouse.com</p>
+                        <button onclick="decreaseQuantity(${index})">
+                            −
+                        </button>
+
+                        <span>${item.quantity}</span>
+
+                        <button onclick="increaseQuantity(${index})">
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <button
+                    class="remove"
+                    onclick="removeItem(${index})">
+
+                    🗑️
+
+                </button>
 
             </div>
 
-        </div>
+        `;
+
+    });
 
 
-        <div class="copyright">
+    cartTotal.innerText = total.toFixed(2);
 
-            <p>
-                © 2026 FoodHouse. All Rights Reserved.
-            </p>
+    cartCount.innerText = count;
 
-        </div>
+}
 
-    </footer>
+
+/* ================= INCREASE ================= */
+
+function increaseQuantity(index) {
+
+    cart[index].quantity++;
+
+    updateCart();
+
+}
+
+
+/* ================= DECREASE ================= */
+
+function decreaseQuantity(index) {
+
+    if (cart[index].quantity > 1) {
+
+        cart[index].quantity--;
+
+    } else {
+
+        cart.splice(index, 1);
+
+    }
+
+    updateCart();
+
+}
+
+
+/* ================= REMOVE ================= */
+
+function removeItem(index) {
+
+    cart.splice(index, 1);
+
+    updateCart();
+
+}
+
+
+/* ================= OPEN CART ================= */
+
+function openCart() {
+
+    document
+        .getElementById("cart-sidebar")
+        .classList.add("open");
+
+    document
+        .getElementById("cart-overlay")
+        .classList.add("show");
+
+}
+
+
+/* ================= CLOSE CART ================= */
+
+function closeCart() {
+
+    document
+        .getElementById("cart-sidebar")
+        .classList.remove("open");
+
+    document
+        .getElementById("cart-overlay")
+        .classList.remove("show");
+
+}
+
+
+/* ================= FILTER FOOD ================= */
+
+function filterFood(category, button) {
+
+    const foods = document.querySelectorAll(".food-card");
+
+    const buttons = document.querySelectorAll(".category");
+
+
+    buttons.forEach(btn => {
+
+        btn.classList.remove("active");
+
+    });
+
+
+    button.classList.add("active");
+
+
+    foods.forEach(food => {
+
+        if (
+            category === "all" ||
+            food.dataset.category === category
+        ) {
+
+            food.style.display = "block";
+
+        } else {
+
+            food.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+/* ================= CHECKOUT ================= */
+
+function checkout() {
+
+    if (cart.length === 0) {
+
+        alert("Your cart is empty!");
+
+        return;
+
+    }
+
+
+    const total = document.getElementById("cart-total").innerText;
+
+
+    alert(
+        "Proceeding to checkout.\n\n" +
+        "Order Total: $" + total
+    );
+
+}
+
+</script>
 
 </body>
 </html>
-```
