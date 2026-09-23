@@ -1,0 +1,382 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodHouse | Delicious Food</title>
+
+    <link rel="stylesheet" href="{% static 'restaurant/css/style.css' %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="navbar">
+        <div class="container nav-content">
+
+            <a href="#" class="logo">
+                Food<span>House</span>
+            </a>
+
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#menu">Menu</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </nav>
+
+            <a href="#menu" class="nav-btn">
+                Order Now
+            </a>
+
+        </div>
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero" id="home">
+
+        <div class="container hero-content">
+
+            <div class="hero-text">
+
+                <p class="small-title">
+                    WELCOME TO FOODHOUSE
+                </p>
+
+                <h1>
+                    Delicious Food,<br>
+                    <span>Made With Love.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Enjoy delicious meals prepared with fresh ingredients,
+                    authentic flavors and a lot of passion.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#menu" class="primary-btn">
+                        Explore Menu
+                    </a>
+
+                    <a href="#about" class="secondary-btn">
+                        Learn More
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="hero-image">
+
+                <img src="{% static 'restaurant/images/hero-food.jpg' %}"
+                     alt="Delicious restaurant food">
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FEATURES ================= -->
+
+    <section class="features">
+
+        <div class="container features-grid">
+
+            <div class="feature">
+                <div class="feature-icon">🍽️</div>
+                <h3>Fresh Food</h3>
+                <p>Fresh ingredients prepared every day.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">👨‍🍳</div>
+                <h3>Expert Chefs</h3>
+                <p>Meals prepared by experienced chefs.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🚚</div>
+                <h3>Fast Delivery</h3>
+                <p>Get your favorite food delivered quickly.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">❤️</div>
+                <h3>Made With Love</h3>
+                <p>Every dish is prepared with passion.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MENU ================= -->
+
+    <section class="menu-section" id="menu">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p>OUR MENU</p>
+
+                <h2>Popular Dishes</h2>
+
+                <span>
+                    Discover some of our most loved dishes.
+                </span>
+
+            </div>
+
+
+            <div class="food-grid">
+
+                <!-- FOOD 1 -->
+
+                <div class="food-card">
+
+                    <img src="{% static 'restaurant/images/burger.jpg' %}"
+                         alt="Classic Burger">
+
+                    <div class="food-info">
+
+                        <h3>Classic Burger</h3>
+
+                        <p>
+                            Juicy beef patty with fresh vegetables
+                            and special sauce.
+                        </p>
+
+                        <div class="food-bottom">
+
+                            <strong>Rs. 350</strong>
+
+                            <a href="#" class="order-btn">
+                                Order
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FOOD 2 -->
+
+                <div class="food-card">
+
+                    <img src="{% static 'restaurant/images/pizza.jpg' %}"
+                         alt="Cheese Pizza">
+
+                    <div class="food-info">
+
+                        <h3>Cheese Pizza</h3>
+
+                        <p>
+                            Freshly baked pizza with mozzarella
+                            cheese and delicious toppings.
+                        </p>
+
+                        <div class="food-bottom">
+
+                            <strong>Rs. 550</strong>
+
+                            <a href="#" class="order-btn">
+                                Order
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FOOD 3 -->
+
+                <div class="food-card">
+
+                    <img src="{% static 'restaurant/images/momo.jpg' %}"
+                         alt="Chicken Momo">
+
+                    <div class="food-info">
+
+                        <h3>Chicken Momo</h3>
+
+                        <p>
+                            Delicious steamed chicken momos
+                            served with spicy chutney.
+                        </p>
+
+                        <div class="food-bottom">
+
+                            <strong>Rs. 180</strong>
+
+                            <a href="#" class="order-btn">
+                                Order
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="menu-button">
+
+                <a href="#" class="primary-btn">
+                    View Full Menu
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ABOUT ================= -->
+
+    <section class="about" id="about">
+
+        <div class="container about-content">
+
+            <div class="about-image">
+
+                <img src="{% static 'restaurant/images/restaurant.jpg' %}"
+                     alt="Our restaurant">
+
+            </div>
+
+
+            <div class="about-text">
+
+                <p class="small-title">
+                    ABOUT US
+                </p>
+
+                <h2>
+                    Good Food Brings<br>
+                    People Together.
+                </h2>
+
+                <p>
+                    At FoodHouse, we believe that food is more than
+                    just a meal. It is an experience that brings
+                    friends and families together.
+                </p>
+
+                <p>
+                    Our chefs use fresh ingredients and carefully
+                    selected spices to create delicious dishes
+                    that everyone can enjoy.
+                </p>
+
+                <a href="#contact" class="primary-btn">
+                    Contact Us
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="cta">
+
+        <div class="container">
+
+            <h2>
+                Hungry? Let's Fix That.
+            </h2>
+
+            <p>
+                Order your favorite food today.
+            </p>
+
+            <a href="#menu" class="cta-btn">
+                Order Now
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer id="contact">
+
+        <div class="container footer-grid">
+
+            <div>
+
+                <h2 class="footer-logo">
+                    Food<span>House</span>
+                </h2>
+
+                <p>
+                    Delicious food, fresh ingredients,
+                    and unforgettable experiences.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h3>Quick Links</h3>
+
+                <a href="#home">Home</a>
+                <a href="#menu">Menu</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+
+            </div>
+
+
+            <div>
+
+                <h3>Contact</h3>
+
+                <p>📍 Kathmandu, Nepal</p>
+                <p>📞 +977 9800000000</p>
+                <p>✉️ info@foodhouse.com</p>
+
+            </div>
+
+        </div>
+
+
+        <div class="copyright">
+
+            <p>
+                © 2026 FoodHouse. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+</html>
+```
