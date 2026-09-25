@@ -97,7 +97,20 @@ class OrderItemInline(admin.TabularInline):
         "food",
         "quantity",
         "price",
+        "subtotal_display",
+        "special_instructions",
     )
+
+    readonly_fields = (
+        "subtotal_display",
+    )
+
+    def subtotal_display(self, obj):
+        if obj.pk:
+            return f"Rs. {obj.subtotal}"
+        return "-"
+
+    subtotal_display.short_description = "Total"
 
 
 # =========================
@@ -111,26 +124,50 @@ class OrderAdmin(admin.ModelAdmin):
         "id",
         "table",
         "customer_name",
-        "customer_phone",
         "status",
         "payment_status",
+        "total_display",
         "created_at",
     )
 
-    list_filter = (
+    list_editable = (
         "status",
         "payment_status",
-        "created_at",
-    )
-
-    search_fields = (
-        "customer_name",
-        "customer_phone",
     )
 
     inlines = [
-        OrderItemInline
+        OrderItemInline,
     ]
+
+    def total_display(self, obj):
+        return f"Rs. {obj.total_amount}"
+
+    total_display.short_description = "Total"
+
+
+# =========================
+# ORDER ITEM
+# =========================
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "order",
+        "food",
+        "quantity",
+        "price",
+        "subtotal_display",
+    )
+
+    search_fields = (
+        "food__name",
+    )
+
+    def subtotal_display(self, obj):
+        return f"Rs. {obj.subtotal}"
+
+    subtotal_display.short_description = "Total"
 
 
 # =========================

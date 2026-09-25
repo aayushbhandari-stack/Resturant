@@ -1,0 +1,42 @@
+<td>
+    <a href="{% url 'order_detail' order.id %}">
+        {{ order.id }}
+    </a>
+</td>
+<p>
+    Customer: {{ order.customer_name }}
+</p>
+
+<p>
+    Phone: {{ order.customer_phone }}
+</p>
+
+<p>
+    Status: <strong>{{ order.status }}</strong>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in order.items.all %}
+        <tr>
+            <td>{{ item.product_name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>Rs. {{ item.price }}</td>
+            <td>Rs. {{ item.total_price }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No items found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -4,6 +4,7 @@ from .models import (
     Category,
     Food,
     RestaurantTable,
+    Cart,
     StaffProfile,
     Order,
     OrderItem,
@@ -88,6 +89,55 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
         ]
 
 
+class CartSerializer(serializers.ModelSerializer):
+
+    food_name = serializers.CharField(
+        source="food.name",
+        read_only=True
+    )
+
+    food_price = serializers.DecimalField(
+        source="food.price",
+        max_digits=10,
+        decimal_places=2,
+        read_only=True
+    )
+
+    subtotal = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Cart
+
+        fields = [
+            "id",
+            "session_id",
+            "food",
+            "food_name",
+            "food_price",
+            "quantity",
+            "table",
+            "special_instructions",
+            "subtotal",
+            "created_at",
+        ]
+
+        read_only_fields = [
+            "id",
+            "food_name",
+            "food_price",
+            "subtotal",
+            "created_at",
+        ]
+
+    def validate_quantity(self, value):
+        if value < 1:
+            raise serializers.ValidationError(
+                "Quantity must be at least 1."
+            )
+
+        return value
+
+
 # =========================================================
 # STAFF PROFILE SERIALIZER
 # =========================================================
@@ -170,12 +220,18 @@ class OrderSerializer(serializers.ModelSerializer):
 
     total_amount = serializers.ReadOnlyField()
 
+    table_number = serializers.IntegerField(
+        source="table.table_number",
+        read_only=True
+    )
+
     class Meta:
         model = Order
 
         fields = [
             "id",
             "table",
+            "table_number",
             "customer_name",
             "customer_phone",
             "special_instructions",
@@ -194,6 +250,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "total_amount",
             "created_at",
             "updated_at",
+            "table_number",
         ]
 
     def validate_customer_phone(self, value):
@@ -221,15 +278,12 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
 
-        # Get items from request
         items_data = validated_data.pop("items")
 
-        # Create the order
         order = Order.objects.create(
             **validated_data
         )
 
-        # Create every order item
         for item_data in items_data:
 
             food = item_data["food"]
@@ -237,20 +291,16 @@ class OrderSerializer(serializers.ModelSerializer):
             OrderItem.objects.create(
                 order=order,
                 food=food,
-
-                # Quantity comes from customer
                 quantity=item_data["quantity"],
-
-                # Price MUST come from database
                 price=food.price,
-
-                special_instructions=
-                    item_data.get(
-                        "special_instructions"
-                    )
+                special_instructions=item_data.get(
+                    "special_instructions"
+                )
             )
 
         return order
+
+
 
 
 # =========================================================

@@ -10,6 +10,12 @@ from .views import (
     TableListCreateAPIView,
     TableDetailAPIView,
 
+    cart_list,
+    cart_detail,
+
+    checkout,
+    staff_login,
+
     OrderListCreateAPIView,
     OrderDetailAPIView,
 
@@ -19,8 +25,28 @@ from .views import (
     PaymentDetailAPIView,
 
     KitchenOrderAPIView,
+
+    table_menu,
+    kitchen_dashboard,
 )
+
+
 urlpatterns = [
+
+    # =========================
+    # CUSTOMER MENU
+    # =========================
+
+    path(
+        "table/<int:table_number>/",
+        table_menu,
+        name="table-menu"
+    ),
+
+
+    # =========================
+    # CATEGORY
+    # =========================
 
     path(
         "categories/",
@@ -34,6 +60,11 @@ urlpatterns = [
         name="category-detail"
     ),
 
+
+    # =========================
+    # FOOD
+    # =========================
+
     path(
         "foods/",
         FoodListCreateAPIView.as_view(),
@@ -46,6 +77,11 @@ urlpatterns = [
         name="food-detail"
     ),
 
+
+    # =========================
+    # TABLES
+    # =========================
+
     path(
         "tables/",
         TableListCreateAPIView.as_view(),
@@ -57,6 +93,39 @@ urlpatterns = [
         TableDetailAPIView.as_view(),
         name="table-detail"
     ),
+
+
+    # =========================
+    # CART
+    # =========================
+
+    path(
+        "cart/",
+        cart_list,
+        name="cart-list"
+    ),
+
+    path(
+        "cart/<int:pk>/",
+        cart_detail,
+        name="cart-detail"
+    ),
+
+
+    # =========================
+    # CHECKOUT
+    # =========================
+
+    path(
+        "checkout/",
+        checkout,
+        name="checkout"
+    ),
+
+
+    # =========================
+    # ORDERS
+    # =========================
 
     path(
         "orders/",
@@ -71,6 +140,17 @@ urlpatterns = [
     ),
 
     path(
+        "orders/<int:pk>/status/",
+        OrderStatusUpdateAPIView.as_view(),
+        name="order-status-update"
+    ),
+
+
+    # =========================
+    # PAYMENTS
+    # =========================
+
+    path(
         "payments/",
         PaymentListCreateAPIView.as_view(),
         name="payment-list"
@@ -81,15 +161,32 @@ urlpatterns = [
         PaymentDetailAPIView.as_view(),
         name="payment-detail"
     ),
-    
+
+
+    # =========================
+    # KITCHEN
+    # =========================
+
     path(
-    "kitchen/orders/",
-    KitchenOrderAPIView.as_view(),
-    name="kitchen-orders"
-),
+        "kitchen/",
+        kitchen_dashboard,
+        name="kitchen-dashboard"
+    ),
+
     path(
-    "orders/<int:pk>/status/",
-    OrderStatusUpdateAPIView.as_view(),
-    name="order-status-update"
-),
+        "kitchen/orders/",
+        KitchenOrderAPIView.as_view(),
+        name="kitchen-orders"
+    ),
+
+
+    # =========================
+    # STAFF LOGIN
+    # =========================
+
+    path(
+        "staff/login/",
+        staff_login,
+        name="staff-login"
+    ),
 ]

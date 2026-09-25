@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from .import views
-from rms.views import (table_menu, kitchen_dashboard,)
+from rms.views import (table_menu, kitchen_dashboard,checkout)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +25,9 @@ urlpatterns = [
     path("api/",include("rms.urls")),
     path("table/<int:table_number>/",table_menu,name="table-menu"),
     path("kitchen/",kitchen_dashboard,name="kitchen-dashboard"),
+    path(
+    "checkout/",
+        checkout,
+    name="checkout"
+),
 ]

@@ -27,7 +27,7 @@ body {
 
 
 /* ==============================
-   HEADER
+HEADER
 ================================ */
 
 .header {
@@ -142,7 +142,7 @@ nav a:hover {
 
 
 /* ==============================
-   HERO
+HERO
 ================================ */
 
 .hero {
@@ -371,3 +371,231 @@ FOOD GRID
     max-width: 1200px;
 
     margin    
+}
+
+.order-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-title h2 {
+    margin: 0;
+}
+
+.items h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.item-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 8px;
+    color: #555;
+}
+
+.item-details strong {
+    color: #222;
+}
+
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #ddd;
+    font-size: 18px;
+}
+
+.order-total strong {
+    color: #16803c;
+    font-size: 20px;
+}
+
+.payment-status {
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.status.served {
+    background: #e4d9ff;
+    color: #5b21b6;
+}
+
+.status.completed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status.cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+<style>
+    .menu-section {
+        margin-top: 30px;
+    }
+
+    .categories {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 15px 0 25px;
+    }
+
+    .category-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        background: #eee;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .category-btn.active,
+    .category-btn:hover {
+        background: #008000;
+        color: white;
+    }
+
+    .food-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .food-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 3px 12px rgba(0,0,0,.1);
+    }
+
+    .food-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f1f1;
+        font-size: 50px;
+    }
+
+    .food-info {
+        padding: 18px;
+    }
+
+    .food-info h3 {
+        margin: 0 0 6px;
+    }
+
+    .category-name {
+        color: #008000;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .description {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .food-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .food-bottom strong {
+        font-size: 18px;
+    }
+
+    .add-cart-btn {
+        background: #008000;
+        color: white;
+        border: none;
+        padding: 9px 13px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .add-cart-btn:hover {
+        background: #006400;
+    }
+
+    .cart-section {
+        background: white;
+        margin-top: 35px;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.1);
+    }
+
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .cart-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .cart-controls button {
+        border: none;
+        background: #008000;
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .remove-btn {
+        background: #dc3545 !important;
+    }
+
+    .cart-total {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+
+    .checkout-btn {
+        width: 100%;
+        margin-top: 15px;
+        padding: 14px;
+        border: none;
+        border-radius: 7px;
+        background: green;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .checkout-btn:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+    }
+
+    .empty-menu {
+        width: 100%;
+        padding: 40px;
+        text-align: center;
+        color: #666;
+    }
+</style>

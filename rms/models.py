@@ -16,6 +16,13 @@ class Food(models.Model):
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="foods")
+    image = models.ImageField(
+        upload_to="foods/",
+        blank=True,
+        null=True
+    )
+    is_available = models.BooleanField(default=True)
+
     updated_at = models.DateTimeField(auto_now=True)    
     def __str__(self):
         return self.name
@@ -28,15 +35,6 @@ class RestaurantTable(models.Model):
 
     def __str__(self):
         return f"Table {self.table_number}"
-    
-class RestaurantTable(models.Model):
-    table_number = models.PositiveIntegerField(unique=True)
-    capacity = models.PositiveIntegerField(default=4)
-    is_available = models.BooleanField(default=True)
-
-    def __str__(self):
-        return f"Table {self.table_number}"
-
 
 class Cart(models.Model):
     session_id = models.CharField(max_length=100)
@@ -71,6 +69,14 @@ class Cart(models.Model):
     def subtotal(self):
         return self.food.price * self.quantity
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["session_id", "food"],
+                name="unique_cart_food_per_session"
+            )
+        ]
+
     def __str__(self):
         return f"{self.food.name} x {self.quantity}"
     
@@ -88,7 +94,6 @@ class StaffProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
-
 class Order(models.Model):
 
     STATUS_CHOICES = [
@@ -101,30 +106,63 @@ class Order(models.Model):
         ("cancelled", "Cancelled"),
     ]
 
-    PAYMENT_STATUS = [
+    PAYMENT_STATUS_CHOICES = [
         ("unpaid", "Unpaid"),
         ("paid", "Paid"),
-        ]
-    
-    
+    ]
 
     PAYMENT_METHODS = [
         ("cash", "Cash"),
         ("card", "Card"),
         ("online", "Online Payment"),
     ]
-    
-    table = models.ForeignKey(RestaurantTable,on_delete=models.PROTECT,related_name="orders",null=True)
-    # Customer information
-    customer_name = models.CharField(max_length=100,blank=False,null=True)
-    customer_phone = models.CharField(max_length=10,blank=False,null=True)
 
-    # Special instructions for the kitchen
-    special_instructions = models.TextField(blank=True,null=True)
-    status = models.CharField(max_length=20,choices=STATUS_CHOICES,default="pending")
-    payment_status = models.CharField(max_length=20,choices=PAYMENT_STATUS,default="unpaid")
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    table = models.ForeignKey(
+        RestaurantTable,
+        on_delete=models.PROTECT,
+        related_name="orders",
+        null=True
+    )
+
+    # Customer information
+    customer_name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=True
+    )
+
+    customer_phone = models.CharField(
+        max_length=10,
+        blank=False,
+        null=True
+    )
+
+    # Special instructions
+    special_instructions = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="pending"
+    )
+
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS_CHOICES,
+        default="unpaid"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
 
     def __str__(self):
         return f"Order #{self.id} - Table {self.table.table_number}"
@@ -135,6 +173,7 @@ class Order(models.Model):
             item.subtotal
             for item in self.items.all()
         )
+
 class OrderItem(models.Model):
 
     order = models.ForeignKey(

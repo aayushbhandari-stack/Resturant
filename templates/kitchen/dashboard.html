@@ -430,162 +430,255 @@
     // ==========================================
     // DISPLAY ORDERS
     // ==========================================
+function displayOrders(orders) {
 
-    function displayOrders(orders) {
+    const container = document.getElementById("orders");
 
-        const container = document.getElementById("orders");
+    if (!orders || orders.length === 0) {
 
-        if (!orders || orders.length === 0) {
-            container.innerHTML = `
-                <div class="empty">
-                    <h2>No kitchen orders</h2>
-                    <p>New orders will appear here.</p>
-                </div>
-            `;
+        container.innerHTML = `
+            <div class="empty">
+                <h2>No kitchen orders</h2>
+                <p>New orders will appear here.</p>
+            </div>
+        `;
 
-            return;
-        }
+        return;
+    }
 
-        container.innerHTML = "";
+    container.innerHTML = "";
 
-        orders.forEach(order => {
+    orders.forEach(order => {
 
-            let itemsHTML = "";
+        const items = Array.isArray(order.items)
+            ? order.items
+            : [];
 
-            const items = Array.isArray(order.items)
-                ? order.items
-                : [];
+        let itemsHTML = "";
 
-            items.forEach(item => {
+        items.forEach(item => {
 
-                itemsHTML += `
-                    <div class="food-item">
+            itemsHTML += `
+                <div class="food-item">
 
-                        <div class="food-name">
-                            ${escapeHTML(item.food_name)}
-                        </div>
+                    <div class="food-name">
+                        ${escapeHTML(item.food_name)}
+                    </div>
 
-                        <div>
-                            Quantity:
-                            <span class="quantity">
+                    <div class="item-details">
+
+                        <span>
+                            Qty:
+                            <strong>
                                 ${escapeHTML(item.quantity)}
-                            </span>
-                        </div>
+                            </strong>
+                        </span>
 
-                        ${
-                            item.special_instructions
-                            ? `
-                                <div class="note">
-                                    Note:
-                                    ${escapeHTML(item.special_instructions)}
-                                </div>
-                            `
-                            : ""
-                        }
+                        <span>
+                            Price:
+                            <strong>
+                                Rs. ${escapeHTML(item.price)}
+                            </strong>
+                        </span>
+
+                        <span>
+                            Subtotal:
+                            <strong>
+                                Rs. ${escapeHTML(item.subtotal)}
+                            </strong>
+                        </span>
 
                     </div>
-                `;
-            });
 
-            const currentStatus = String(
-                order.status || ""
-            ).toLowerCase();
+                    ${
+                        item.special_instructions
+                        ? `
+                            <div class="note">
+                                Note:
+                                ${escapeHTML(
+                                    item.special_instructions
+                                )}
+                            </div>
+                        `
+                        : ""
+                    }
 
-            const nextStatus = getNextStatus(currentStatus);
+                </div>
+            `;
+        });
 
-            const buttonText = getButtonText(currentStatus);
+        const currentStatus = String(
+            order.status || ""
+        ).toLowerCase();
 
-            const statusClass = [
-                "pending",
-                "confirmed",
-                "preparing",
-                "ready"
-            ].includes(currentStatus)
-                ? currentStatus
-                : "";
+        const nextStatus = getNextStatus(
+            currentStatus
+        );
 
-            const orderCard = document.createElement("div");
+        const buttonText = getButtonText(
+            currentStatus
+        );
 
-            orderCard.className = "order-card";
+        const statusClass = [
+            "pending",
+            "confirmed",
+            "preparing",
+            "ready",
+            "served",
+            "completed",
+            "cancelled"
+        ].includes(currentStatus)
+            ? currentStatus
+            : "";
 
-            orderCard.innerHTML = `
+        const orderCard = document.createElement(
+            "div"
+        );
 
-                <div class="order-header">
+        orderCard.className = "order-card";
 
+        orderCard.innerHTML = `
+
+            <div class="order-header">
+
+                <div class="order-title">
                     <h2>
                         Order #${escapeHTML(order.id)}
                     </h2>
 
-                    <p>
-                        <strong>Table:</strong>
-                        ${escapeHTML(order.table ?? "N/A")}
-                    </p>
-
-                    <p>
-                        <strong>Customer:</strong>
-                        ${escapeHTML(order.customer_name ?? "N/A")}
-                    </p>
-
-                    <p>
-                        <strong>Phone:</strong>
-                        ${escapeHTML(order.customer_phone ?? "N/A")}
-                    </p>
-
                     <span class="status ${statusClass}">
                         ${escapeHTML(order.status)}
                     </span>
-
                 </div>
 
-                <div>
-                    ${itemsHTML || "<p>No food items found.</p>"}
-                </div>
+                <p>
+                    <strong>Table:</strong>
+                    Table ${escapeHTML(
+                        order.table_number ??
+                        order.table ??
+                        "N/A"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Customer:</strong>
+                    ${escapeHTML(
+                        order.customer_name ?? "N/A"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    ${escapeHTML(
+                        order.customer_phone ?? "N/A"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Payment:</strong>
+                    <span class="payment-status">
+                        ${escapeHTML(
+                            order.payment_status ?? "unpaid"
+                        )}
+                    </span>
+                </p>
+
+            </div>
+
+
+            <div class="items">
+
+                <h3>Ordered Items</h3>
 
                 ${
-                    order.special_instructions
-                    ? `
-                        <div class="order-note">
-                            <strong>Order Note:</strong>
-                            <p>
-                                ${escapeHTML(order.special_instructions)}
-                            </p>
-                        </div>
-                    `
-                    : ""
+                    itemsHTML ||
+                    "<p>No food items found.</p>"
                 }
 
-                ${
-                    nextStatus
-                    ? `
-                        <button
-                            type="button"
-                            class="status-btn"
-                            data-order-id="${escapeHTML(order.id)}"
-                        >
-                            ${buttonText}
-                        </button>
-                    `
-                    : ""
-                }
+            </div>
 
-            `;
 
-            container.appendChild(orderCard);
+            <div class="order-total">
 
-            // Attach event listener safely.
-            const button = orderCard.querySelector(".status-btn");
+                <span>
+                    Total Amount
+                </span>
 
-            if (button) {
-                button.addEventListener("click", () => {
+                <strong>
+                    Rs. ${escapeHTML(
+                        order.total_amount ?? "0.00"
+                    )}
+                </strong>
+
+            </div>
+
+
+            ${
+                order.special_instructions
+                ? `
+                    <div class="order-note">
+
+                        <strong>
+                            Order Note:
+                        </strong>
+
+                        <p>
+                            ${escapeHTML(
+                                order.special_instructions
+                            )}
+                        </p>
+
+                    </div>
+                `
+                : ""
+            }
+
+
+            ${
+                nextStatus
+                ? `
+                    <button
+                        type="button"
+                        class="status-btn"
+                        data-order-id="${escapeHTML(
+                            order.id
+                        )}"
+                    >
+                        ${buttonText}
+                    </button>
+                `
+                : ""
+            }
+
+        `;
+
+        container.appendChild(orderCard);
+
+        const button =
+            orderCard.querySelector(
+                ".status-btn"
+            );
+
+        if (button) {
+
+            button.addEventListener(
+                "click",
+                () => {
+
                     updateOrderStatus(
                         order.id,
                         currentStatus,
                         button
                     );
-                });
-            }
-        });
-    }
+
+                }
+            );
+
+        }
+
+    });
+}
+
 
     // ==========================================
     // GET NEXT STATUS
