@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Kitchen Dashboard</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .orders {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(320px, 1fr));
+
+            gap: 20px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .order-header h2 {
+            margin: 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 5px;
+            margin-top: 10px;
+            background: #eee;
+        }
+
+        .food-item {
+            border-bottom: 1px solid #eee;
+            padding: 12px 0;
+        }
+
+        .food-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .quantity {
+            font-weight: bold;
+        }
+
+        .note {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+
+            border: none;
+            border-radius: 6px;
+
+            background: #222;
+            color: white;
+
+            cursor: pointer;
+
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 10px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>Kitchen Dashboard</h1>
+
+</header>
+
+
+<div class="container">
+
+    <div id="orders" class="orders">
+
+        <div class="empty">
+
+            Loading orders...
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+async function loadOrders() {
+
+    try {
+
+        const response =
+            await fetch("/api/kitchen/orders/");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load orders"
+            );
+
+        }
+
+
+        const orders =
+            await response.json();
+
+
+        displayOrders(orders);
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "orders"
+        ).innerHTML = `
+
+            <div class="empty">
+
+                <h2>
+                    Could not load orders
+                </h2>
+
+                <p>
+                    ${error.message}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+function displayOrders(orders) {
+
+    const container =
+        document.getElementById("orders");
+
+
+    if (orders.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <h2>
+                    No kitchen orders
+                </h2>
+
+                <p>
+                    New orders will appear here.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    orders.forEach(order => {
+
+        let itemsHTML = "";
+
+
+        order.items.forEach(item => {
+
+            itemsHTML += `
+
+                <div class="food-item">
+
+                    <div class="food-name">
+
+                        ${item.food_name}
+
+                    </div>
+
+                    <div>
+
+                        Quantity:
+
+                        <span class="quantity">
+
+                            ${item.quantity}
+
+                        </span>
+
+                    </div>
+
+                    ${
+                        item.special_instructions
+                        ?
+                        `
+                        <div class="note">
+
+                            Note:
+                            ${item.special_instructions}
+
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+            `;
+
+        });
+
+
+        container.innerHTML += `
+
+            <div class="order-card">
+
+                <div class="order-header">
+
+                    <h2>
+                        Order #${order.id}
+                    </h2>
+
+                    <p>
+                        Table ${order.table}
+                    </p>
+
+                    <p>
+                        Customer:
+                        ${order.customer_name}
+                    </p>
+
+                    <span class="status">
+
+                        ${order.status}
+
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    ${itemsHTML}
+
+                </div>
+
+
+                ${
+                    order.special_instructions
+                    ?
+                    `
+                    <p>
+
+                        <strong>
+                            Order Note:
+                        </strong>
+
+                        ${order.special_instructions}
+
+                    </p>
+                    `
+                    :
+                    ""
+                }
+
+
+                <button
+                    onclick="updateOrderStatus(
+                        ${order.id},
+                        '${order.status}'
+                    )"
+                >
+
+                    ${getNextButtonText(
+                        order.status
+                    )}
+
+                </button>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+
+function getNextButtonText(status) {
+
+    if (status === "pending") {
+
+        return "Confirm Order";
+
+    }
+
+    if (status === "confirmed") {
+
+        return "Start Preparing";
+
+    }
+
+    if (status === "preparing") {
+
+        return "Mark as Ready";
+
+    }
+
+    return "No Action";
+
+}
+
+
+// Load orders
+loadOrders();
+
+</script>
+
+</body>
+
+</html>

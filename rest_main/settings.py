@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rms',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,7 @@ WSGI_APPLICATION = 'rest_main.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'resturant_db',
+        'NAME': 'restaurant_db',
         'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST': 'localhost',

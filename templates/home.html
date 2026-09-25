@@ -1,453 +1,225 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Foodie Restaurant</title>
+    <title>Restaurant Menu - Table {{ table.table_number }}</title>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .table-info {
+            text-align: center;
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .food-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+
+        .food-card h2 {
+            margin-top: 0;
+        }
+
+        .price {
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #222;
+            color: white;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        .cart {
+            background: white;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        .cart-item button {
+            padding: 5px 10px;
+            margin: 3px;
+        }
+
+        .checkout {
+            margin-top: 20px;
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .place-order {
+            background: green;
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<div class="container">
 
-<header class="header">
+    <h1>Restaurant Menu</h1>
 
-    <div class="logo">
-        🍴 Foodie
+    <div class="table-info">
+        <h2>Table {{ table.table_number }}</h2>
+        <p>Capacity: {{ table.capacity }}</p>
     </div>
 
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#menu">Menu</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-    </nav>
 
-    <button class="cart-button" onclick="openCart()">
-        🛒 Cart
-        <span id="cart-count">0</span>
-    </button>
+    <!-- FOOD MENU -->
 
-</header>
+    <h2>Menu</h2>
+
+    {% for food in foods %}
+
+        <div class="food-card">
+
+            <h2>{{ food.name }}</h2>
+
+            <p>
+                Category:
+                {{ food.category.Category_name }}
+            </p>
+
+            <p class="price">
+                Rs. {{ food.price }}
+            </p>
+
+            <button
+                type="button"
+                onclick="addToCart(
+                    {{ food.id }},
+                    '{{ food.name|escapejs }}',
+                    {{ food.price }}
+                )">
+                Add to Cart
+            </button>
+
+        </div>
+
+    {% empty %}
+
+        <div class="food-card">
+            <p>No food items available.</p>
+        </div>
+
+    {% endfor %}
 
 
-<!-- ================= HERO ================= -->
+    <!-- CART -->
 
-<section class="hero" id="home">
+    <div class="cart">
 
-    <div class="hero-content">
+        <h2>Your Cart</h2>
 
-        <span class="hero-small">WELCOME TO FOODIE</span>
+        <div id="cart-items">
+            <p>Your cart is empty.</p>
+        </div>
 
-        <h1>
-            Delicious Food,
-            <span>Made With Love.</span>
-        </h1>
+        <h3>
+            Total: Rs.
+            <span id="cart-total">0.00</span>
+        </h3>
 
-        <p>
-            Enjoy delicious meals prepared with fresh ingredients
-            and served with love.
-        </p>
-
-        <a href="#menu" class="hero-button">
-            Explore Menu
-        </a>
-
-    </div>
-
-</section>
-
-
-<!-- ================= CATEGORIES ================= -->
-
-<section class="categories">
-
-    <h2>Explore Categories</h2>
-
-    <div class="category-container">
-
-        <button class="category active" onclick="filterFood('all', this)">
-            🍽️ All
-        </button>
-
-        <button class="category" onclick="filterFood('pizza', this)">
-            🍕 Pizza
-        </button>
-
-        <button class="category" onclick="filterFood('burger', this)">
-            🍔 Burger
-        </button>
-
-        <button class="category" onclick="filterFood('chicken', this)">
-            🍗 Chicken
-        </button>
-
-        <button class="category" onclick="filterFood('drinks', this)">
-            🥤 Drinks
-        </button>
-
-        <button class="category" onclick="filterFood('dessert', this)">
-            🍰 Dessert
+        <button
+            type="button"
+            onclick="showCheckout()">
+            Checkout
         </button>
 
     </div>
 
-</section>
 
+    <!-- CHECKOUT -->
 
-<!-- ================= MENU ================= -->
+    <div
+        class="checkout"
+        id="checkout">
 
-<section class="menu" id="menu">
+        <h2>Customer Information</h2>
 
-    <div class="section-title">
-        <span>OUR MENU</span>
-        <h2>Popular Dishes</h2>
-        <p>
-            Choose from our delicious selection of freshly prepared food.
-        </p>
-    </div>
+        <label>
+            Name
+        </label>
 
+        <input
+            type="text"
+            id="customer-name"
+            placeholder="Enter your name">
 
-    <div class="food-grid" id="food-grid">
 
+        <label>
+            Phone
+        </label>
 
-        <!-- FOOD 1 -->
+        <input
+            type="text"
+            id="customer-phone"
+            placeholder="Enter your phone number">
 
-        <div class="food-card" data-category="pizza">
 
-            <div class="food-image">
+        <label>
+            Special Instructions
+        </label>
 
-                <img src="{% static 'images/pizza.jpg' %}"
-                     alt="Margherita Pizza">
+        <textarea
+            id="special-instructions"
+            placeholder="Example: Less spicy, no onion..."></textarea>
 
-                <span class="popular">Popular</span>
 
-            </div>
+        <button
+            type="button"
+            class="place-order"
+            onclick="placeOrder()">
 
-            <div class="food-info">
+            Place Order
 
-                <div class="food-title">
-
-                    <h3>Margherita Pizza</h3>
-
-                    <span class="price">$12.99</span>
-
-                </div>
-
-                <div class="rating">
-                    ⭐⭐⭐⭐⭐
-                    <span>4.9</span>
-                </div>
-
-                <p>
-                    Fresh mozzarella, tomato sauce, basil and
-                    delicious Italian herbs.
-                </p>
-
-                <button
-                    class="add-cart"
-                    onclick="addToCart(
-                        'Margherita Pizza',
-                        12.99,
-                        '{% static 'images/pizza.jpg' %}'
-                    )">
-
-                    + Add to Cart
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- FOOD 2 -->
-
-        <div class="food-card" data-category="burger">
-
-            <div class="food-image">
-
-                <img src="{% static 'images/burger.jpg' %}"
-                     alt="Classic Burger">
-
-            </div>
-
-            <div class="food-info">
-
-                <div class="food-title">
-
-                    <h3>Classic Burger</h3>
-
-                    <span class="price">$9.99</span>
-
-                </div>
-
-                <div class="rating">
-                    ⭐⭐⭐⭐⭐
-                    <span>4.8</span>
-                </div>
-
-                <p>
-                    Juicy beef patty with fresh lettuce, tomato,
-                    cheese and special sauce.
-                </p>
-
-                <button
-                    class="add-cart"
-                    onclick="addToCart(
-                        'Classic Burger',
-                        9.99,
-                        '{% static 'images/burger.jpg' %}'
-                    )">
-
-                    + Add to Cart
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- FOOD 3 -->
-
-        <div class="food-card" data-category="chicken">
-
-            <div class="food-image">
-
-                <img src="{% static 'images/chicken.jpg' %}"
-                     alt="Fried Chicken">
-
-            </div>
-
-            <div class="food-info">
-
-                <div class="food-title">
-
-                    <h3>Crispy Chicken</h3>
-
-                    <span class="price">$11.50</span>
-
-                </div>
-
-                <div class="rating">
-                    ⭐⭐⭐⭐☆
-                    <span>4.6</span>
-                </div>
-
-                <p>
-                    Crispy golden chicken served with our
-                    signature spicy sauce.
-                </p>
-
-                <button
-                    class="add-cart"
-                    onclick="addToCart(
-                        'Crispy Chicken',
-                        11.50,
-                        '{% static 'images/chicken.jpg' %}'
-                    )">
-
-                    + Add to Cart
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- FOOD 4 -->
-
-        <div class="food-card" data-category="pizza">
-
-            <div class="food-image">
-
-                <img src="{% static 'images/pepperoni.jpg' %}"
-                     alt="Pepperoni Pizza">
-
-            </div>
-
-            <div class="food-info">
-
-                <div class="food-title">
-
-                    <h3>Pepperoni Pizza</h3>
-
-                    <span class="price">$14.99</span>
-
-                </div>
-
-                <div class="rating">
-                    ⭐⭐⭐⭐⭐
-                    <span>4.9</span>
-                </div>
-
-                <p>
-                    Loaded with premium pepperoni, mozzarella
-                    cheese and rich tomato sauce.
-                </p>
-
-                <button
-                    class="add-cart"
-                    onclick="addToCart(
-                        'Pepperoni Pizza',
-                        14.99,
-                        '{% static 'images/pepperoni.jpg' %}'
-                    )">
-
-                    + Add to Cart
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- FOOD 5 -->
-
-        <div class="food-card" data-category="drinks">
-
-            <div class="food-image">
-
-                <img src="{% static 'images/drink.jpg' %}"
-                    alt="Fresh Drink">
-
-            </div>
-
-            <div class="food-info">
-
-                <div class="food-title">
-
-                    <h3>Fresh Lemonade</h3>
-
-                    <span class="price">$4.50</span>
-
-                </div>
-
-                <div class="rating">
-                    ⭐⭐⭐⭐⭐
-                    <span>4.7</span>
-                </div>
-
-                <p>
-                    Refreshing homemade lemonade made with
-                    fresh lemons.
-                </p>
-
-                <button
-                    class="add-cart"
-                    onclick="addToCart(
-                        'Fresh Lemonade',
-                        4.50,
-                        '{% static 'images/drink.jpg' %}'
-                    )">
-
-                    + Add to Cart
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- FOOD 6 -->
-
-        <div class="food-card" data-category="dessert">
-
-            <div class="food-image">
-
-                <img src="{% static 'images/cake.jpg' %}"
-                     alt="Chocolate Cake">
-
-            </div>
-
-            <div class="food-info">
-
-                <div class="food-title">
-
-                    <h3>Chocolate Cake</h3>
-
-                    <span class="price">$6.99</span>
-
-                </div>
-
-                <div class="rating">
-                    ⭐⭐⭐⭐⭐
-                    <span>4.9</span>
-                </div>
-
-                <p>
-                    Soft chocolate cake topped with rich
-                    chocolate cream.
-                </p>
-
-                <button
-                    class="add-cart"
-                    onclick="addToCart(
-                        'Chocolate Cake',
-                        6.99,
-                        '{% static 'images/cake.jpg' %}'
-                    )">
-
-                    + Add to Cart
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= CART SIDEBAR ================= -->
-
-<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
-
-<div class="cart-sidebar" id="cart-sidebar">
-
-    <div class="cart-header">
-
-        <h2>🛒 Your Cart</h2>
-
-        <button onclick="closeCart()">✕</button>
-
-    </div>
-
-
-    <div id="cart-items" class="cart-items">
-
-        <p class="empty-cart">
-            Your cart is empty.
-        </p>
-
-    </div>
-
-
-    <div class="cart-bottom">
-
-        <div class="subtotal">
-
-            <span>Subtotal</span>
-
-            <strong>
-                $<span id="cart-total">0.00</span>
-            </strong>
-
-        </div>
-
-        <button class="checkout-button" onclick="checkout()">
-            Proceed to Checkout →
         </button>
 
     </div>
@@ -455,276 +227,349 @@
 </div>
 
 
-<!-- ================= FOOTER ================= -->
-
-<footer>
-
-    <h2>🍴 Foodie Restaurant</h2>
-
-    <p>
-        Delicious food made fresh every day.
-    </p>
-
-    <p class="copyright">
-        © 2026 Foodie Restaurant. All rights reserved.
-    </p>
-
-</footer>
-
-
-<!-- ================= JAVASCRIPT ================= -->
-
 <script>
 
-let cart = [];
+    // Get table number directly from Django
+    const tableNumber = {{ table.table_number }};
 
+    // Cart
+    let cart = [];
 
-/* ================= ADD TO CART ================= */
 
-function addToCart(name, price, image) {
+    // --------------------------------
+    // ADD TO CART
+    // --------------------------------
 
-    const existingItem = cart.find(item => item.name === name);
+    function addToCart(foodId, foodName, price) {
 
-    if (existingItem) {
+        console.log("Adding food:", foodId, foodName, price);
 
-        existingItem.quantity++;
+        const existingItem = cart.find(
+            item => item.food_id === foodId
+        );
 
-    } else {
 
-        cart.push({
-            name: name,
-            price: price,
-            image: image,
-            quantity: 1
-        });
+        if (existingItem) {
 
-    }
-
-    updateCart();
-
-    openCart();
-}
-
-
-/* ================= UPDATE CART ================= */
-
-function updateCart() {
-
-    const cartItems = document.getElementById("cart-items");
-
-    const cartCount = document.getElementById("cart-count");
-
-    const cartTotal = document.getElementById("cart-total");
-
-
-    cartItems.innerHTML = "";
-
-    let total = 0;
-
-    let count = 0;
-
-
-    if (cart.length === 0) {
-
-        cartItems.innerHTML = `
-            <p class="empty-cart">
-                Your cart is empty.
-            </p>
-        `;
-
-    }
-
-
-    cart.forEach((item, index) => {
-
-        total += item.price * item.quantity;
-
-        count += item.quantity;
-
-
-        cartItems.innerHTML += `
-
-            <div class="cart-item">
-
-                <img src="${item.image}" alt="${item.name}">
-
-                <div class="cart-item-info">
-
-                    <h4>${item.name}</h4>
-
-                    <p>$${item.price.toFixed(2)}</p>
-
-                    <div class="quantity">
-
-                        <button onclick="decreaseQuantity(${index})">
-                            −
-                        </button>
-
-                        <span>${item.quantity}</span>
-
-                        <button onclick="increaseQuantity(${index})">
-                            +
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <button
-                    class="remove"
-                    onclick="removeItem(${index})">
-
-                    🗑️
-
-                </button>
-
-            </div>
-
-        `;
-
-    });
-
-
-    cartTotal.innerText = total.toFixed(2);
-
-    cartCount.innerText = count;
-
-}
-
-
-/* ================= INCREASE ================= */
-
-function increaseQuantity(index) {
-
-    cart[index].quantity++;
-
-    updateCart();
-
-}
-
-
-/* ================= DECREASE ================= */
-
-function decreaseQuantity(index) {
-
-    if (cart[index].quantity > 1) {
-
-        cart[index].quantity--;
-
-    } else {
-
-        cart.splice(index, 1);
-
-    }
-
-    updateCart();
-
-}
-
-
-/* ================= REMOVE ================= */
-
-function removeItem(index) {
-
-    cart.splice(index, 1);
-
-    updateCart();
-
-}
-
-
-/* ================= OPEN CART ================= */
-
-function openCart() {
-
-    document
-        .getElementById("cart-sidebar")
-        .classList.add("open");
-
-    document
-        .getElementById("cart-overlay")
-        .classList.add("show");
-
-}
-
-
-/* ================= CLOSE CART ================= */
-
-function closeCart() {
-
-    document
-        .getElementById("cart-sidebar")
-        .classList.remove("open");
-
-    document
-        .getElementById("cart-overlay")
-        .classList.remove("show");
-
-}
-
-
-/* ================= FILTER FOOD ================= */
-
-function filterFood(category, button) {
-
-    const foods = document.querySelectorAll(".food-card");
-
-    const buttons = document.querySelectorAll(".category");
-
-
-    buttons.forEach(btn => {
-
-        btn.classList.remove("active");
-
-    });
-
-
-    button.classList.add("active");
-
-
-    foods.forEach(food => {
-
-        if (
-            category === "all" ||
-            food.dataset.category === category
-        ) {
-
-            food.style.display = "block";
+            existingItem.quantity += 1;
 
         } else {
 
-            food.style.display = "none";
+            cart.push({
+                food_id: foodId,
+                name: foodName,
+                price: Number(price),
+                quantity: 1
+            });
 
         }
 
-    });
 
-}
+        displayCart();
+
+    }
 
 
-/* ================= CHECKOUT ================= */
+    // --------------------------------
+    // DISPLAY CART
+    // --------------------------------
 
-function checkout() {
+    function displayCart() {
 
-    if (cart.length === 0) {
+        const cartItems =
+            document.getElementById("cart-items");
 
-        alert("Your cart is empty!");
+        const cartTotal =
+            document.getElementById("cart-total");
 
+
+        if (cart.length === 0) {
+
+            cartItems.innerHTML =
+                "<p>Your cart is empty.</p>";
+
+            cartTotal.innerText = "0.00";
+
+            return;
+
+        }
+
+
+        let html = "";
+        let total = 0;
+
+
+        cart.forEach(function(item, index) {
+
+            const subtotal =
+                item.price * item.quantity;
+
+            total += subtotal;
+
+
+            html += `
+                <div class="cart-item">
+
+                    <strong>
+                        ${item.name}
+                    </strong>
+
+                    <p>
+                        Rs. ${item.price.toFixed(2)}
+                    </p>
+
+                    <button
+                        type="button"
+                        onclick="decreaseQuantity(${index})">
+
+                        -
+
+                    </button>
+
+
+                    <span>
+                        ${item.quantity}
+                    </span>
+
+
+                    <button
+                        type="button"
+                        onclick="increaseQuantity(${index})">
+
+                        +
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onclick="removeItem(${index})">
+
+                        Remove
+
+                    </button>
+
+
+                    <p>
+                        Subtotal:
+                        Rs. ${subtotal.toFixed(2)}
+                    </p>
+
+                </div>
+            `;
+
+        });
+
+
+        cartItems.innerHTML = html;
+
+        cartTotal.innerText =
+            total.toFixed(2);
+
+    }
+
+
+    // --------------------------------
+    // INCREASE
+    // --------------------------------
+
+    function increaseQuantity(index) {
+
+        cart[index].quantity++;
+
+        displayCart();
+
+    }
+
+
+    // --------------------------------
+    // DECREASE
+    // --------------------------------
+
+    function decreaseQuantity(index) {
+
+        if (cart[index].quantity > 1) {
+
+            cart[index].quantity--;
+
+        } else {
+
+            cart.splice(index, 1);
+
+        }
+
+        displayCart();
+
+    }
+
+
+    // --------------------------------
+    // REMOVE
+    // --------------------------------
+
+    function removeItem(index) {
+
+        cart.splice(index, 1);
+
+        displayCart();
+
+    }
+
+
+    // --------------------------------
+    // CHECKOUT
+    // --------------------------------
+
+    function showCheckout() {
+
+        if (cart.length === 0) {
+
+            alert("Please add food to your cart first.");
+
+            return;
+
+        }
+
+
+        document.getElementById("checkout").style.display =
+            "block";
+
+    }
+
+
+    // --------------------------------
+    // PLACE ORDER
+    // --------------------------------
+
+    function  placeOrder() {
+
+    const customerName =
+        document.getElementById("customer-name").value;
+
+    const customerPhone =
+        document.getElementById("customer-phone").value;
+
+    const specialInstructions =
+        document.getElementById("special-instructions").value;
+
+
+    if (customerName.trim() === "") {
+
+        alert("Please enter your name.");
         return;
 
     }
 
 
-    const total = document.getElementById("cart-total").innerText;
+    if (customerPhone.trim() === "") {
+
+        alert("Please enter your phone number.");
+        return;
+
+    }
 
 
-    alert(
-        "Proceeding to checkout.\n\n" +
-        "Order Total: $" + total
-    );
+    if (cart.length === 0) {
+
+        alert("Your cart is empty.");
+        return;
+
+    }
+
+
+    const orderData = {
+
+        table: tableNumber,
+
+        customer_name: customerName,
+
+        customer_phone: customerPhone,
+
+        special_instructions: specialInstructions,
+
+        items: cart.map(item => ({
+
+            food: item.food_id,
+
+            quantity: item.quantity,
+
+            special_instructions: ""
+
+        }))
+
+    };
+
+
+    fetch("/api/orders/", {
+
+        method: "POST",
+
+        headers: {
+
+            "Content-Type": "application/json"
+
+        },
+
+        body: JSON.stringify(orderData)
+
+    })
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            return response.json().then(error => {
+
+                throw new Error(
+                    JSON.stringify(error)
+                );
+
+            });
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        console.log("Order created:", data);
+
+        alert(
+            "Order placed successfully! Order #" +
+            data.id
+        );
+
+
+        // Clear cart
+        cart = [];
+
+        displayCart();
+
+
+        // Hide checkout
+        document.getElementById(
+            "checkout"
+        ).style.display = "none";
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Order error:",
+            error
+        );
+
+        alert(
+            "Could not place order.\n\n" +
+            error.message
+        );
+
+    });
 
 }
-
 </script>
 
 </body>
