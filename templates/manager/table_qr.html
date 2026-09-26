@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>
+        Table {{ table.table_number }} QR Code
+    </title>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f5f9;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .qr-card {
+            background: white;
+            max-width: 500px;
+            margin: auto;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+
+        #qrcode {
+            margin: 30px auto;
+            width: 256px;
+        }
+
+        .url {
+            word-break: break-all;
+            color: #667085;
+            font-size: 14px;
+        }
+
+        button {
+            background: #2864e8;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media print {
+
+            button {
+                display: none;
+            }
+
+            .url {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .qr-card {
+                box-shadow: none;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="qr-card">
+
+    <h1>
+        Table {{ table.table_number }}
+    </h1>
+
+    <p>
+        Scan this QR code to order
+    </p>
+
+    <div id="qrcode"></div>
+
+    <p class="url">
+        {{ customer_url }}
+    </p>
+
+    <button onclick="window.print()">
+        🖨️ Print QR Code
+    </button>
+
+</div>
+
+
+<script>
+
+    new QRCode(
+        document.getElementById("qrcode"),
+        {
+            text: "{{ customer_url|escapejs }}",
+            width: 256,
+            height: 256
+        }
+    );
+
+</script>
+
+</body>
+</html>

@@ -11,22 +11,22 @@ from .models import (
     Payment,
 )
 
-class OrderStatusUpdateSerializer(serializers.Serializer):
-    status = serializers.ChoiceField(
-        choices=Order.STATUS_CHOICES
-    )
+
 # =========================================================
-# CATEGORY SERIALIZER
+# CATEGORY
 # =========================================================
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(
+    serializers.ModelSerializer
+):
 
     class Meta:
+
         model = Category
 
         fields = [
             "id",
-            "Category_name",
+            "category_name",
             "created_at",
             "updated_at",
         ]
@@ -39,17 +39,20 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 # =========================================================
-# FOOD SERIALIZER
+# FOOD
 # =========================================================
 
-class FoodSerializer(serializers.ModelSerializer):
+class FoodSerializer(
+    serializers.ModelSerializer
+):
 
     category_name = serializers.CharField(
-        source="category.Category_name",
+        source="category.category_name",
         read_only=True
     )
 
     class Meta:
+
         model = Food
 
         fields = [
@@ -58,23 +61,28 @@ class FoodSerializer(serializers.ModelSerializer):
             "price",
             "category",
             "category_name",
+            "image",
+            "is_available",
             "updated_at",
         ]
 
         read_only_fields = [
             "id",
-            "updated_at",
             "category_name",
+            "updated_at",
         ]
 
 
 # =========================================================
-# RESTAURANT TABLE SERIALIZER
+# TABLE
 # =========================================================
 
-class RestaurantTableSerializer(serializers.ModelSerializer):
+class RestaurantTableSerializer(
+    serializers.ModelSerializer
+):
 
     class Meta:
+
         model = RestaurantTable
 
         fields = [
@@ -89,7 +97,13 @@ class RestaurantTableSerializer(serializers.ModelSerializer):
         ]
 
 
-class CartSerializer(serializers.ModelSerializer):
+# =========================================================
+# CART
+# =========================================================
+
+class CartSerializer(
+    serializers.ModelSerializer
+):
 
     food_name = serializers.CharField(
         source="food.name",
@@ -106,6 +120,7 @@ class CartSerializer(serializers.ModelSerializer):
     subtotal = serializers.ReadOnlyField()
 
     class Meta:
+
         model = Cart
 
         fields = [
@@ -130,6 +145,7 @@ class CartSerializer(serializers.ModelSerializer):
         ]
 
     def validate_quantity(self, value):
+
         if value < 1:
             raise serializers.ValidationError(
                 "Quantity must be at least 1."
@@ -139,10 +155,12 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 # =========================================================
-# STAFF PROFILE SERIALIZER
+# STAFF PROFILE
 # =========================================================
 
-class StaffProfileSerializer(serializers.ModelSerializer):
+class StaffProfileSerializer(
+    serializers.ModelSerializer
+):
 
     username = serializers.CharField(
         source="user.username",
@@ -150,6 +168,7 @@ class StaffProfileSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+
         model = StaffProfile
 
         fields = [
@@ -166,10 +185,12 @@ class StaffProfileSerializer(serializers.ModelSerializer):
 
 
 # =========================================================
-# ORDER ITEM SERIALIZER
+# ORDER ITEM
 # =========================================================
 
-class OrderItemSerializer(serializers.ModelSerializer):
+class OrderItemSerializer(
+    serializers.ModelSerializer
+):
 
     food_name = serializers.CharField(
         source="food.name",
@@ -179,6 +200,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     subtotal = serializers.ReadOnlyField()
 
     class Meta:
+
         model = OrderItem
 
         fields = [
@@ -193,9 +215,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
         read_only_fields = [
             "id",
+            "food_name",
             "price",
             "subtotal",
-            "food_name",
         ]
 
     def validate_quantity(self, value):
@@ -209,10 +231,25 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 # =========================================================
-# ORDER SERIALIZER
+# ORDER STATUS
 # =========================================================
 
-class OrderSerializer(serializers.ModelSerializer):
+class OrderStatusUpdateSerializer(
+    serializers.Serializer
+):
+
+    status = serializers.ChoiceField(
+        choices=Order.STATUS_CHOICES
+    )
+
+
+# =========================================================
+# ORDER
+# =========================================================
+
+class OrderSerializer(
+    serializers.ModelSerializer
+):
 
     items = OrderItemSerializer(
         many=True
@@ -226,6 +263,7 @@ class OrderSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+
         model = Order
 
         fields = [
@@ -255,6 +293,9 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def validate_customer_phone(self, value):
 
+        if not value:
+            return value
+
         if not value.isdigit():
             raise serializers.ValidationError(
                 "Phone number must contain only numbers."
@@ -269,7 +310,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def validate_table(self, value):
 
-        if not value.is_available:
+        if value and not value.is_available:
             raise serializers.ValidationError(
                 "This table is currently unavailable."
             )
@@ -278,7 +319,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
 
-        items_data = validated_data.pop("items")
+        items_data = validated_data.pop(
+            "items",
+            []
+        )
 
         order = Order.objects.create(
             **validated_data
@@ -293,21 +337,23 @@ class OrderSerializer(serializers.ModelSerializer):
                 food=food,
                 quantity=item_data["quantity"],
                 price=food.price,
-                special_instructions=item_data.get(
-                    "special_instructions"
-                )
+                special_instructions=
+                    item_data.get(
+                        "special_instructions",
+                        ""
+                    )
             )
 
         return order
 
 
-
-
 # =========================================================
-# PAYMENT SERIALIZER
+# PAYMENT
 # =========================================================
 
-class PaymentSerializer(serializers.ModelSerializer):
+class PaymentSerializer(
+    serializers.ModelSerializer
+):
 
     order_total = serializers.DecimalField(
         source="order.total_amount",
@@ -322,6 +368,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+
         model = Payment
 
         fields = [

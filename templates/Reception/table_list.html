@@ -1,0 +1,29 @@
+{% extends "Reception/base.html" %}
+
+{% block content %}
+
+<h1>Tables</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Table</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for table in tables %}
+        <tr>
+            <td>{{ table.table_number }}</td>
+            <td>{{ table.status }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No tables found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

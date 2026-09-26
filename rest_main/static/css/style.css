@@ -437,6 +437,20 @@ FOOD GRID
 }
 
 <style>
+
+.table-banner {
+    background: #e8f1ff;
+    color: #174ea6;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: center;
+}
+
+.table-banner strong {
+    font-weight: 700;
+}
     .menu-section {
         margin-top: 30px;
     }
@@ -574,6 +588,15 @@ FOOD GRID
         font-size: 20px;
         margin-top: 20px;
     }
+
+    .checkout-btn {
+    background: #222;
+    margin-left: 10px;
+}
+
+.checkout-btn:hover {
+    background: #ff9800;
+}
 
     .checkout-btn {
         width: 100%;

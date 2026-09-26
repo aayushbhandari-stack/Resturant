@@ -1,0 +1,770 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restaurant Tables</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f5f9;
+            color: #172033;
+        }
+
+        /* =====================================================
+           LAYOUT
+        ===================================================== */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            width: 255px;
+            background: linear-gradient(
+                180deg,
+                #111827 0%,
+                #1c2738 100%
+            );
+
+            color: white;
+            padding: 28px 18px;
+
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 24px;
+            font-weight: 700;
+
+            padding: 0 14px 35px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+        }
+
+        .menu-title {
+            color: #9ca3af;
+            font-size: 12px;
+            text-transform: uppercase;
+
+            padding: 0 14px;
+            margin-bottom: 12px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #e5e7eb;
+
+            padding: 13px 15px;
+
+            border-radius: 9px;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 16px;
+
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .menu a.active {
+            background: #2864e8;
+            color: white;
+        }
+
+        .menu-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+
+            border-top: 1px solid rgba(255,255,255,0.12);
+            padding-top: 20px;
+        }
+
+        .logout a {
+            text-decoration: none;
+            color: #e5e7eb;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 12px 15px;
+        }
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+            margin-left: 255px;
+            width: calc(100% - 255px);
+            padding: 28px;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 20px 23px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: right;
+        }
+
+        .user-icon {
+            color: #57378f;
+            font-size: 21px;
+        }
+
+        .username {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .role {
+            color: #667085;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        /* =====================================================
+           TABLE CARD
+        ===================================================== */
+
+        .card {
+            background: white;
+            border-radius: 15px;
+
+            padding: 20px;
+
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+
+            padding: 9px 15px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            text-decoration: none;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.92;
+        }
+
+        .btn-add {
+            background: #2864e8;
+            color: white;
+
+            padding: 10px 17px;
+        }
+
+        .btn-qr {
+            background: #6f42c1;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8fafc;
+        }
+
+        th {
+            text-align: left;
+
+            padding: 14px;
+
+            color: #64748b;
+
+            font-size: 13px;
+            text-transform: uppercase;
+
+            font-weight: 600;
+        }
+
+        td {
+            padding: 14px;
+
+            border-top: 1px solid #edf0f4;
+
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #fafbfc;
+        }
+
+        .table-number {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* =====================================================
+           AVAILABILITY
+        ===================================================== */
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status.available {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status.unavailable {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .delete-form {
+            margin: 0;
+        }
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+
+            color: #667085;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .empty h3 {
+            margin: 5px 0;
+            color: #344054;
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                width: calc(100% - 210px);
+                padding: 18px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .user-info {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                min-height: auto;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .logout {
+                position: static;
+                margin-top: 20px;
+            }
+
+            .menu {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .actions .btn,
+            .actions form {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <span class="logo-icon">🍽️</span>
+            <span>Restaurant</span>
+        </div>
+
+        <div class="menu-title">
+            Main
+        </div>
+
+        <nav class="menu">
+
+            <a href="{% url 'manager_dashboard' %}">
+                <span class="menu-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'staff_list' %}">
+                <span class="menu-icon">👥</span>
+                <span>Staff</span>
+            </a>
+
+            <a href="{% url 'manager_food_list' %}">
+                <span class="menu-icon">🍔</span>
+                <span>Food</span>
+            </a>
+
+            <a href="{% url 'manager_category_list' %}">
+                <span class="menu-icon">📁</span>
+                <span>Categories</span>
+            </a>
+
+            <a href="{% url 'manager_table_list' %}" class="active">
+                <span class="menu-icon">🪑</span>
+                <span>Tables</span>
+            </a>
+
+            <a href="{% url 'manager_order_list' %}">
+                <span class="menu-icon">📋</span>
+                <span>Orders</span>
+            </a>
+
+        </nav>
+
+        <div class="logout">
+
+            <a href="{% url 'logout' %}">
+                <span class="menu-icon">🚪</span>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div>
+                <h1>
+                    Restaurant Tables
+                </h1>
+
+                <p>
+                    Restaurant Management System
+                </p>
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-icon">
+                    👤
+                </div>
+
+                <div>
+                    <div class="username">
+                        {{ staff_username|default:request.user.username }}
+                    </div>
+
+                    <div class="role">
+                        Manager
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- TABLE CARD -->
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <h2>
+                    Tables
+                </h2>
+
+                <a
+                    href="{% url 'manager_table_create' %}"
+                    class="btn btn-add"
+                >
+                    + Add Table
+                </a>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                {% if tables %}
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                TABLE NUMBER
+                            </th>
+
+                            <th>
+                                AVAILABILITY
+                            </th>
+
+                            <th>
+                                QR CODE
+                            </th>
+
+                            <th>
+                                ACTIONS
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for table in tables %}
+
+                        <tr>
+
+                            <!-- ID -->
+
+                            <td>
+                                {{ table.id }}
+                            </td>
+
+
+                            <!-- TABLE NUMBER -->
+
+                            <td>
+                                <span class="table-number">
+                                    Table {{ table.table_number }}
+                                </span>
+                            </td>
+
+
+                            <!-- AVAILABILITY -->
+
+                            <td>
+
+                                {% if table.is_available %}
+
+                                    <span class="status available">
+                                        Available
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status unavailable">
+                                        Unavailable
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- QR CODE -->
+
+                            <td>
+
+                                {% if table.qr_token %}
+
+                                    <a
+                                        href="{% url 'manager_table_qr' table.id %}"
+                                        target="_blank"
+                                        class="btn btn-qr"
+                                    >
+                                        📱 QR Code
+                                    </a>
+
+                                {% else %}
+
+                                    <span style="color:#999;">
+                                        No QR
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <div class="actions">
+
+                                    <a
+                                        href="{% url 'manager_table_edit' table.id %}"
+                                        class="btn btn-edit"
+                                    >
+                                        Edit
+                                    </a>
+
+
+                                    <form
+                                        method="POST"
+                                        action="{% url 'manager_table_delete' table.id %}"
+                                        class="delete-form"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-delete"
+                                            onclick="return confirm('Are you sure you want to delete Table {{ table.table_number }}?');"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                {% else %}
+
+                <!-- EMPTY TABLE -->
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        🪑
+                    </div>
+
+                    <h3>
+                        No tables found
+                    </h3>
+
+                    <p>
+                        Add your first restaurant table to generate QR codes.
+                    </p>
+
+                    <a
+                        href="{% url 'manager_table_create' %}"
+                        class="btn btn-add"
+                    >
+                        + Add Table
+                    </a>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

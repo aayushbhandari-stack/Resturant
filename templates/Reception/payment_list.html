@@ -1,0 +1,309 @@
+{% extends "Reception/base.html" %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+        <div>
+            <h1>Payments</h1>
+            <p>View and manage customer payments.</p>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+
+        <div class="summary-card">
+            <div class="summary-card-title">Total Payments</div>
+            <div class="summary-card-value">
+                {{ payments|length }}
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-card-title">Paid</div>
+            <div class="summary-card-value">
+                {{ paid_count }}
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-card-title">Pending</div>
+            <div class="summary-card-value">
+                {{ pending_count }}
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-card-title">Total Amount</div>
+            <div class="summary-card-value">
+                Rs. {{ total_amount|default:"0" }}
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Payments Table -->
+    <div class="table-container">
+
+        <div class="table-header">
+            <h2>Payment List</h2>
+        </div>
+
+        <table class="data-table">
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for payment in payments %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+                    <td>
+                        {% if payment.order %}
+                            #{{ payment.order.id }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if payment.order.customer %}
+                            {{ payment.order.customer }}
+                        {% else %}
+                            Walk-in Customer
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        Rs. {{ payment.amount }}
+                    </td>
+
+                    <td>
+                        {{ payment.payment_method|default:"Cash" }}
+                    </td>
+
+                    <td>
+
+                        {% if payment.status == "paid" %}
+                            <span class="status-badge status-paid">
+                                Paid
+                            </span>
+
+                        {% elif payment.status == "pending" %}
+                            <span class="status-badge status-pending">
+                                Pending
+                            </span>
+
+                        {% elif payment.status == "failed" %}
+                            <span class="status-badge status-failed">
+                                Failed
+                            </span>
+
+                        {% else %}
+                            <span class="status-badge">
+                                {{ payment.status|default:"Unknown" }}
+                            </span>
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {% if payment.created_at %}
+                            {{ payment.created_at|date:"M d, Y H:i" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="7" class="empty-state">
+                        No payments found.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<style>
+
+.page-container {
+    padding: 25px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.page-header p {
+    margin-top: 6px;
+    color: #777;
+}
+
+
+/* Summary Cards */
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.summary-card-title {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.summary-card-value {
+    font-size: 25px;
+    font-weight: bold;
+    color: #222;
+}
+
+
+/* Table */
+
+.table-container {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.table-header {
+    margin-bottom: 20px;
+}
+
+.table-header h2 {
+    margin: 0;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 13px 15px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.data-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.data-table tbody tr:hover {
+    background: #fafafa;
+}
+
+
+/* Status */
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #eee;
+}
+
+.status-paid {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
+/* Empty */
+
+.empty-state {
+    text-align: center !important;
+    padding: 40px !important;
+    color: #777;
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+    .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+}
+
+</style>
+
+{% endblock %}

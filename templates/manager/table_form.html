@@ -1,0 +1,66 @@
+{% extends "manager/base.html" %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block page_title %}
+{{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="form-card">
+
+    <h2 style="margin-bottom:25px;">
+        {{ title }}
+    </h2>
+
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        {% csrf_token %}
+
+
+        {{ form.non_field_errors }}
+
+
+        {% for field in form %}
+
+            <div class="form-group">
+
+                {{ field.label_tag }}
+
+                {{ field }}
+
+                {{ field.errors }}
+
+            </div>
+
+        {% endfor %}
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            {{ button_text }}
+        </button>
+
+
+        <a
+            href="{% url 'manager_table_list' %}"
+            class="btn btn-secondary"
+        >
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

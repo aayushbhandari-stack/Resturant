@@ -1,0 +1,164 @@
+{% extends "manager/base.html" %}
+
+{% block title %}
+Staff
+{% endblock %}
+
+{% block page_title %}
+Staff Management
+{% endblock %}
+
+
+{% block content %}
+
+<div class="card">
+
+
+    <div style="
+        margin-bottom:20px;
+    ">
+
+        <h2>
+            Staff Members
+        </h2>
+
+        <p style="
+            color:#6b7280;
+            font-size:13px;
+            margin-top:5px;
+        ">
+            Restaurant employees and their roles.
+        </p>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Username
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Role
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for staff in staff_members %}
+
+                <tr>
+
+                    <td>
+
+                        <strong>
+                            {{ staff.user.username }}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        {{ staff.user.first_name }}
+                        {{ staff.user.last_name }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ staff.user.email|default:"-" }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% for group in staff.user.groups.all %}
+
+                            <span class="status confirmed">
+                                {{ group.name }}
+                            </span>
+
+                        {% empty %}
+
+                            Staff
+
+                        {% endfor %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if staff.user.is_active %}
+
+                            <span class="status completed">
+                                Active
+                            </span>
+
+                        {% else %}
+
+                            <span class="status cancelled">
+                                Inactive
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        style="
+                            text-align:center;
+                            padding:40px;
+                        "
+                    >
+
+                        No staff members found.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

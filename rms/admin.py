@@ -1,8 +1,10 @@
 from django.contrib import admin
+
 from .models import (
     Category,
     Food,
     RestaurantTable,
+    Cart,
     StaffProfile,
     Order,
     OrderItem,
@@ -10,112 +12,151 @@ from .models import (
 )
 
 
-# =========================
+# =========================================================
 # CATEGORY
-# =========================
+# =========================================================
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+
     list_display = (
         "id",
-        "Category_name",
+        "category_name",
         "created_at",
         "updated_at",
     )
 
-    search_fields = ("Category_name",)
+    search_fields = (
+        "category_name",
+    )
+
+    ordering = (
+        "category_name",
+    )
 
 
-# =========================
+# =========================================================
 # FOOD
-# =========================
+# =========================================================
 
 @admin.register(Food)
 class FoodAdmin(admin.ModelAdmin):
+
     list_display = (
         "id",
         "name",
         "category",
         "price",
+        "is_available",
         "updated_at",
     )
 
-    list_filter = ("category",)
-
-    search_fields = (
-        "name",
-        "category__Category_name",
-    )
-
-
-# =========================
-# RESTAURANT TABLE
-# =========================
-
-@admin.register(RestaurantTable)
-class RestaurantTableAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "table_number",
-        "capacity",
+    list_filter = (
+        "category",
         "is_available",
     )
 
-    list_filter = ("is_available",)
+    search_fields = (
+        "name",
+        "category__category_name",
+    )
 
-    search_fields = ("table_number",)
+    ordering = (
+        "name",
+    )
 
 
-# =========================
+# =========================================================
+# RESTAURANT TABLE
+# =========================================================
+
+@admin.register(RestaurantTable)
+class RestaurantTableAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "id",
+        "table_number",
+        "is_available",
+    )
+
+    list_filter = (
+        "is_available",
+    )
+
+    ordering = (
+        "table_number",
+    )
+
+
+# =========================================================
+# CART
+# =========================================================
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "id",
+        "session_id",
+        "food",
+        "quantity",
+        "table",
+        "created_at",
+    )
+
+    search_fields = (
+        "session_id",
+        "food__name",
+    )
+
+    list_filter = (
+        "created_at",
+    )
+
+
+# =========================================================
 # STAFF PROFILE
-# =========================
+# =========================================================
 
 @admin.register(StaffProfile)
 class StaffProfileAdmin(admin.ModelAdmin):
+
     list_display = (
         "id",
         "user",
         "role",
     )
 
-    list_filter = ("role",)
+    list_filter = (
+        "role",
+    )
 
     search_fields = (
         "user__username",
     )
 
 
-# =========================
+# =========================================================
 # ORDER ITEM INLINE
-# =========================
+# =========================================================
 
-class OrderItemInline(admin.TabularInline):
+class OrderItemInline(
+    admin.TabularInline
+):
+
     model = OrderItem
+
     extra = 0
 
-    fields = (
-        "food",
-        "quantity",
-        "price",
-        "subtotal_display",
-        "special_instructions",
-    )
-
     readonly_fields = (
-        "subtotal_display",
+        "price",
+        "subtotal",
     )
 
-    def subtotal_display(self, obj):
-        if obj.pk:
-            return f"Rs. {obj.subtotal}"
-        return "-"
 
-    subtotal_display.short_description = "Total"
-
-
-# =========================
+# =========================================================
 # ORDER
-# =========================
+# =========================================================
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -124,55 +165,55 @@ class OrderAdmin(admin.ModelAdmin):
         "id",
         "table",
         "customer_name",
+        "customer_phone",
         "status",
         "payment_status",
-        "total_display",
         "created_at",
     )
 
-    list_editable = (
+    list_filter = (
         "status",
         "payment_status",
+        "created_at",
+    )
+
+    search_fields = (
+        "customer_name",
+        "customer_phone",
+    )
+
+    ordering = (
+        "-created_at",
     )
 
     inlines = [
         OrderItemInline,
     ]
 
-    def total_display(self, obj):
-        return f"Rs. {obj.total_amount}"
 
-    total_display.short_description = "Total"
-
-
-# =========================
+# =========================================================
 # ORDER ITEM
-# =========================
+# =========================================================
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
 
     list_display = (
+        "id",
         "order",
         "food",
         "quantity",
         "price",
-        "subtotal_display",
     )
 
     search_fields = (
         "food__name",
     )
 
-    def subtotal_display(self, obj):
-        return f"Rs. {obj.subtotal}"
 
-    subtotal_display.short_description = "Total"
-
-
-# =========================
+# =========================================================
 # PAYMENT
-# =========================
+# =========================================================
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
@@ -180,10 +221,9 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "order",
-        "received_by",
         "amount",
         "method",
-        "transaction_reference",
+        "received_by",
         "paid_at",
     )
 
@@ -194,6 +234,6 @@ class PaymentAdmin(admin.ModelAdmin):
 
     search_fields = (
         "order__id",
-        "transaction_reference",
         "received_by__username",
+        "transaction_reference",
     )

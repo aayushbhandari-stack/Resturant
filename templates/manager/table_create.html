@@ -1,0 +1,59 @@
+{% extends "manager/base.html" %}
+
+{% block title %}
+Add Table
+{% endblock %}
+
+{% block page_title %}
+Add Restaurant Table
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    <h2>Add Table</h2>
+
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div>
+            <label>
+                Table Number
+            </label>
+
+            <input
+                type="text"
+                name="table_number"
+                required
+            >
+        </div>
+
+        <br>
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Add Table
+        </button>
+
+        <a
+            href="{% url 'manager_table_list' %}"
+            class="btn btn-secondary"
+        >
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

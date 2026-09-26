@@ -1,0 +1,207 @@
+{% extends "manager/base.html" %}
+
+{% block title %}
+Food Management
+{% endblock %}
+
+{% block page_title %}
+Food
+{% endblock %}
+
+
+{% block content %}
+
+<div class="card">
+
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+    ">
+
+        <div>
+
+            <h2>
+                Food Items
+            </h2>
+
+            <p style="
+                color:#6b7280;
+                font-size:13px;
+                margin-top:4px;
+            ">
+                Manage your restaurant menu.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'manager_food_create' %}"
+            class="btn btn-primary"
+        >
+            + Add Food
+        </a>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Category
+                    </th>
+
+                    <th>
+                        Price
+                    </th>
+
+                    <th>
+                        Available
+                    </th>
+
+                    <th>
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for food in foods %}
+
+                <tr>
+
+                    <td>
+                        {{ food.id }}
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ food.name }}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if food.category %}
+                            {{ food.category.name }}
+                        {% else %}
+                            -
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        {{ food.price }}
+                    </td>
+
+
+                    <td>
+
+                        {% if food.is_available %}
+
+                            <span class="status completed">
+                                Available
+                            </span>
+
+                        {% else %}
+
+                            <span class="status cancelled">
+                                Unavailable
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <a
+                            href="{% url 'manager_food_edit' food.id %}"
+                            class="btn btn-warning"
+                        >
+                            Edit
+                        </a>
+
+
+                        <form
+                            method="POST"
+                            action="{% url 'manager_food_delete' food.id %}"
+                            style="display:inline;"
+                            onsubmit="
+                                return confirm(
+                                    'Delete this food item?'
+                                );
+                            "
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                            >
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        style="
+                            text-align:center;
+                            padding:40px;
+                        "
+                    >
+
+                        No food items found.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

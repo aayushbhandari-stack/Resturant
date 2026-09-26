@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Restaurant - Cart & Checkout</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            height: 75px;
+            background: #222;
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 5%;
+        }
+
+        header h2 {
+            font-size: 27px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        /* =========================
+           TWO COLUMN LAYOUT
+        ========================= */
+
+        .order-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* =========================
+           CART
+        ========================= */
+
+        .cart-section {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 25px;
+        }
+
+        .cart-item {
+            position: relative;
+
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px;
+
+            padding: 20px;
+            margin-bottom: 15px;
+
+            min-height: 105px;
+        }
+
+        .cart-item h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .cart-item p {
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .item-price {
+            position: absolute;
+            right: 20px;
+            top: 25px;
+
+            color: #ff9800;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .cart-total {
+            border-top: 1px solid #ddd;
+            margin-top: 25px;
+            padding-top: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-total span:first-child {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .cart-total span:last-child {
+            font-size: 25px;
+            font-weight: bold;
+            color: #ff9800;
+        }
+
+        /* =========================
+           CHECKOUT
+        ========================= */
+
+        .checkout-section {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px;
+
+            border: 1px solid #ddd;
+            border-radius: 6px;
+
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+
+        textarea {
+            height: 110px;
+            resize: vertical;
+        }
+
+        /* =========================
+           ORDER SUMMARY
+        ========================= */
+
+        .order-summary {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .summary-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+
+            padding: 8px 0;
+
+            color: #444;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+
+            border-top: 1px solid #ddd;
+
+            margin-top: 10px;
+            padding-top: 18px;
+
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .summary-total span:last-child {
+            color: #ff9800;
+        }
+
+        /* =========================
+           PLACE ORDER BUTTON
+        ========================= */
+
+        .place-order-btn {
+            width: 100%;
+
+            margin-top: 25px;
+            padding: 15px;
+
+            background: #ff9800;
+            color: white;
+
+            border: none;
+            border-radius: 7px;
+
+            font-size: 18px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .place-order-btn:hover {
+            background: #f57c00;
+        }
+
+        /* =========================
+           SUCCESS MESSAGE
+        ========================= */
+
+        .success-message {
+            display: none;
+
+            margin-top: 20px;
+            padding: 15px;
+
+            background: #dff5e1;
+            color: #237a32;
+
+            border-radius: 7px;
+
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* =========================
+           MOBILE RESPONSIVE
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            .order-container {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 30px;
+            }
+
+            header {
+                padding: 0 20px;
+            }
+
+            header h2 {
+                font-size: 22px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header>
+
+        <h2>My Restaurant</h2>
+
+        <a href="#">
+            ← Back to Menu
+        </a>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="container">
+
+        <h1 class="page-title">
+            Cart & Checkout
+        </h1>
+
+
+        <div class="order-container">
+
+
+            <!-- =========================
+                 CART SECTION
+            ========================= -->
+
+            <section class="cart-section">
+
+                <h2 class="section-title">
+                    Your Cart
+                </h2>
+
+
+                <!-- Goat Momo -->
+
+                <div class="cart-item">
+
+                    <h3>
+                        Goat Momo
+                    </h3>
+
+                    <p>
+                        Quantity: 1
+                    </p>
+
+                    <p>
+                        Price: Rs. 200.00
+                    </p>
+
+                    <span class="item-price">
+                        Rs. 200.00
+                    </span>
+
+                </div>
+
+
+                <!-- Buff Momo -->
+
+                <div class="cart-item">
+
+                    <h3>
+                        Buff MOMO
+                    </h3>
+
+                    <p>
+                        Quantity: 2
+                    </p>
+
+                    <p>
+                        Price: Rs. 150.00
+                    </p>
+
+                    <span class="item-price">
+                        Rs. 300.00
+                    </span>
+
+                </div>
+
+
+                <!-- Chicken Wings -->
+
+                <div class="cart-item">
+
+                    <h3>
+                        Chicken wings
+                    </h3>
+
+                    <p>
+                        Quantity: 1
+                    </p>
+
+                    <p>
+                        Price: Rs. 100.00
+                    </p>
+
+                    <span class="item-price">
+                        Rs. 100.00
+                    </span>
+
+                </div>
+
+
+                <!-- Cup Cake -->
+
+                <div class="cart-item">
+
+                    <h3>
+                        Cup cake
+                    </h3>
+
+                    <p>
+                        Quantity: 1
+                    </p>
+
+                    <p>
+                        Price: Rs. 80.00
+                    </p>
+
+                    <span class="item-price">
+                        Rs. 80.00
+                    </span>
+
+                </div>
+
+
+                <!-- CART TOTAL -->
+
+                <div class="cart-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span>
+                        Rs. 680.00
+                    </span>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================
+                 CHECKOUT SECTION
+            ========================= -->
+
+            <section class="checkout-section">
+
+                <h2 class="section-title">
+                    Checkout
+                </h2>
+
+
+                <!-- Customer Information -->
+
+                <h3 style="margin-bottom: 20px;">
+                    Customer Information
+                </h3>
+
+
+                <!-- Name -->
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter your name"
+                    >
+
+                </div>
+
+
+                <!-- Phone -->
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="Enter your phone number"
+                    >
+
+                </div>
+
+
+                <!-- Table -->
+
+                <div class="form-group">
+
+                    <label for="table">
+                        Select Table
+                    </label>
+
+                    <select id="table">
+
+                        <option value="">
+                            Select a table
+                        </option>
+
+                        <option value="Table 1">
+                            Table 1
+                        </option>
+
+                        <option value="Table 2">
+                            Table 2
+                        </option>
+
+                        <option value="Table 3">
+                            Table 3
+                        </option>
+
+                        <option value="Table 4">
+                            Table 4
+                        </option>
+
+                        <option value="Table 5">
+                            Table 5
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Special Instructions -->
+
+                <div class="form-group">
+
+                    <label for="instructions">
+                        Special Instructions
+                    </label>
+
+                    <textarea
+                        id="instructions"
+                        placeholder="Example: Less spicy, no onion..."
+                    ></textarea>
+
+                </div>
+
+
+                <!-- =========================
+                     ORDER SUMMARY
+                ========================= -->
+
+                <div class="order-summary">
+
+                    <h3 class="summary-title">
+                        Your Order
+                    </h3>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Goat Momo × 1
+                        </span>
+
+                        <span>
+                            Rs. 200.00
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Buff MOMO × 2
+                        </span>
+
+                        <span>
+                            Rs. 300.00
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Chicken wings × 1
+                        </span>
+
+                        <span>
+                            Rs. 100.00
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Cup cake × 1
+                        </span>
+
+                        <span>
+                            Rs. 80.00
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <span>
+                            Rs. 680.00
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PLACE ORDER -->
+
+                <button
+                    class="place-order-btn"
+                    onclick="placeOrder()"
+                >
+                    Place Order
+                </button>
+
+
+                <!-- SUCCESS MESSAGE -->
+
+                <div
+                    class="success-message"
+                    id="successMessage"
+                >
+                    ✓ Order placed successfully!
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+        function placeOrder() {
+
+            const name =
+                document.getElementById("name").value.trim();
+
+            const phone =
+                document.getElementById("phone").value.trim();
+
+            const table =
+                document.getElementById("table").value;
+
+
+            if (name === "") {
+
+                alert("Please enter your name.");
+
+                return;
+            }
+
+
+            if (phone === "") {
+
+                alert("Please enter your phone number.");
+
+                return;
+            }
+
+
+            if (table === "") {
+
+                alert("Please select a table.");
+
+                return;
+            }
+
+
+            document.getElementById("successMessage").style.display =
+                "block";
+
+
+            document.getElementById("successMessage").scrollIntoView({
+                behavior: "smooth"
+            });
+
+        }
+
+    </script>
+
+</body>
+</html>

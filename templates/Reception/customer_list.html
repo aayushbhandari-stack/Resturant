@@ -1,0 +1,139 @@
+{% extends "Reception/base.html" %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+        <div>
+            <h1>Customers</h1>
+            <p>View customers and their order history.</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+
+        <div class="table-header">
+            <h2>Customer List</h2>
+        </div>
+
+        <table class="data-table">
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Customer Name</th>
+                    <th>Phone</th>
+                    <th>Total Orders</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for customer in customers %}
+
+                <tr>
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+                    <td>
+                        {{ customer.customer_name }}
+                    </td>
+
+                    <td>
+                        {% if customer.customer_phone %}
+                            {{ customer.customer_phone }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ customer.order_count }}
+                    </td>
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="4" class="empty-state">
+                        No customers found.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<style>
+
+.page-container {
+    padding: 25px;
+}
+
+.page-header {
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.page-header p {
+    margin-top: 6px;
+    color: #777;
+}
+
+.table-container {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.table-header {
+    margin-bottom: 20px;
+}
+
+.table-header h2 {
+    margin: 0;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 13px 15px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.data-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.data-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.empty-state {
+    text-align: center !important;
+    padding: 40px !important;
+    color: #777;
+}
+
+</style>
+
+{% endblock %}

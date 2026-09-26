@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Order Successful</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .box {
+            background: white;
+            width: 500px;
+            max-width: 90%;
+            margin: auto;
+            padding: 40px;
+            border-radius: 12px;
+
+            box-shadow:
+                0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #4caf50;
+        }
+
+        .order-number {
+            font-size: 25px;
+            font-weight: bold;
+            color: #ff9800;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 25px;
+
+            background: #ff9800;
+            color: white;
+
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>
+        Order Placed Successfully!
+    </h1>
+
+    <p>
+        Thank you, {{ order.customer_name }}.
+    </p>
+
+    <p>
+        Your order number is:
+    </p>
+
+    <div class="order-number">
+        #{{ order.id }}
+    </div>
+
+    <p>
+        Table {{ order.table.table_number }}
+    </p>
+
+    <a href="{% url 'home' %}">
+        Back to Menu
+    </a>
+
+</div>
+
+</body>
+
+</html>

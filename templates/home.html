@@ -1,566 +1,574 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Restaurant Menu</title>
+    <title>Restaurant | Home</title>
 
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f8f8f8;
             color: #222;
         }
 
+        /* ================= HEADER ================= */
+
+        header {
+            background: #222;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #ff9800;
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: #ff9800;
+        }
+
+        .cart-btn {
+            background: #ff9800;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .cart-btn:hover {
+            background: #e68900;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 450px;
+            background:
+                linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+                url("{% static 'images/restaurant.jpg' %}");
+
+            background-size: cover;
+            background-position: center;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            color: white;
+            padding: 30px;
+        }
+
+        .hero-content {
+            max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 19px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background: #ff9800;
+            color: white;
+            padding: 13px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .hero-btn:hover {
+            background: #e68900;
+        }
+
+        /* ================= CONTAINER ================= */
+
         .container {
-            max-width: 1100px;
+            width: 90%;
+            max-width: 1200px;
             margin: auto;
-            padding: 25px;
         }
 
-        /* HEADER */
+        .section {
+            padding: 50px 0;
+        }
 
-        .header {
+        .section-title {
             text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            color: #666;
-        }
-
-        /* TABLE INFO */
-
-        .table-info {
-            background: white;
-            padding: 18px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .table-info h2 {
-            margin: 0 0 8px;
-        }
-
-        /* CATEGORY */
-
-        .category {
             margin-bottom: 35px;
         }
 
-        .category-title {
-            font-size: 25px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #222;
-            padding-bottom: 8px;
+        .section-title h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
         }
 
-        /* FOOD GRID */
+        .section-title p {
+            color: #777;
+        }
+
+        /* ================= CATEGORIES ================= */
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: 1px solid #ff9800;
+            border-radius: 25px;
+            text-decoration: none;
+            color: #ff9800;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* ================= FOOD GRID ================= */
 
         .food-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
         }
-
-        /* FOOD CARD */
 
         .food-card {
             background: white;
             border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: 0.3s;
         }
 
-        .food-card h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 20px;
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.12);
         }
 
-        .food-price {
-            font-size: 18px;
-            font-weight: bold;
-            color: #e67e22;
-            margin-bottom: 15px;
-        }
-
-        .add-button {
+        .food-image {
             width: 100%;
-            padding: 11px;
-            border: none;
-            border-radius: 7px;
+            height: 200px;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .no-image {
+            height: 200px;
+            background: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #999;
+        }
+
+        .food-content {
+            padding: 18px;
+        }
+
+        .food-content h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .category-name {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .food-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .price {
+            color: #ff9800;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .add-btn {
             background: #222;
             color: white;
-            cursor: pointer;
-            font-size: 15px;
-        }
-
-        .add-button:hover {
-            background: #444;
-        }
-
-        /* CART */
-
-        .cart {
-            background: white;
-            padding: 25px;
-            margin-top: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .cart h2 {
-            margin-top: 0;
-        }
-
-        .cart-item {
-            border-bottom: 1px solid #ddd;
-            padding: 15px 0;
-        }
-
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-
-        .cart-controls {
-            margin-top: 10px;
-        }
-
-        .cart-controls button {
             border: none;
-            padding: 6px 12px;
-            margin-right: 5px;
+            padding: 9px 14px;
             border-radius: 5px;
             cursor: pointer;
         }
 
-        .quantity {
-            margin-right: 10px;
+        .add-btn:hover {
+            background: #ff9800;
+        }
+
+        .unavailable {
+            color: #e53935;
             font-weight: bold;
+            font-size: 14px;
         }
 
-        .remove {
-            background: #dc3545;
-            color: white;
-        }
+        /* ================= TABLE SECTION ================= */
 
-        .cart-total {
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .checkout-button {
-            margin-top: 15px;
-            width: 100%;
-            padding: 13px;
-            background: green;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        /* CHECKOUT */
-
-        .checkout {
-            display: none;
-            background: white;
-            padding: 25px;
-            margin-top: 25px;
+        .table-section {
+            background: #fff3e0;
+            padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .checkout input,
-        .checkout textarea {
-            width: 100%;
-            padding: 11px;
-            margin: 8px 0 15px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        .place-order {
-            width: 100%;
-            padding: 13px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .empty {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
             text-align: center;
-            color: #777;
+            margin-bottom: 50px;
+        }
+
+        .table-section h2 {
+            margin-bottom: 10px;
+        }
+
+        .table-section p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .table-select {
+            padding: 12px;
+            width: 250px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        footer p {
+            color: #bbb;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 768px) {
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 35px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .table-select {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- ================= HEADER ================= -->
 
-    <!-- HEADER -->
+<header>
 
-    <div class="header">
-
-        <h1>🍽️ Restaurant Menu</h1>
-
-        <p>
-            Welcome! Choose your favorite food below.
-        </p>
-
+    <div class="logo">
+        My Restaurant
     </div>
+    {% if table %}
 
+<div class="table-banner">
 
-    <!-- TABLE INFORMATION -->
-
-    <div class="table-info">
-
-        <h2>
-            Table {{ table.table_number }}
-        </h2>
-
-        <p>
-            Capacity: {{ table.capacity }} people
-        </p>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- FOOD MENU -->
-    <!-- ========================= -->
-<!-- Menu -->
-<section class="menu-section">
-    <h2>Menu</h2>
-
-    <!-- Categories -->
-    <div class="categories">
-        <button class="category-btn active" onclick="filterFood('all')">
-            All
-        </button>
-
-        {% for category in categories %}
-        <button class="category-btn"
-                onclick="filterFood('{{ category.id }}')">
-            {{ category.name }}
-        </button>
-        {% endfor %}
-    </div>
-
-    <!-- Food Items -->
-    <div class="food-grid">
-
-        {% for food in foods %}
-        <div class="food-card"
-            data-category="{{ food.category.id }}">
-
-            {% if food.image %}
-                <img src="{{ food.image.url }}"
-                    alt="{{ food.name }}"
-                    class="food-image">
-            {% else %}
-                <div class="food-image no-image">
-                    🍽️
-                </div>
-            {% endif %}
-
-            <div class="food-info">
-                <h3>{{ food.name }}</h3>
-
-                <p class="category-name">
-                    {{ food.category.name }}
-                </p>
-
-                {% if food.description %}
-                    <p class="description">
-                        {{ food.description }}
-                    </p>
-                {% endif %}
-
-                <div class="food-bottom">
-                    <strong>Rs. {{ food.price }}</strong>
-
-                    <button class="add-cart-btn"
-                            onclick="addToCart(
-                                '{{ food.id }}',
-                                '{{ food.name|escapejs }}',
-                                {{ food.price }}
-                            )">
-                        🛒 Add to Cart
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        {% empty %}
-        <div class="empty-menu">
-            <p>No food items are available right now.</p>
-        </div>
-        {% endfor %}
-
-    </div>
-</section>
-
-
-<!-- Cart -->
-<section class="cart-section">
-    <h2>🛒 Your Cart</h2>
-
-    <div id="cart-items"></div>
-
-    <div id="empty-cart">
-        Your cart is empty.
-    </div>
-
-    <div class="cart-total">
-        <strong>Total: Rs. <span id="cart-total">0.00</span></strong>
-    </div>
-
-    <button id="checkout-btn"
-            class="checkout-btn"
-            onclick="checkout()"
-            disabled>
-        Proceed to Checkout
-    </button>
-</section>
-
-
-
-    <!-- ========================= -->
-    <!-- CHECKOUT -->
-    <!-- ========================= -->
-
-    <div
-        class="checkout"
-        id="checkout">
-
-        <h2>Customer Information</h2>
-
-
-        <label>
-            Name
-        </label>
-
-        <input
-            type="text"
-            id="customer-name"
-            placeholder="Enter your name"
-        >
-
-
-        <label>
-            Phone
-        </label>
-
-        <input
-            type="text"
-            id="customer-phone"
-            placeholder="Enter your phone number"
-        >
-
-
-        <label>
-            Special Instructions
-        </label>
-
-        <textarea
-            id="special-instructions"
-            placeholder="Example: Less spicy, no onion..."
-        ></textarea>
-
-
-        <button
-            class="place-order"
-            type="button"
-            onclick="placeOrder()">
-
-            Place Order
-
-        </button>
-
-    </div>
+    🪑
+    You are ordering from
+    <strong>Table {{ table.table_number }}</strong>
 
 </div>
-<script>
-    let cart = JSON.parse(localStorage.getItem("cart")) || {};
 
-    function saveCart() {
-        localStorage.setItem("cart", JSON.stringify(cart));
-    }
-
-    function addToCart(id, name, price) {
-
-        if (cart[id]) {
-            cart[id].quantity += 1;
-        } else {
-            cart[id] = {
-                id: id,
-                name: name,
-                price: Number(price),
-                quantity: 1
-            };
-        }
-
-        saveCart();
-        displayCart();
-    }
+{% endif %}
 
 
-    function increaseQuantity(id) {
-        cart[id].quantity += 1;
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
 
-        saveCart();
-        displayCart();
-    }
+        <a href="#menu">Menu</a>
 
+        <a href="#tables">Tables</a>
 
-    function decreaseQuantity(id) {
+        <a href="{% url 'cart' %}" class="cart-btn">
+            🛒 Cart
+            {% if cart_count %}
+                ({{ cart_count }})
+            {% endif %}
+        </a>
+    </nav>
 
-        cart[id].quantity -= 1;
-
-        if (cart[id].quantity <= 0) {
-            delete cart[id];
-        }
-
-        saveCart();
-        displayCart();
-    }
+</header>
 
 
-    function removeFromCart(id) {
-        delete cart[id];
+<!-- ================= HERO ================= -->
 
-        saveCart();
-        displayCart();
-    }
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>Delicious Food, Made For You</h1>
+
+        <p>
+            Enjoy delicious meals prepared fresh for you.
+            Choose your favorite food and place your order easily.
+        </p>
+
+        <a href="#menu" class="hero-btn">
+            Explore Menu
+        </a>
+
+    </div>
+
+</section>
 
 
-    function displayCart() {
+<!-- ================= MENU ================= -->
 
-        const cartItems = document.getElementById("cart-items");
-        const emptyCart = document.getElementById("empty-cart");
-        const totalElement = document.getElementById("cart-total");
-        const checkoutBtn = document.getElementById("checkout-btn");
+<section class="section" id="menu">
 
-        cartItems.innerHTML = "";
+    <div class="container">
 
-        let total = 0;
-        let itemCount = 0;
+        <div class="section-title">
 
-        Object.values(cart).forEach(item => {
+            <h2>Our Menu</h2>
 
-            const itemTotal = item.price * item.quantity;
+            <p>
+                Choose from our delicious selection of food.
+            </p>
 
-            total += itemTotal;
-            itemCount += item.quantity;
+        </div>
 
-            cartItems.innerHTML += `
-                <div class="cart-item">
 
-                    <div>
-                        <strong>${item.name}</strong>
-                        <br>
-                        Rs. ${item.price} × ${item.quantity}
-                    </div>
+        <!-- Categories -->
 
-                    <div class="cart-controls">
+        <div class="categories">
 
-                        <button onclick="decreaseQuantity('${item.id}')">
-                            −
-                        </button>
+            <a href="{% url 'home' %}"
+               class="category-btn {% if not selected_category %}active{% endif %}">
+                All
+            </a>
 
-                        <span>${item.quantity}</span>
+            {% for category in categories %}
 
-                        <button onclick="increaseQuantity('${item.id}')">
-                            +
-                        </button>
+                <a href="?category={{ category.id }}"
+                   class="category-btn
+                   {% if selected_category == category.id %}active{% endif %}">
 
-                        <button class="remove-btn"
-                                onclick="removeFromCart('${item.id}')">
-                            🗑
-                        </button>
+                    {{ category.Category_name }}
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Food Items -->
+
+        <div class="food-grid">
+
+            {% for food in foods %}
+
+                <div class="food-card">
+
+                    {% if food.image %}
+
+                        <img
+                            src="{{ food.image.url }}"
+                            alt="{{ food.name }}"
+                            class="food-image"
+                        >
+
+                    {% else %}
+
+                        <div class="no-image">
+                            No Image
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="food-content">
+
+                        <h3>
+                            {{ food.name }}
+                        </h3>
+
+                        <div class="category-name">
+                            {{ food.category.Category_name }}
+                        </div>
+
+
+                        <div class="food-bottom">
+
+                            <span class="price">
+                                Rs. {{ food.price }}
+                            </span>
+
+
+                            {% if food.is_available %}
+
+                                <form method="POST"
+                                      action="{% url 'add_to_cart' food.id %}">
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="add-btn">
+                                        Add to Cart
+                                    </button>
+
+                                </form>
+
+                            {% else %}
+
+                                <span class="unavailable">
+                                    Unavailable
+                                </span>
+
+                            {% endif %}
+
+                        </div>
 
                     </div>
 
                 </div>
-            `;
-        });
 
-        totalElement.innerText = total.toFixed(2);
+            {% empty %}
 
-        if (itemCount === 0) {
-            emptyCart.style.display = "block";
-            checkoutBtn.disabled = true;
-        } else {
-            emptyCart.style.display = "none";
-            checkoutBtn.disabled = false;
-        }
-    }
+                <p style="text-align:center; width:100%;">
+                    No food items available.
+                </p>
 
+            {% endfor %}
 
-    function filterFood(categoryId) {
+        </div>
 
-        const cards = document.querySelectorAll(".food-card");
+    </div>
 
-        cards.forEach(card => {
-
-            if (
-                categoryId === "all" ||
-                card.dataset.category === categoryId
-            ) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
-        });
-
-        document.querySelectorAll(".category-btn").forEach(btn => {
-            btn.classList.remove("active");
-        });
-
-        event.target.classList.add("active");
-    }
+</section>
 
 
-    function checkout() {
+<!-- ================= TABLE SELECTION ================= -->
 
-        if (Object.keys(cart).length === 0) {
-            alert("Your cart is empty.");
-            return;
-        }
+<section class="container" id="tables">
 
-        window.location.href = "{% url 'checkout' %}";
-    }
+    <div class="table-section">
+
+        <h2>Select Your Table</h2>
+
+        <p>
+            Choose an available table before placing your order.
+        </p>
+
+        <select class="table-select" name="table">
+
+            <option value="">
+                Select a table
+            </option>
+
+            {% for table in tables %}
+
+                {% if table.is_available %}
+
+                    <option value="{{ table.id }}">
+                        Table {{ table.table_number }}
+                        - Capacity {{ table.capacity }}
+                    </option>
+
+                {% endif %}
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+</section>
 
 
-    // Display cart when page loads
-    displayCart();
-</script>
+<!-- ================= FOOTER ================= -->
 
+<footer>
 
+    <h3>My Restaurant</h3>
 
+    <p>
+        Delicious food. Great service. Happy customers.
+    </p>
+
+    <p style="margin-top:10px;">
+        &copy; {% now "Y" %} My Restaurant. All rights reserved.
+    </p>
+
+</footer>
 
 </body>
 </html>

@@ -1,43 +1,120 @@
-from django.db import models
-from django.conf import settings
 from decimal import Decimal
+import uuid
+from django.conf import settings
 from django.core.validators import MinValueValidator
-# Create your models here.
+from django.db import models
 
-class Category (models.Model) :
-    Category_name = models.CharField(max_length=100,)
-    created_at = models.DateTimeField(auto_now_add=True,null=True,blank=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-    
+
+# =========================================================
+# CATEGORY
+# =========================================================
+
+class Category(models.Model):
+
+    category_name = models.CharField(
+        max_length=100
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
     def __str__(self):
-        return self.Category_name
-    
+        return self.category_name
+
+
+# =========================================================
+# FOOD
+# =========================================================
+
 class Food(models.Model):
-    name = models.CharField(max_length=200)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="foods")
+
+    name = models.CharField(
+        max_length=200
+    )
+
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name="foods"
+    )
+
     image = models.ImageField(
         upload_to="foods/",
         blank=True,
         null=True
     )
-    is_available = models.BooleanField(default=True)
 
-    updated_at = models.DateTimeField(auto_now=True)    
+    is_available = models.BooleanField(
+        default=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
     def __str__(self):
         return self.name
-    
 
+
+# =========================================================
+# RESTAURANT TABLE
+# =========================================================
+
+# ============================================================
+# TABLE CREATE
+# ============================================================
+# =========================================================
+# RESTAURANT TABLE
+# =========================================================
 class RestaurantTable(models.Model):
-    table_number = models.PositiveIntegerField(unique=True)
-    capacity = models.PositiveIntegerField(default=4)
-    is_available = models.BooleanField(default=True)
+
+    table_number = models.PositiveIntegerField(
+        unique=True
+    )
+
+    qr_token = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False
+    )
+
+    is_available = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,null=True,blank=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
 
     def __str__(self):
         return f"Table {self.table_number}"
 
+
+
+
+# =========================================================
+# CART
+# =========================================================
+
 class Cart(models.Model):
-    session_id = models.CharField(max_length=100)
+
+    session_id = models.CharField(
+        max_length=100
+    )
 
     food = models.ForeignKey(
         Food,
@@ -47,7 +124,9 @@ class Cart(models.Model):
 
     quantity = models.PositiveIntegerField(
         default=1,
-        validators=[MinValueValidator(1)]
+        validators=[
+            MinValueValidator(1)
+        ]
     )
 
     table = models.ForeignKey(
@@ -63,7 +142,9 @@ class Cart(models.Model):
         null=True
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
     @property
     def subtotal(self):
@@ -72,16 +153,24 @@ class Cart(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["session_id", "food"],
+                fields=[
+                    "session_id",
+                    "food"
+                ],
                 name="unique_cart_food_per_session"
             )
         ]
 
     def __str__(self):
         return f"{self.food.name} x {self.quantity}"
-    
-    
+
+
+# =========================================================
+# STAFF PROFILE
+# =========================================================
+
 class StaffProfile(models.Model):
+
     ROLE_CHOICES = [
         ("chef", "Chef"),
         ("waiter", "Waiter"),
@@ -89,11 +178,25 @@ class StaffProfile(models.Model):
         ("reception", "Reception"),
     ]
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="staff_profile",null=False)
-    role = models.CharField(max_length=20,choices=ROLE_CHOICES)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="staff_profile"
+    )
+
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES
+    )
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
+
+
+# =========================================================
+# ORDER
+# =========================================================
+
 class Order(models.Model):
 
     STATUS_CHOICES = [
@@ -111,36 +214,26 @@ class Order(models.Model):
         ("paid", "Paid"),
     ]
 
-    PAYMENT_METHODS = [
-        ("cash", "Cash"),
-        ("card", "Card"),
-        ("online", "Online Payment"),
-    ]
-
     table = models.ForeignKey(
         RestaurantTable,
         on_delete=models.PROTECT,
         related_name="orders",
-        null=True
+        null=True,
+        blank=True
     )
 
-    # Customer information
     customer_name = models.CharField(
         max_length=100,
-        blank=False,
-        null=True
+        blank=True
     )
 
     customer_phone = models.CharField(
-        max_length=10,
-        blank=False,
-        null=True
+        max_length=20,
+        blank=True
     )
 
-    # Special instructions
     special_instructions = models.TextField(
-        blank=True,
-        null=True
+        blank=True
     )
 
     status = models.CharField(
@@ -156,8 +249,7 @@ class Order(models.Model):
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True,
-        null=True
+        auto_now_add=True
     )
 
     updated_at = models.DateTimeField(
@@ -165,14 +257,28 @@ class Order(models.Model):
     )
 
     def __str__(self):
-        return f"Order #{self.id} - Table {self.table.table_number}"
+        if self.table:
+            return (
+                f"Order #{self.id} - "
+                f"Table {self.table.table_number}"
+            )
+
+        return f"Order #{self.id}"
 
     @property
     def total_amount(self):
         return sum(
-            item.subtotal
-            for item in self.items.all()
+            (
+                item.subtotal
+                for item in self.items.all()
+            ),
+            Decimal("0.00")
         )
+
+
+# =========================================================
+# ORDER ITEM
+# =========================================================
 
 class OrderItem(models.Model):
 
@@ -189,7 +295,9 @@ class OrderItem(models.Model):
     )
 
     quantity = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)]
+        validators=[
+            MinValueValidator(1)
+        ]
     )
 
     price = models.DecimalField(
@@ -198,8 +306,7 @@ class OrderItem(models.Model):
     )
 
     special_instructions = models.TextField(
-        blank=True,
-        null=True
+        blank=True
     )
 
     @property
@@ -207,10 +314,23 @@ class OrderItem(models.Model):
         return self.price * self.quantity
 
     def __str__(self):
-        return f"{self.food.name} x {self.quantity}"
+        return (
+            f"{self.food.name} x "
+            f"{self.quantity}"
+        )
 
+
+# =========================================================
+# PAYMENT
+# =========================================================
 
 class Payment(models.Model):
+
+    PAYMENT_METHODS = [
+        ("cash", "Cash"),
+        ("card", "Card"),
+        ("online", "Online Payment"),
+    ]
 
     order = models.OneToOneField(
         Order,
@@ -231,7 +351,7 @@ class Payment(models.Model):
 
     method = models.CharField(
         max_length=20,
-        choices=Order.PAYMENT_METHODS
+        choices=PAYMENT_METHODS
     )
 
     transaction_reference = models.CharField(
@@ -239,7 +359,12 @@ class Payment(models.Model):
         blank=True
     )
 
-    paid_at = models.DateTimeField(auto_now_add=True)
+    paid_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
     def __str__(self):
-        return f"Payment for Order #{self.order_id}"
+        return (
+            f"Payment for Order "
+            f"#{self.order_id}"
+        )

@@ -1,0 +1,710 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            Restaurant Management
+        {% endblock %}
+    </title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background: #f5f6f8;
+            color: #222;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        /* ==================================================
+           LAYOUT
+        ================================================== */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* ==================================================
+           SIDEBAR
+        ================================================== */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+
+            background: #1f2937;
+            color: white;
+
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            overflow-y: auto;
+
+            z-index: 1000;
+        }
+
+
+        .brand {
+            padding: 25px 20px;
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.1);
+        }
+
+        .brand h1 {
+            font-size: 21px;
+            margin-bottom: 5px;
+        }
+
+        .brand p {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+
+        /* ==================================================
+           NAVIGATION
+        ================================================== */
+
+        .nav {
+            padding: 20px 12px;
+        }
+
+        .nav-title {
+            color: #9ca3af;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            padding:
+                0 10px 8px;
+
+            letter-spacing: 0.7px;
+        }
+
+        .nav-link {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                12px 13px;
+
+            margin-bottom: 4px;
+
+            border-radius: 8px;
+
+            color: #d1d5db;
+
+            font-size: 14px;
+
+            transition:
+                background 0.2s,
+                color 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #374151;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .nav-icon {
+            width: 25px;
+
+            text-align: center;
+
+            font-size: 18px;
+        }
+
+
+        /* ==================================================
+           MAIN
+        ================================================== */
+
+        .main {
+            flex: 1;
+
+            margin-left: 250px;
+
+            min-width: 0;
+        }
+
+
+        /* ==================================================
+           TOP BAR
+        ================================================== */
+
+        .topbar {
+            height: 70px;
+
+            background: white;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 30px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 900;
+        }
+
+        .topbar-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .menu-button {
+            display: none;
+
+            border: none;
+
+            background: #f3f4f6;
+
+            width: 40px;
+            height: 40px;
+
+            border-radius: 8px;
+
+            font-size: 20px;
+
+            cursor: pointer;
+        }
+
+        .topbar-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+
+        /* ==================================================
+           USER
+        ================================================== */
+
+        .user-area {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #2563eb;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: #888;
+        }
+
+
+        /* ==================================================
+           CONTENT
+        ================================================== */
+
+        .content {
+            padding: 30px;
+        }
+
+
+        /* ==================================================
+           MESSAGES
+        ================================================== */
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 13px 16px;
+
+            border-radius: 8px;
+
+            margin-bottom: 10px;
+
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .message.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .message.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+
+        /* ==================================================
+           MOBILE OVERLAY
+        ================================================== */
+
+        .sidebar-overlay {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0,0,0,0.45);
+
+            z-index: 999;
+        }
+
+
+        /* ==================================================
+           MOBILE
+        ================================================== */
+
+        @media (max-width: 768px) {
+
+            .sidebar {
+                transform:
+                    translateX(-100%);
+
+                transition:
+                    transform 0.25s ease;
+            }
+
+            .sidebar.open {
+                transform:
+                    translateX(0);
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .topbar {
+                padding:
+                    0 15px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- ==================================================
+         SIDEBAR
+    ================================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+        <div class="brand">
+
+            <h1>
+                🍽️ Restaurant
+            </h1>
+
+            <p>
+                Management System
+            </p>
+
+        </div>
+
+
+        <nav class="nav">
+
+            <div class="nav-title">
+                Main
+            </div>
+
+
+            <!-- Dashboard -->
+
+            <a
+                href="{% url 'reception_dashboard' %}"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    🏠
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- Orders -->
+
+            <a
+                href="{% url 'reception_order_list' %}"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    📋
+                </span>
+
+                <span>
+                    Orders
+                </span>
+
+            </a>
+
+
+            <!-- Payments -->
+
+            <a
+                href="{% url 'reception_payment_list' %}"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    💳
+                </span>
+
+                <span>
+                    Payments
+                </span>
+
+            </a>
+
+
+            <!-- Customers -->
+
+            <a
+                href="{% url 'reception_customer_list' %}"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    👥
+                </span>
+
+                <span>
+                    Customers
+                </span>
+
+            </a>
+
+
+            <!-- Tables -->
+
+            <a
+                href="{% url 'reception_table_list' %}"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    🪑
+                </span>
+
+                <span>
+                    Tables
+                </span>
+
+            </a>
+
+
+            <div
+                class="nav-title"
+                style="margin-top: 25px;"
+            >
+                Account
+            </div>
+
+
+            <!-- Logout -->
+
+            <a
+                href="{% url 'logout' %}"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    🚪
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MOBILE OVERLAY -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        onclick="closeSidebar()"
+    ></div>
+
+
+    <!-- ==================================================
+         MAIN
+    ================================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="menu-button"
+                    onclick="toggleSidebar()"
+                    type="button"
+                >
+                    ☰
+                </button>
+
+                <div class="topbar-title">
+
+                    {% block page_title %}
+                        Reception
+                    {% endblock %}
+
+                </div>
+
+            </div>
+
+
+            <!-- USER -->
+
+            <div class="user-area">
+
+                <div class="user-avatar">
+
+                    {% if request.user.is_authenticated %}
+                        {{ request.user.username|first|upper }}
+                    {% else %}
+                        R
+                    {% endif %}
+
+                </div>
+
+                <div class="user-info">
+
+                    <span class="user-name">
+
+                        {% if request.user.is_authenticated %}
+                            {{ request.user.username }}
+                        {% else %}
+                            Reception
+                        {% endif %}
+
+                    </span>
+
+                    <span class="user-role">
+                        Reception Staff
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==================================================
+             CONTENT
+        ================================================== -->
+
+        <section class="content">
+
+
+            <!-- DJANGO MESSAGES -->
+
+            {% if messages %}
+
+                <div class="messages">
+
+                    {% for message in messages %}
+
+                        <div
+                            class="message {{ message.tags }}"
+                        >
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- PAGE CONTENT -->
+
+            {% block content %}
+
+            {% endblock %}
+
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    function toggleSidebar() {
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+        const overlay =
+            document.getElementById("sidebarOverlay");
+
+        sidebar.classList.toggle("open");
+
+        overlay.classList.toggle("open");
+    }
+
+
+    function closeSidebar() {
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+        const overlay =
+            document.getElementById("sidebarOverlay");
+
+        sidebar.classList.remove("open");
+
+        overlay.classList.remove("open");
+    }
+
+</script>
+
+
+{% block extra_js %}
+{% endblock %}
+
+
+</body>
+
+</html>

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manager Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 240px;
+            height: 100vh;
+
+            background: #1f2937;
+            color: white;
+
+            padding: 25px 15px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+        .sidebar a {
+            display: block;
+
+            color: #d1d5db;
+            text-decoration: none;
+
+            padding: 13px 15px;
+            margin-bottom: 7px;
+
+            border-radius: 8px;
+
+            transition: 0.2s;
+        }
+
+        .sidebar a:hover {
+            background: #374151;
+            color: white;
+        }
+
+        .sidebar .active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 240px;
+            padding: 25px;
+        }
+
+        /* =========================
+           TOP BAR
+        ========================= */
+
+        .topbar {
+            background: white;
+
+            padding: 20px 25px;
+
+            border-radius: 12px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .username {
+            font-weight: bold;
+        }
+
+        .role {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            color: #6b7280;
+            font-size: 14px;
+
+            margin-bottom: 10px;
+        }
+
+        .card-number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .blue {
+            border-left: 5px solid #2563eb;
+        }
+
+        .orange {
+            border-left: 5px solid #f59e0b;
+        }
+
+        .purple {
+            border-left: 5px solid #8b5cf6;
+        }
+
+        .green {
+            border-left: 5px solid #10b981;
+        }
+
+        .red {
+            border-left: 5px solid #ef4444;
+        }
+
+        /* =========================
+           CONTENT GRID
+        ========================= */
+
+        .content-grid {
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr;
+
+            gap: 20px;
+        }
+
+        /* =========================
+           PANEL
+        ========================= */
+
+        .panel {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .panel-header h2 {
+            font-size: 19px;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+
+            background: #f9fafb;
+
+            padding: 12px;
+
+            font-size: 13px;
+
+            color: #6b7280;
+        }
+
+        td {
+            padding: 13px 12px;
+
+            border-bottom: 1px solid #eee;
+
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-confirmed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-preparing {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .status-ready {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =========================
+           STAFF
+        ========================= */
+
+        .staff-item {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #eee;
+        }
+
+        .staff-item:last-child {
+            border-bottom: none;
+        }
+
+        .staff-name {
+            font-weight: bold;
+        }
+
+        .staff-role {
+            color: #6b7280;
+            font-size: 12px;
+
+            margin-top: 3px;
+        }
+
+        .staff-count {
+            font-size: 28px;
+            font-weight: bold;
+
+            color: #2563eb;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+
+                gap: 10px;
+            }
+
+            .user-info {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        🍽 Restaurant
+    </div>
+
+    <a href="{% url 'manager_dashboard' %}" class="active">
+        🏠 Dashboard
+    </a>
+
+    <a href="{% url 'staff_list' %}">
+        👥 Staff
+    </a>
+
+    <!-- These should point to manager HTML views
+         once you create them -->
+
+    <a href="#">
+        🍔 Food
+    </a>
+
+    <a href="#">
+        📂 Categories
+    </a>
+
+    <a href="#">
+        🪑 Tables
+    </a>
+
+    <a href="#">
+        🧾 Orders
+    </a>
+
+    <hr style="
+        border: 0;
+        border-top: 1px solid #374151;
+        margin: 20px 0;
+    ">
+
+    <a href="{% url 'logout' %}">
+        🚪 Logout
+    </a>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<div class="main">
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <div>
+            <h1>Manager Dashboard</h1>
+
+            <p style="
+                color:#6b7280;
+                margin-top:5px;
+            ">
+                Restaurant management overview
+            </p>
+        </div>
+
+        <div class="user-info">
+
+            <div class="username">
+                👤 {{ staff_username }}
+            </div>
+
+            <div class="role">
+
+                {% for role in staff_roles %}
+                    {{ role }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================= -->
+
+    <div class="stats">
+
+        <div class="card blue">
+
+            <div class="card-title">
+                Total Orders
+            </div>
+
+            <div class="card-number">
+                {{ total_orders }}
+            </div>
+
+        </div>
+
+
+        <div class="card orange">
+
+            <div class="card-title">
+                Pending
+            </div>
+
+            <div class="card-number">
+                {{ pending_orders }}
+            </div>
+
+        </div>
+
+
+        <div class="card purple">
+
+            <div class="card-title">
+                Preparing
+            </div>
+
+            <div class="card-number">
+                {{ preparing_orders }}
+            </div>
+
+        </div>
+
+
+        <div class="card green">
+
+            <div class="card-title">
+                Ready
+            </div>
+
+            <div class="card-number">
+                {{ ready_orders }}
+            </div>
+
+        </div>
+
+
+        <div class="card red">
+
+            <div class="card-title">
+                Completed
+            </div>
+
+            <div class="card-number">
+                {{ completed_orders }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CONTENT
+    ================================================= -->
+
+    <div class="content-grid">
+
+
+        <!-- ===============================
+             ORDERS
+        ================================ -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h2>
+                    Recent Orders
+                </h2>
+
+                <span style="
+                    color:#6b7280;
+                    font-size:13px;
+                ">
+                    {{ total_orders }} total
+                </span>
+
+            </div>
+
+
+            {% if orders %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Order
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Table
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for order in orders|slice:":10" %}
+
+                    <tr>
+
+                        <td>
+                            #{{ order.id }}
+                        </td>
+
+                        <td>
+                            {{ order.customer_name|default:"Guest" }}
+                        </td>
+
+                        <td>
+
+                            {% if order.table %}
+                                Table {{ order.table.table_number }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if order.status == "pending" %}
+
+                                <span class="status status-pending">
+                                    Pending
+                                </span>
+
+                            {% elif order.status == "confirmed" %}
+
+                                <span class="status status-confirmed">
+                                    Confirmed
+                                </span>
+
+                            {% elif order.status == "preparing" %}
+
+                                <span class="status status-preparing">
+                                    Preparing
+                                </span>
+
+                            {% elif order.status == "ready" %}
+
+                                <span class="status status-ready">
+                                    Ready
+                                </span>
+
+                            {% elif order.status == "completed" %}
+
+                                <span class="status status-completed">
+                                    Completed
+                                </span>
+
+                            {% elif order.status == "cancelled" %}
+
+                                <span class="status status-cancelled">
+                                    Cancelled
+                                </span>
+
+                            {% else %}
+
+                                <span class="status">
+                                    {{ order.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ order.created_at|date:"M d, Y H:i" }}
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+                <p style="
+                    color:#6b7280;
+                    text-align:center;
+                    padding:30px;
+                ">
+                    No orders found.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ===============================
+             STAFF
+        ================================ -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h2>
+                    Staff
+                </h2>
+
+                <div class="staff-count">
+                    {{ total_staff }}
+                </div>
+
+            </div>
+
+
+            {% if staff_members %}
+
+                {% for staff in staff_members|slice:":8" %}
+
+                    <div class="staff-item">
+
+                        <div>
+
+                            <div class="staff-name">
+
+                                {{ staff.user.username }}
+
+                            </div>
+
+                            <div class="staff-role">
+
+                                {% for group in staff.user.groups.all %}
+
+                                    {{ group.name }}
+
+                                    {% if not forloop.last %}
+                                        ,
+                                    {% endif %}
+
+                                {% empty %}
+
+                                    Staff
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p style="
+                    color:#6b7280;
+                    text-align:center;
+                    padding:30px 0;
+                ">
+                    No staff members found.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

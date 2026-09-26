@@ -1,834 +1,1354 @@
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Kitchen Dashboard</title>
 
-    <!-- Django CSRF token -->
-    {% csrf_token %}
-
     <style>
+
         * {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            color: #222;
+            padding: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f6f8;
+            color: #111827;
         }
 
-        header {
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
             background: #222;
+
             color: white;
-            padding: 20px;
-            text-align: center;
+
+            min-height: 105px;
+
+            padding: 25px 35px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
-        header h1 {
+
+        .header-title {
             margin: 0;
+
+            font-size: 28px;
+
+            font-weight: 700;
         }
+
+
+        .header-subtitle {
+            margin-top: 6px;
+
+            color: #d1d5db;
+
+            font-size: 14px;
+        }
+
+
+        .header-right {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 15px;
+        }
+
+
+        .chef-name {
+            font-weight: 600;
+        }
+
+
+        .logout {
+            color: white;
+
+            text-decoration: underline;
+
+            font-weight: 600;
+        }
+
+
+        .logout:hover {
+            color: #fca5a5;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
 
         .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 15px;
-        }
-
-        .top-bar h2 {
-            margin: 0;
-        }
-
-        .refresh-btn {
-            width: auto;
-            padding: 10px 18px;
-            margin: 0;
-            background: #333;
-        }
-
-        .orders {
-            display: grid;
-            grid-template-columns: repeat(
-                auto-fit,
-                minmax(320px, 1fr)
-            );
-            gap: 20px;
-        }
-
-        .order-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .order-header {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-
-        .order-header h2 {
-            margin: 0 0 10px;
-        }
-
-        .order-header p {
-            margin: 5px 0;
-            overflow-wrap: anywhere;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 7px 12px;
-            border-radius: 5px;
-            margin-top: 10px;
-            background: #eee;
-            font-weight: bold;
-            text-transform: capitalize;
-        }
-
-        .status.pending {
-            background: #fff0c2;
-            color: #805500;
-        }
-
-        .status.confirmed {
-            background: #dcecff;
-            color: #084b9b;
-        }
-
-        .status.preparing {
-            background: #ffe2c2;
-            color: #914500;
-        }
-
-        .status.ready {
-            background: #d5f5df;
-            color: #176b32;
-        }
-
-        .food-item {
-            border-bottom: 1px solid #eee;
-            padding: 12px 0;
-        }
-
-        .food-item:last-child {
-            border-bottom: none;
-        }
-
-        .food-name {
-            font-weight: bold;
-            font-size: 18px;
-            overflow-wrap: anywhere;
-        }
-
-        .quantity {
-            font-weight: bold;
-        }
-
-        .note {
-            margin-top: 6px;
-            color: #666;
-            font-style: italic;
-            overflow-wrap: anywhere;
-        }
-
-        .order-note {
-            margin-top: 15px;
-            padding: 12px;
-            background: #f7f7f7;
-            border-radius: 6px;
-            overflow-wrap: anywhere;
-        }
-
-        button {
             width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            background: #222;
-            color: white;
-            cursor: pointer;
-            margin-top: 15px;
+
+            max-width: 1500px;
+
+            margin: 0 auto;
+
+            padding: 40px 35px;
+        }
+
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+
+        .welcome h2 {
+            margin: 0;
+
+            font-size: 32px;
+
+            color: #111827;
+        }
+
+
+        .welcome p {
+            margin-top: 8px;
+
+            color: #6b7280;
+
             font-size: 16px;
         }
 
-        button:hover {
-            background: #444;
+
+        /* =====================================================
+           STATISTICS
+        ===================================================== */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 35px;
         }
 
-        button:disabled {
-            background: #999;
-            cursor: not-allowed;
+
+        .stat-card {
+            background: white;
+
+            min-height: 135px;
+
+            padding: 25px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 3px 12px rgba(0, 0, 0, 0.08);
+
+            border-left: 6px solid #6b7280;
         }
+
+
+        .stat-number {
+            display: block;
+
+            font-size: 32px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+
+        .stat-label {
+            font-size: 16px;
+
+            font-weight: 600;
+
+            color: #374151;
+        }
+
+
+        /* =====================================================
+           CONFIRMED
+        ===================================================== */
+
+        .confirmed {
+            border-left-color: #2563eb;
+        }
+
+
+        .confirmed .stat-number {
+            color: #2563eb;
+        }
+
+
+        /* =====================================================
+           PREPARING
+        ===================================================== */
+
+        .preparing {
+            border-left-color: #f59e0b;
+        }
+
+
+        .preparing .stat-number {
+            color: #d97706;
+        }
+
+
+        /* =====================================================
+           COOKED
+        ===================================================== */
+
+        .cooked {
+            border-left-color: #8b5cf6;
+        }
+
+
+        .cooked .stat-number {
+            color: #7c3aed;
+        }
+
+
+        /* =====================================================
+           READY
+        ===================================================== */
+
+        .ready {
+            border-left-color: #16a34a;
+        }
+
+
+        .ready .stat-number {
+            color: #16a34a;
+        }
+
+
+        /* =====================================================
+           ORDERS SECTION
+        ===================================================== */
+
+        .orders-container {
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+
+
+        .orders-header {
+            margin-bottom: 25px;
+        }
+
+
+        .orders-header h2 {
+            margin: 0;
+
+            font-size: 26px;
+
+            color: #111827;
+        }
+
+
+        .orders-header p {
+            margin-top: 7px;
+
+            color: #6b7280;
+        }
+
+
+        /* =====================================================
+           ORDERS GRID
+        ===================================================== */
+
+        .orders-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 22px;
+        }
+
+
+        /* =====================================================
+           ORDER CARD
+        ===================================================== */
+
+        .order-card {
+            background: white;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.06);
+
+            transition:
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+
+        .order-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 6px 16px rgba(0, 0, 0, 0.10);
+        }
+
+
+        /* =====================================================
+           ORDER HEADER
+        ===================================================== */
+
+        .order-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 15px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .order-number {
+            margin: 0;
+
+            font-size: 21px;
+
+            font-weight: 700;
+        }
+
+
+        .order-date {
+            margin-top: 5px;
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           STATUS BADGES
+        ===================================================== */
+
+        .status {
+            display: inline-block;
+
+            padding: 7px 12px;
+
+            border-radius: 999px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            white-space: nowrap;
+        }
+
+
+        .status-confirmed {
+            background: #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+
+        .status-preparing {
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+
+        .status-cooked {
+            background: #ede9fe;
+
+            color: #6d28d9;
+        }
+
+
+        .status-ready {
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+
+        /* =====================================================
+           ORDER INFORMATION
+        ===================================================== */
+
+        .order-info {
+            background: #f9fafb;
+
+            border-radius: 8px;
+
+            padding: 14px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .info-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 5px 0;
+
+            font-size: 14px;
+        }
+
+
+        .info-label {
+            color: #6b7280;
+        }
+
+
+        .info-value {
+            color: #111827;
+
+            font-weight: 600;
+
+            text-align: right;
+        }
+
+
+        /* =====================================================
+           ITEMS
+        ===================================================== */
+
+        .items-heading {
+            margin: 0 0 10px;
+
+            font-size: 15px;
+
+            font-weight: 700;
+        }
+
+
+        .items {
+            list-style: none;
+
+            margin: 0;
+
+            padding: 0;
+        }
+
+
+        .item {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 10px 0;
+
+            border-bottom:
+                1px solid #eeeeee;
+        }
+
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+
+        .item-name {
+            font-size: 14px;
+
+            font-weight: 600;
+
+            color: #374151;
+        }
+
+
+        .item-quantity {
+            background: #f3f4f6;
+
+            color: #111827;
+
+            padding: 5px 9px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           SPECIAL INSTRUCTIONS
+        ===================================================== */
+
+        .instructions {
+            margin-top: 18px;
+
+            padding: 13px;
+
+            background: #fff7ed;
+
+            border: 1px solid #fed7aa;
+
+            border-radius: 8px;
+        }
+
+
+        .instructions-title {
+            font-size: 13px;
+
+            font-weight: 700;
+
+            color: #9a3412;
+
+            margin-bottom: 5px;
+        }
+
+
+        .instructions-text {
+            font-size: 14px;
+
+            color: #7c2d12;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           ACTION AREA
+        ===================================================== */
+
+        .action {
+            margin-top: 20px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid #e5e7eb;
+        }
+
+
+        .action form {
+            margin: 0;
+        }
+
+
+        .action button {
+            width: 100%;
+
+            border: none;
+
+            border-radius: 8px;
+
+            padding: 14px 18px;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            color: white;
+
+            transition:
+                background 0.15s ease,
+                transform 0.1s ease;
+        }
+
+
+        .action button:hover {
+            transform: translateY(-1px);
+        }
+
+
+        .action button:active {
+            transform: translateY(0);
+        }
+
+
+        /* =====================================================
+           BUTTON COLORS
+        ===================================================== */
+
+        .btn-preparing {
+            background: #f59e0b;
+        }
+
+
+        .btn-preparing:hover {
+            background: #d97706;
+        }
+
+
+        .btn-cooked {
+            background: #7c3aed;
+        }
+
+
+        .btn-cooked:hover {
+            background: #6d28d9;
+        }
+
+
+        .btn-ready {
+            background: #16a34a;
+        }
+
+
+        .btn-ready:hover {
+            background: #15803d;
+        }
+
+
+        .btn-complete {
+            background: #111827;
+        }
+
+
+        .btn-complete:hover {
+            background: #000000;
+        }
+
+
+        /* =====================================================
+           COMPLETED MESSAGE
+        ===================================================== */
+
+        .completed-message {
+            padding: 13px;
+
+            border-radius: 8px;
+
+            background: #f3f4f6;
+
+            color: #374151;
+
+            text-align: center;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
 
         .empty {
             text-align: center;
-            padding: 50px;
-            background: white;
-            border-radius: 10px;
-            grid-column: 1 / -1;
+
+            padding: 70px 20px;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            grid-column: 1 / -1;
+
+        .empty-icon {
+            font-size: 55px;
+
+            margin-bottom: 15px;
         }
 
-        .error-box {
-            background: #ffe5e5;
-            color: #a00000;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            overflow-wrap: anywhere;
+
+        .empty h3 {
+            margin: 0;
+
+            font-size: 22px;
+
+            color: #374151;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 0 10px;
+
+        .empty p {
+            margin-top: 8px;
+
+            color: #6b7280;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
             }
 
-            .top-bar {
+
+            .orders-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 20px;
+
                 flex-direction: column;
-                align-items: stretch;
+
+                align-items: flex-start;
+
+                gap: 12px;
             }
 
-            .refresh-btn {
+
+            .header-right {
                 width: 100%;
             }
 
-            .orders {
+
+            .container {
+                padding: 25px 18px;
+            }
+
+
+            .stats {
                 grid-template-columns: 1fr;
             }
+
+
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .orders-container {
+                padding: 20px;
+            }
+
+
+            .order-header {
+                flex-direction: column;
+            }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
-<header>
-    <h1>Kitchen Dashboard</h1>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div>
+
+        <h1 class="header-title">
+            Kitchen Dashboard
+        </h1>
+
+        <div class="header-subtitle">
+            Restaurant Kitchen Management
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <span class="chef-name">
+            Chef: {{ staff_username }}
+        </span>
+
+        <span>|</span>
+
+        <a
+            href="{% url 'logout' %}"
+            class="logout"
+        >
+            Logout
+        </a>
+
+    </div>
+
 </header>
 
-<div class="container">
 
-    <div class="top-bar">
-        <h2>Kitchen Orders</h2>
 
-        <button
-            class="refresh-btn"
-            type="button"
-            onclick="loadOrders()"
-        >
-            Refresh Orders
-        </button>
-    </div>
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
-    <div id="errorBox" class="error-box"></div>
+<main class="container">
 
-    <div id="orders" class="orders">
-        <div class="loading">
-            Loading orders...
+
+    <!-- =================================================
+         WELCOME
+    ================================================== -->
+
+    <section class="welcome">
+
+        <h2>
+            Welcome, Chef 👨‍🍳
+        </h2>
+
+        <p>
+            Manage customer orders through the kitchen workflow.
+        </p>
+
+    </section>
+
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================== -->
+
+    <section class="stats">
+
+
+        <!-- CONFIRMED -->
+
+        <div class="stat-card confirmed">
+
+            <span class="stat-number">
+                {{ confirmed_orders }}
+            </span>
+
+            <span class="stat-label">
+                Confirmed
+            </span>
+
         </div>
-    </div>
 
-</div>
 
-<script>
-    // ==========================================
-    // API URLS
-    // ==========================================
+        <!-- PREPARING -->
 
-    const ORDERS_API = "/api/kitchen/orders/";
+        <div class="stat-card preparing">
 
-    function getStatusAPI(orderId) {
-        return `/api/orders/${orderId}/status/`;
-    }
+            <span class="stat-number">
+                {{ preparing_orders }}
+            </span>
 
-    // ==========================================
-    // CSRF TOKEN
-    // ==========================================
+            <span class="stat-label">
+                Preparing
+            </span>
 
-    function getCookie(name) {
-        let cookieValue = null;
+        </div>
 
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
 
-            for (let cookie of cookies) {
-                cookie = cookie.trim();
+        <!-- COOKED -->
 
-                if (cookie.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(
-                        cookie.substring(name.length + 1)
-                    );
-                    break;
-                }
-            }
-        }
+        <div class="stat-card cooked">
 
-        return cookieValue;
-    }
+            <span class="stat-number">
+                {{ cooked_orders }}
+            </span>
 
-    function getCSRFToken() {
-        // First, get the token from Django's CSRF cookie.
-        let token = getCookie("csrftoken");
+            <span class="stat-label">
+                Cooked
+            </span>
 
-        // If the cookie is unavailable, try Django's hidden input.
-        if (!token) {
-            const csrfInput = document.querySelector(
-                'input[name="csrfmiddlewaretoken"]'
-            );
+        </div>
 
-            if (csrfInput) {
-                token = csrfInput.value;
-            }
-        }
 
-        return token;
-    }
+        <!-- READY -->
 
-    // ==========================================
-    // ERROR DISPLAY
-    // ==========================================
+        <div class="stat-card ready">
 
-    function showError(message) {
-        const errorBox = document.getElementById("errorBox");
+            <span class="stat-number">
+                {{ ready_to_serve_orders }}
+            </span>
 
-        errorBox.textContent = message;
-        errorBox.style.display = "block";
-    }
+            <span class="stat-label">
+                Ready to Serve
+            </span>
 
-    function hideError() {
-        const errorBox = document.getElementById("errorBox");
+        </div>
 
-        errorBox.textContent = "";
-        errorBox.style.display = "none";
-    }
 
-    // ==========================================
-    // LOAD ORDERS
-    // ==========================================
+    </section>
 
-    let loadingOrders = false;
 
-    async function loadOrders() {
 
-        if (loadingOrders) {
-            return;
-        }
+    <!-- =================================================
+         ORDERS
+    ================================================== -->
 
-        loadingOrders = true;
+    <section class="orders-container">
 
-        const container = document.getElementById("orders");
 
-        hideError();
+        <div class="orders-header">
 
-        container.innerHTML = `
-            <div class="loading">
-                Loading orders...
-            </div>
-        `;
+            <h2>
+                Kitchen Orders
+            </h2>
 
-        try {
-            const response = await fetch(ORDERS_API, {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json"
-                },
-                credentials: "same-origin"
-            });
+            <p>
+                Process each order from confirmation
+                to completion.
+            </p>
 
-            const responseText = await response.text();
+        </div>
 
-            console.log(
-                "Kitchen API status:",
-                response.status
-            );
 
-            console.log(
-                "Kitchen API response:",
-                responseText
-            );
 
-            if (!response.ok) {
-                throw new Error(
-                    `HTTP ${response.status}: ${responseText}`
-                );
-            }
+        {% if orders %}
 
-            let data;
 
-            try {
-                data = JSON.parse(responseText);
-            } catch {
-                throw new Error(
-                    "The kitchen API did not return valid JSON."
-                );
-            }
+            <div class="orders-grid">
 
-            // Support DRF pagination:
-            // { "count": 10, "results": [...] }
-            const orders = Array.isArray(data)
-                ? data
-                : data.results;
 
-            if (!Array.isArray(orders)) {
-                throw new Error(
-                    "Invalid API format. Expected an order list or a results array."
-                );
-            }
+                {% for order in orders %}
 
-            displayOrders(orders);
 
-        } catch (error) {
-            console.error(
-                "Loading orders failed:",
-                error
-            );
+                    <!-- =================================
+                         ORDER CARD
+                    ================================== -->
 
-            container.innerHTML = `
-                <div class="empty">
-                    <h2>Could not load orders</h2>
-                    <p>${escapeHTML(error.message)}</p>
-                    <p>Check your Django API URL and server logs.</p>
-                </div>
-            `;
+                    <article class="order-card">
 
-        } finally {
-            loadingOrders = false;
-        }
-    }
 
-    // ==========================================
-    // HTML ESCAPING
-    // ==========================================
+                        <!-- ORDER HEADER -->
 
-    function escapeHTML(value) {
-        const div = document.createElement("div");
+                        <div class="order-header">
 
-        div.textContent = value ?? "";
+                            <div>
 
-        return div.innerHTML;
-    }
+                                <h3 class="order-number">
+                                    Order #{{ order.id }}
+                                </h3>
 
-    // ==========================================
-    // DISPLAY ORDERS
-    // ==========================================
-function displayOrders(orders) {
+                                <div class="order-date">
 
-    const container = document.getElementById("orders");
+                                    {{ order.created_at|date:"M d, Y - h:i A" }}
 
-    if (!orders || orders.length === 0) {
+                                </div>
 
-        container.innerHTML = `
-            <div class="empty">
-                <h2>No kitchen orders</h2>
-                <p>New orders will appear here.</p>
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML = "";
-
-    orders.forEach(order => {
-
-        const items = Array.isArray(order.items)
-            ? order.items
-            : [];
-
-        let itemsHTML = "";
-
-        items.forEach(item => {
-
-            itemsHTML += `
-                <div class="food-item">
-
-                    <div class="food-name">
-                        ${escapeHTML(item.food_name)}
-                    </div>
-
-                    <div class="item-details">
-
-                        <span>
-                            Qty:
-                            <strong>
-                                ${escapeHTML(item.quantity)}
-                            </strong>
-                        </span>
-
-                        <span>
-                            Price:
-                            <strong>
-                                Rs. ${escapeHTML(item.price)}
-                            </strong>
-                        </span>
-
-                        <span>
-                            Subtotal:
-                            <strong>
-                                Rs. ${escapeHTML(item.subtotal)}
-                            </strong>
-                        </span>
-
-                    </div>
-
-                    ${
-                        item.special_instructions
-                        ? `
-                            <div class="note">
-                                Note:
-                                ${escapeHTML(
-                                    item.special_instructions
-                                )}
                             </div>
-                        `
-                        : ""
-                    }
 
+
+                            <!-- STATUS -->
+
+                            {% if order.status == "confirmed" %}
+
+                                <span class="status status-confirmed">
+                                    Confirmed
+                                </span>
+
+
+                            {% elif order.status == "preparing" %}
+
+                                <span class="status status-preparing">
+                                    Preparing
+                                </span>
+
+
+                            {% elif order.status == "cooked" %}
+
+                                <span class="status status-cooked">
+                                    Cooked
+                                </span>
+
+
+                            {% elif order.status == "ready_to_serve" %}
+
+                                <span class="status status-ready">
+                                    Ready to Serve
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- =================================
+                             CUSTOMER INFORMATION
+                        ================================== -->
+
+                        <div class="order-info">
+
+
+                            <div class="info-row">
+
+                                <span class="info-label">
+                                    Customer
+                                </span>
+
+                                <span class="info-value">
+
+                                    {% if order.customer_name %}
+
+                                        {{ order.customer_name }}
+
+                                    {% else %}
+
+                                        Walk-in Customer
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="info-row">
+
+                                <span class="info-label">
+                                    Table
+                                </span>
+
+                                <span class="info-value">
+
+                                    {% if order.table %}
+
+                                        Table
+                                        {{ order.table.table_number }}
+
+                                    {% else %}
+
+                                        No Table
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+
+
+                            {% if order.customer_phone %}
+
+                                <div class="info-row">
+
+                                    <span class="info-label">
+                                        Phone
+                                    </span>
+
+                                    <span class="info-value">
+
+                                        {{ order.customer_phone }}
+
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+
+                        <!-- =================================
+                             ORDER ITEMS
+                        ================================== -->
+
+                        <h4 class="items-heading">
+                            Order Items
+                        </h4>
+
+
+                        <ul class="items">
+
+
+                            {% for item in order.items.all %}
+
+                                <li class="item">
+
+                                    <span class="item-name">
+
+                                        {{ item.food.name }}
+
+                                    </span>
+
+
+                                    <span class="item-quantity">
+
+                                        × {{ item.quantity }}
+
+                                    </span>
+
+                                </li>
+
+                            {% empty %}
+
+                                <li class="item">
+
+                                    <span class="item-name">
+                                        No items
+                                    </span>
+
+                                </li>
+
+                            {% endfor %}
+
+
+                        </ul>
+
+
+
+                        <!-- =================================
+                             ORDER SPECIAL INSTRUCTIONS
+                        ================================== -->
+
+                        {% if order.special_instructions %}
+
+                            <div class="instructions">
+
+                                <div class="instructions-title">
+                                    Special Instructions
+                                </div>
+
+
+                                <div class="instructions-text">
+
+                                    {{ order.special_instructions }}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- =================================
+                             CHEF ACTION
+                        ================================== -->
+
+                        <div class="action">
+
+
+                            <!-- =================================
+                                 CONFIRMED → PREPARING
+                            ================================== -->
+
+                            {% if order.status == "confirmed" %}
+
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'chef_order_status' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="hidden"
+                                        name="status"
+                                        value="preparing"
+                                    >
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn-preparing"
+                                    >
+                                        Start Preparing
+                                    </button>
+
+                                </form>
+
+
+                            <!-- =================================
+                                 PREPARING → COOKED
+                            ================================== -->
+
+                            {% elif order.status == "preparing" %}
+
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'chef_order_status' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="hidden"
+                                        name="status"
+                                        value="cooked"
+                                    >
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn-cooked"
+                                    >
+                                        Mark as Cooked
+                                    </button>
+
+                                </form>
+
+
+                            <!-- =================================
+                                 COOKED → READY TO SERVE
+                            ================================== -->
+
+                            {% elif order.status == "cooked" %}
+
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'chef_order_status' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="hidden"
+                                        name="status"
+                                        value="ready_to_serve"
+                                    >
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn-ready"
+                                    >
+                                        Ready to Serve
+                                    </button>
+
+                                </form>
+
+
+                            <!-- =================================
+                                 READY TO SERVE → COMPLETED
+                            ================================== -->
+
+                            {% elif order.status == "ready_to_serve" %}
+
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'chef_order_status' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="hidden"
+                                        name="status"
+                                        value="completed"
+                                    >
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn-complete"
+                                    >
+                                        Complete Order
+                                    </button>
+
+                                </form>
+
+
+                            {% else %}
+
+                                <div class="completed-message">
+                                    No action required
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    </article>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- =============================================
+                 NO ORDERS
+            ============================================== -->
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🍳
                 </div>
-            `;
-        });
 
-        const currentStatus = String(
-            order.status || ""
-        ).toLowerCase();
-
-        const nextStatus = getNextStatus(
-            currentStatus
-        );
-
-        const buttonText = getButtonText(
-            currentStatus
-        );
-
-        const statusClass = [
-            "pending",
-            "confirmed",
-            "preparing",
-            "ready",
-            "served",
-            "completed",
-            "cancelled"
-        ].includes(currentStatus)
-            ? currentStatus
-            : "";
-
-        const orderCard = document.createElement(
-            "div"
-        );
-
-        orderCard.className = "order-card";
-
-        orderCard.innerHTML = `
-
-            <div class="order-header">
-
-                <div class="order-title">
-                    <h2>
-                        Order #${escapeHTML(order.id)}
-                    </h2>
-
-                    <span class="status ${statusClass}">
-                        ${escapeHTML(order.status)}
-                    </span>
-                </div>
+                <h3>
+                    No active orders
+                </h3>
 
                 <p>
-                    <strong>Table:</strong>
-                    Table ${escapeHTML(
-                        order.table_number ??
-                        order.table ??
-                        "N/A"
-                    )}
-                </p>
-
-                <p>
-                    <strong>Customer:</strong>
-                    ${escapeHTML(
-                        order.customer_name ?? "N/A"
-                    )}
-                </p>
-
-                <p>
-                    <strong>Phone:</strong>
-                    ${escapeHTML(
-                        order.customer_phone ?? "N/A"
-                    )}
-                </p>
-
-                <p>
-                    <strong>Payment:</strong>
-                    <span class="payment-status">
-                        ${escapeHTML(
-                            order.payment_status ?? "unpaid"
-                        )}
-                    </span>
+                    New confirmed customer orders will appear here.
                 </p>
 
             </div>
 
 
-            <div class="items">
+        {% endif %}
 
-                <h3>Ordered Items</h3>
 
-                ${
-                    itemsHTML ||
-                    "<p>No food items found.</p>"
-                }
+    </section>
 
-            </div>
 
+</main>
 
-            <div class="order-total">
-
-                <span>
-                    Total Amount
-                </span>
-
-                <strong>
-                    Rs. ${escapeHTML(
-                        order.total_amount ?? "0.00"
-                    )}
-                </strong>
-
-            </div>
-
-
-            ${
-                order.special_instructions
-                ? `
-                    <div class="order-note">
-
-                        <strong>
-                            Order Note:
-                        </strong>
-
-                        <p>
-                            ${escapeHTML(
-                                order.special_instructions
-                            )}
-                        </p>
-
-                    </div>
-                `
-                : ""
-            }
-
-
-            ${
-                nextStatus
-                ? `
-                    <button
-                        type="button"
-                        class="status-btn"
-                        data-order-id="${escapeHTML(
-                            order.id
-                        )}"
-                    >
-                        ${buttonText}
-                    </button>
-                `
-                : ""
-            }
-
-        `;
-
-        container.appendChild(orderCard);
-
-        const button =
-            orderCard.querySelector(
-                ".status-btn"
-            );
-
-        if (button) {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    updateOrderStatus(
-                        order.id,
-                        currentStatus,
-                        button
-                    );
-
-                }
-            );
-
-        }
-
-    });
-}
-
-
-    // ==========================================
-    // GET NEXT STATUS
-    // ==========================================
-
-    function getNextStatus(currentStatus) {
-
-        const statusMap = {
-            pending: "confirmed",
-            confirmed: "preparing",
-            preparing: "ready"
-        };
-
-        return statusMap[currentStatus] || null;
-    }
-
-    // ==========================================
-    // BUTTON TEXT
-    // ==========================================
-
-    function getButtonText(status) {
-
-        const buttonMap = {
-            pending: "Confirm Order",
-            confirmed: "Start Preparing",
-            preparing: "Mark as Ready"
-        };
-
-        return buttonMap[status] || "";
-    }
-
-    // ==========================================
-    // UPDATE ORDER STATUS
-    // ==========================================
-
-    async function updateOrderStatus(
-        orderId,
-        currentStatus,
-        button
-    ) {
-
-        const nextStatus = getNextStatus(currentStatus);
-
-        if (!nextStatus) {
-            return;
-        }
-
-        hideError();
-
-        button.disabled = true;
-        button.textContent = "Updating...";
-
-        try {
-
-            const csrftoken = getCSRFToken();
-
-            if (!csrftoken) {
-                throw new Error(
-                    "CSRF token missing. Check your Django CSRF settings."
-                );
-            }
-
-            console.log("Order ID:", orderId);
-            console.log("Current status:", currentStatus);
-            console.log("Changing to:", nextStatus);
-
-            const response = await fetch(
-                getStatusAPI(orderId),
-                {
-                    method: "PATCH",
-
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "X-CSRFToken": csrftoken
-                    },
-
-                    credentials: "same-origin",
-
-                    body: JSON.stringify({
-                        status: nextStatus
-                    })
-                }
-            );
-
-            const responseText = await response.text();
-
-            console.log(
-                "Status update HTTP:",
-                response.status
-            );
-
-            console.log(
-                "Status update response:",
-                responseText
-            );
-
-            let data = {};
-
-            try {
-                data = responseText
-                    ? JSON.parse(responseText)
-                    : {};
-            } catch {
-                data = {};
-            }
-
-            if (!response.ok) {
-                throw new Error(
-                    data.error ||
-                    data.detail ||
-                    responseText ||
-                    `HTTP ${response.status}`
-                );
-            }
-
-            console.log("Order updated:", data);
-
-            // Reload orders after successful database update.
-            await loadOrders();
-
-        } catch (error) {
-
-            console.error(
-                "Status update failed:",
-                error
-            );
-
-            showError(
-                "Failed to update order status: " + error.message
-            );
-
-            button.disabled = false;
-            button.textContent = getButtonText(currentStatus);
-        }
-    }
-
-    // ==========================================
-    // INITIAL LOAD
-    // ==========================================
-
-    loadOrders();
-
-    // ==========================================
-    // AUTO REFRESH EVERY 5 SECONDS
-    // ==========================================
-
-    setInterval(loadOrders, 5000);
-
-</script>
 
 </body>
+
 </html>
