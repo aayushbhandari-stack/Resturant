@@ -5,322 +5,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Restaurant | Home</title>
-
+    <title>Restaurant Menu</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * {margin: 0;padding: 0;box-sizing: border-box;}
+        body {font-family: Arial, Helvetica, sans-serif;background: #f7f7f7;color: #222;}
+        /* =========================
+        HEADER
+        ========================== */
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f8f8f8;
-            color: #222;
-        }
-
-        /* ================= HEADER ================= */
-
-        header {
-            background: #222;
+        .header {
+            background: #111827;
             color: white;
             padding: 18px 6%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            gap: 20px;
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .logo {
-            font-size: 25px;
-            font-weight: bold;
-            color: #ff9800;
+        .brand h1 {
+            font-size: 24px;
         }
 
-        nav {
-            display: flex;
-            gap: 25px;
-            align-items: center;
+        .brand p {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-top: 4px;
         }
 
-        nav a {
-            color: white;
+        .cart-button {
             text-decoration: none;
-            font-size: 15px;
-        }
-
-        nav a:hover {
-            color: #ff9800;
-        }
-
-        .cart-btn {
-            background: #ff9800;
             color: white;
-            padding: 10px 18px;
-            border-radius: 6px;
-            text-decoration: none;
+            background: #dc2626;
+            padding: 10px 16px;
+            border-radius: 8px;
             font-weight: bold;
+            white-space: nowrap;
         }
 
-        .cart-btn:hover {
-            background: #e68900;
+        .cart-button:hover {
+            background: #b91c1c;
         }
 
-        /* ================= HERO ================= */
-
-        .hero {
-            min-height: 450px;
-            background:
-                linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
-                url("{% static 'images/restaurant.jpg' %}");
-
-            background-size: cover;
-            background-position: center;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-
-            color: white;
-            padding: 30px;
+        .cart-count {
+            background: white;
+            color: #dc2626;
+            padding: 2px 7px;
+            border-radius: 20px;
+            margin-left: 5px;
+            font-size: 12px;
         }
 
-        .hero-content {
-            max-width: 700px;
+        /* =========================
+           TABLE INFO
+        ========================== */
+
+        .table-banner {
+            background: #fff7ed;
+            border-bottom: 1px solid #fed7aa;
+            padding: 14px 6%;
         }
 
-        .hero h1 {
-            font-size: 50px;
-            margin-bottom: 15px;
-        }
-
-        .hero p {
-            font-size: 19px;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .hero-btn {
-            display: inline-block;
-            background: #ff9800;
-            color: white;
-            padding: 13px 25px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .hero-btn:hover {
-            background: #e68900;
-        }
-
-        /* ================= CONTAINER ================= */
-
-        .container {
-            width: 90%;
+        .table-info {
             max-width: 1200px;
             margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
         }
 
-        .section {
-            padding: 50px 0;
+        .table-info strong {
+            color: #c2410c;
         }
 
-        .section-title {
-            text-align: center;
-            margin-bottom: 35px;
+        .table-status {
+            color: #15803d;
+            font-size: 14px;
+            font-weight: bold;
         }
 
-        .section-title h2 {
-            font-size: 32px;
-            margin-bottom: 10px;
+        /* =========================
+           MAIN
+        ========================== */
+
+        .container {
+            width: 88%;
+            max-width: 1200px;
+            margin: 30px auto;
         }
 
-        .section-title p {
-            color: #777;
+        .welcome {
+            margin-bottom: 25px;
         }
 
-        /* ================= CATEGORIES ================= */
+        .welcome h2 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #6b7280;
+        }
+
+        /* =========================
+           CATEGORY FILTER
+        ========================== */
 
         .categories {
             display: flex;
-            justify-content: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         .category-btn {
-            padding: 10px 20px;
-            border: 1px solid #ff9800;
-            border-radius: 25px;
             text-decoration: none;
-            color: #ff9800;
+            padding: 9px 17px;
+            border-radius: 25px;
             background: white;
-            transition: 0.3s;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            transition: 0.2s;
         }
 
-        .category-btn:hover,
-        .category-btn.active {
-            background: #ff9800;
+        .category-btn:hover {
+            background: #111827;
             color: white;
         }
 
-        /* ================= FOOD GRID ================= */
+        .category-btn.active {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+
+        /* =========================
+           FOOD GRID
+        ========================== */
 
         .food-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
         }
 
         .food-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
-            transition: 0.3s;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.07);
+            transition: 0.2s;
         }
 
         .food-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 7px 20px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
         }
 
         .food-image {
             width: 100%;
-            height: 200px;
+            height: 210px;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .food-image img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            background: #eee;
         }
 
         .no-image {
-            height: 200px;
-            background: #eee;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #999;
+            color: #9ca3af;
+            font-size: 14px;
         }
 
         .food-content {
-            padding: 18px;
+            padding: 16px;
         }
 
-        .food-content h3 {
-            font-size: 20px;
+        .food-category {
+            font-size: 12px;
+            color: #dc2626;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .food-name {
+            font-size: 19px;
             margin-bottom: 8px;
         }
 
-        .category-name {
-            color: #888;
+        .food-price {
+            font-size: 18px;
+            color: #111827;
+            font-weight: bold;
+            margin-bottom: 14px;
+        }
+
+        .availability {
             font-size: 13px;
             margin-bottom: 12px;
         }
 
-        .food-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-        }
-
-        .price {
-            color: #ff9800;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .add-btn {
-            background: #222;
-            color: white;
-            border: none;
-            padding: 9px 14px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .add-btn:hover {
-            background: #ff9800;
+        .available {
+            color: #15803d;
         }
 
         .unavailable {
-            color: #e53935;
-            font-weight: bold;
-            font-size: 14px;
+            color: #dc2626;
         }
 
-        /* ================= TABLE SECTION ================= */
-
-        .table-section {
-            background: #fff3e0;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .table-section h2 {
-            margin-bottom: 10px;
-        }
-
-        .table-section p {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .table-select {
-            padding: 12px;
-            width: 250px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 15px;
-        }
-
-        /* ================= FOOTER ================= */
-
-        footer {
-            background: #222;
+        .add-button {
+            display: block;
+            width: 100%;
+            border: none;
+            background: #111827;
             color: white;
+            padding: 11px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
             text-align: center;
-            padding: 30px;
-            margin-top: 40px;
         }
 
-        footer p {
-            color: #bbb;
+        .add-button:hover {
+            background: #dc2626;
         }
 
-        /* ================= RESPONSIVE ================= */
+        /* =========================
+           EMPTY STATE
+        ========================== */
 
-        @media (max-width: 768px) {
+        .empty {
+            text-align: center;
+            padding: 70px 20px;
+            background: white;
+            border-radius: 12px;
+        }
 
-            header {
+        .empty h3 {
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: #6b7280;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 1000px) {
+            .food-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 750px) {
+            .header {
+                padding: 15px 4%;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .food-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .welcome h2 {
+                font-size: 25px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .brand h1 {
+                font-size: 19px;
+            }
+
+            .brand p {
+                font-size: 11px;
+            }
+
+            .cart-button {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .food-image {
+                height: 220px;
+            }
+
+            .table-info {
                 flex-direction: column;
-                gap: 15px;
-            }
-
-            nav {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .hero h1 {
-                font-size: 35px;
-            }
-
-            .hero p {
-                font-size: 16px;
-            }
-
-            .table-select {
-                width: 100%;
-                max-width: 300px;
+                align-items: flex-start;
             }
         }
     </style>
@@ -328,170 +321,222 @@
 
 <body>
 
-<!-- ================= HEADER ================= -->
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-<header>
+    <header class="header">
 
-    <div class="logo">
-        My Restaurant
-    </div>
-    {% if table %}
+        <div class="brand">
+            <h1>🍽️ Foodie </h1>
 
-<div class="table-banner">
+            {% if table %}
+                <p>Ordering from your table</p>
+            {% else %}
+                <p>Browse our delicious menu</p>
+            {% endif %}
+        </div>
 
-    🪑
-    You are ordering from
-    <strong>Table {{ table.table_number }}</strong>
-
-</div>
-
-{% endif %}
-
-
-    <nav>
-        <a href="{% url 'home' %}">Home</a>
-
-        <a href="#menu">Menu</a>
-
-        <a href="#tables">Tables</a>
-
-        <a href="{% url 'cart' %}" class="cart-btn">
+        <a href="{% url 'cart' %}" class="cart-button">
             🛒 Cart
+
             {% if cart_count %}
-                ({{ cart_count }})
+                <span class="cart-count">
+                    {{ cart_count }}
+                </span>
+            {% else %}
+                <span class="cart-count">
+                    0
+                </span>
             {% endif %}
         </a>
-    </nav>
 
-</header>
-
-
-<!-- ================= HERO ================= -->
-
-<section class="hero">
-
-    <div class="hero-content">
-
-        <h1>Delicious Food, Made For You</h1>
-
-        <p>
-            Enjoy delicious meals prepared fresh for you.
-            Choose your favorite food and place your order easily.
-        </p>
-
-        <a href="#menu" class="hero-btn">
-            Explore Menu
-        </a>
-
-    </div>
-
-</section>
+    </header>
 
 
-<!-- ================= MENU ================= -->
+    <!-- =========================
+         TABLE INFORMATION
+    ========================== -->
 
-<section class="section" id="menu">
+    {% if table %}
 
-    <div class="container">
+        <section class="table-banner">
 
-        <div class="section-title">
+            <div class="table-info">
 
-            <h2>Our Menu</h2>
+                <div>
+                    You are ordering from
+                    <strong>
+                        Table {{ table.table_number }}
+                    </strong>
+                </div>
 
-            <p>
-                Choose from our delicious selection of food.
-            </p>
+                {% if table.is_available %}
+                    <div class="table-status">
+                        ● Table Available
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    {% endif %}
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="container">
+
+        <div class="welcome">
+
+            {% if table %}
+                <h2>What would you like to order?</h2>
+
+                <p>
+                    Choose your favorite food and add it to your cart.
+                </p>
+            {% else %}
+                <h2>Our Menu</h2>
+
+                <p>
+                    Explore our food and choose what you'd like to order.
+                </p>
+            {% endif %}
 
         </div>
 
 
-        <!-- Categories -->
+        <!-- =========================
+             CATEGORY FILTER
+        ========================== -->
 
         <div class="categories">
 
-            <a href="{% url 'home' %}"
-               class="category-btn {% if not selected_category %}active{% endif %}">
-                All
-            </a>
+    <button
+        type="button"
+        class="category-btn active"
+        data-category="all"
+        onclick="filterCategory('all', this)"
+    >
+        All
+    </button>
 
-            {% for category in categories %}
+    {% for category in categories %}
 
-                <a href="?category={{ category.id }}"
-                   class="category-btn
-                   {% if selected_category == category.id %}active{% endif %}">
+        <button
+            type="button"
+            class="category-btn"
+            data-category="{{ category.id }}"
+            onclick="filterCategory('{{ category.id }}', this)"
+        >
+            {{ category.category_name }}
+        </button>
 
-                    {{ category.Category_name }}
+    {% endfor %}
 
-                </a>
-
-            {% endfor %}
-
-        </div>
+</div>
 
 
-        <!-- Food Items -->
 
-        <div class="food-grid">
+        <!-- =========================
+             FOOD LIST
+        ========================== -->
 
-            {% for food in foods %}
+        {% if foods %}
 
-                <div class="food-card">
+            <div class="food-grid">
 
-                    {% if food.image %}
+                {% for food in foods %}
 
-                        <img
-                            src="{{ food.image.url }}"
-                            alt="{{ food.name }}"
-                            class="food-image"
-                        >
+                    <div class="food-card"
+                            data-category="{{ food.category.id }}">
+                        <!-- FOOD IMAGE -->
 
-                    {% else %}
+                        <div class="food-image">
 
-                        <div class="no-image">
-                            No Image
+                            {% if food.image %}
+
+                                <img
+                                    src="{{ food.image.url }}"
+                                    alt="{{ food.name }}"
+                                >
+
+                            {% else %}
+
+                                <div class="no-image">
+                                    No image available
+                                </div>
+
+                            {% endif %}
+
                         </div>
 
-                    {% endif %}
+
+                        <!-- FOOD CONTENT -->
+
+                        <div class="food-content">
+
+                            {% if food.category %}
+
+                                <div class="food-category">
+                                    {{ food.category.category_name }}
+                                </div>
+
+                            {% endif %}
 
 
-                    <div class="food-content">
-
-                        <h3>
-                            {{ food.name }}
-                        </h3>
-
-                        <div class="category-name">
-                            {{ food.category.Category_name }}
-                        </div>
+                            <h3 class="food-name">
+                                {{ food.name }}
+                            </h3>
 
 
-                        <div class="food-bottom">
-
-                            <span class="price">
+                            <div class="food-price">
                                 Rs. {{ food.price }}
-                            </span>
+                            </div>
 
 
                             {% if food.is_available %}
 
-                                <form method="POST"
-                                      action="{% url 'add_to_cart' food.id %}">
+                                <div class="availability available">
+                                    ● Available
+                                </div>
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'add_to_cart' food.id %}"
+                                >
 
                                     {% csrf_token %}
 
                                     <button
                                         type="submit"
-                                        class="add-btn">
-                                        Add to Cart
+                                        class="add-button"
+                                    >
+                                        + Add to Cart
                                     </button>
 
                                 </form>
 
                             {% else %}
 
-                                <span class="unavailable">
-                                    Unavailable
-                                </span>
+                                <div class="availability unavailable">
+                                    ● Currently unavailable
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="add-button"
+                                    disabled
+                                    style="
+                                        background:#9ca3af;
+                                        cursor:not-allowed;
+                                    "
+                                >
+                                    Not Available
+                                </button>
 
                             {% endif %}
 
@@ -499,76 +544,77 @@
 
                     </div>
 
-                </div>
+                {% endfor %}
 
-            {% empty %}
+            </div>
 
-                <p style="text-align:center; width:100%;">
-                    No food items available.
+        {% else %}
+
+            <div class="empty">
+
+                <h3>No food items found</h3>
+
+                <p>
+                    There are currently no available food items
+                    in this category.
                 </p>
 
-            {% endfor %}
+            </div>
 
-        </div>
+        {% endif %}
 
-    </div>
+    </main>
 
-</section>
+<script>
 
+function filterCategory(categoryId, button) {
 
-<!-- ================= TABLE SELECTION ================= -->
+    
 
-<section class="container" id="tables">
+    // Get all category buttons
+    const buttons = document.querySelectorAll(".category-btn");
 
-    <div class="table-section">
+    // Remove active state
+    buttons.forEach(function(btn) {
+        btn.classList.remove("active");
+    });
 
-        <h2>Select Your Table</h2>
-
-        <p>
-            Choose an available table before placing your order.
-        </p>
-
-        <select class="table-select" name="table">
-
-            <option value="">
-                Select a table
-            </option>
-
-            {% for table in tables %}
-
-                {% if table.is_available %}
-
-                    <option value="{{ table.id }}">
-                        Table {{ table.table_number }}
-                        - Capacity {{ table.capacity }}
-                    </option>
-
-                {% endif %}
-
-            {% endfor %}
-
-        </select>
-
-    </div>
-
-</section>
+    // Add active state to clicked button
+    button.classList.add("active");
 
 
-<!-- ================= FOOTER ================= -->
+    // Get all food cards
+    const foodCards = document.querySelectorAll(".food-card");
 
-<footer>
 
-    <h3>My Restaurant</h3>
+    foodCards.forEach(function(card) {
 
-    <p>
-        Delicious food. Great service. Happy customers.
-    </p>
+        if (categoryId === "all") {
 
-    <p style="margin-top:10px;">
-        &copy; {% now "Y" %} My Restaurant. All rights reserved.
-    </p>
+            card.style.display = "";
 
-</footer>
+        } else {
+
+            const foodCategory =
+                card.getAttribute("data-category");
+
+            if (foodCategory === categoryId) {
+
+                card.style.display = "";
+
+            } else {
+
+                card.style.display = "none";
+            }
+        }
+
+    });
+
+}
+
+</script>
+
+
 
 </body>
 </html>

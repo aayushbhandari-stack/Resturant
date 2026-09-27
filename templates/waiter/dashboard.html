@@ -1,0 +1,1381 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Waiter Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            min-height: 70px;
+            background: #111827;
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 12px 30px;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 10px;
+
+            background: #f97316;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .waiter-info {
+            text-align: right;
+        }
+
+        .waiter-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .waiter-role {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+
+        .logout-btn {
+            display: inline-block;
+
+            background: #dc2626;
+            color: white;
+
+            border-radius: 7px;
+
+            padding: 9px 15px;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            padding: 30px;
+
+            max-width: 1500px;
+
+            margin: 0 auto;
+        }
+
+        .page-heading {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+        }
+
+        .page-heading h2 {
+            font-size: 26px;
+            color: #111827;
+        }
+
+        .page-heading p {
+            color: #6b7280;
+            font-size: 14px;
+
+            margin-top: 5px;
+        }
+
+        .refresh-btn {
+            border: 1px solid #d1d5db;
+
+            background: white;
+            color: #374151;
+
+            padding: 10px 16px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .refresh-btn:hover {
+            background: #f9fafb;
+        }
+
+
+        /* =========================
+           SUMMARY
+        ========================= */
+
+        .summary-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            border: 1px solid #e5e7eb;
+
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+
+            box-shadow:
+                0 2px 5px
+                rgba(0, 0, 0, 0.03);
+        }
+
+        .summary-icon {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+        .icon-blue {
+            background: #dbeafe;
+        }
+
+        .icon-yellow {
+            background: #fef3c7;
+        }
+
+        .icon-green {
+            background: #dcfce7;
+        }
+
+        .summary-content h3 {
+            font-size: 25px;
+            color: #111827;
+        }
+
+        .summary-content p {
+            font-size: 13px;
+            color: #6b7280;
+
+            margin-top: 3px;
+        }
+
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .order-count {
+            background: #e5e7eb;
+            color: #374151;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           ORDERS GRID
+        ========================= */
+
+        .orders-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .order-card {
+            background: white;
+
+            border-radius: 12px;
+
+            border: 1px solid #e5e7eb;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 3px 8px
+                rgba(0, 0, 0, 0.04);
+
+            transition: 0.2s;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 7px 20px
+                rgba(0, 0, 0, 0.08);
+        }
+
+
+        /* =========================
+           ORDER HEADER
+        ========================= */
+
+        .order-header {
+            padding: 16px 18px;
+
+            background: #f9fafb;
+
+            border-bottom:
+                1px solid #e5e7eb;
+        }
+
+        .order-top {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .order-number {
+            font-size: 17px;
+            font-weight: 700;
+
+            color: #111827;
+        }
+
+        .order-meta {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+
+            margin-top: 12px;
+        }
+
+        .meta-item {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .meta-item strong {
+            color: #374151;
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            white-space: nowrap;
+        }
+
+        .status-ready {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .status-served {
+            color: #6d28d9;
+            background: #ede9fe;
+        }
+
+        .status-completed {
+            color: #166534;
+            background: #dcfce7;
+        }
+
+
+        /* =========================
+           BODY
+        ========================= */
+
+        .order-body {
+            padding: 18px;
+        }
+
+
+        /* CUSTOMER */
+
+        .customer-box {
+            background: #f9fafb;
+
+            border-radius: 8px;
+
+            padding: 11px 12px;
+
+            margin-bottom: 15px;
+        }
+
+        .customer-title {
+            font-size: 11px;
+
+            color: #6b7280;
+
+            text-transform: uppercase;
+
+            font-weight: 700;
+
+            margin-bottom: 5px;
+        }
+
+        .customer-name {
+            font-size: 14px;
+
+            font-weight: 600;
+
+            color: #111827;
+        }
+
+        .customer-phone {
+            font-size: 12px;
+
+            color: #6b7280;
+
+            margin-top: 3px;
+        }
+
+
+        /* ITEMS */
+
+        .items-title {
+            font-size: 12px;
+
+            color: #6b7280;
+
+            text-transform: uppercase;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+        .items-list {
+            list-style: none;
+        }
+
+        .item {
+            display: flex;
+
+            align-items: flex-start;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            padding: 9px 0;
+
+            border-bottom:
+                1px solid #f0f0f0;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-left {
+            display: flex;
+
+            gap: 8px;
+
+            min-width: 0;
+        }
+
+        .quantity {
+            min-width: 28px;
+
+            height: 24px;
+
+            border-radius: 5px;
+
+            background: #111827;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+        .item-name {
+            font-size: 13px;
+
+            font-weight: 600;
+
+            color: #374151;
+
+            line-height: 1.4;
+        }
+
+        .item-instruction {
+            color: #9ca3af;
+
+            font-size: 11px;
+
+            margin-top: 3px;
+        }
+
+        .item-price {
+            font-size: 12px;
+
+            color: #374151;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================
+           INSTRUCTIONS
+        ========================= */
+
+        .instructions {
+            margin-top: 14px;
+
+            padding: 11px;
+
+            border-radius: 7px;
+
+            background: #fff7ed;
+
+            border-left:
+                3px solid #f97316;
+        }
+
+        .instructions-title {
+            color: #c2410c;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            margin-bottom: 4px;
+        }
+
+        .instructions-text {
+            color: #7c2d12;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .order-footer {
+            padding: 14px 18px;
+
+            border-top:
+                1px solid #e5e7eb;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            background: #fafafa;
+        }
+
+        .payment-status {
+            font-size: 11px;
+
+            font-weight: 700;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+        }
+
+        .payment-paid {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .payment-unpaid {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .total {
+            text-align: right;
+        }
+
+        .total-label {
+            font-size: 10px;
+
+            color: #9ca3af;
+
+            text-transform: uppercase;
+        }
+
+        .total-amount {
+            font-size: 17px;
+
+            font-weight: 700;
+
+            color: #111827;
+
+            margin-top: 2px;
+        }
+
+
+        /* =========================
+           WAITER ACTION
+        ========================= */
+
+        .waiter-action {
+            padding: 14px 18px 18px;
+
+            background: #fafafa;
+        }
+
+        .waiter-action button {
+            width: 100%;
+
+            padding: 13px 16px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #7c3aed;
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .waiter-action button:hover {
+            background: #6d28d9;
+        }
+
+        .served-message {
+            padding: 13px 18px;
+
+            background: #f5f3ff;
+
+            color: #6d28d9;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty-state {
+            background: white;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 12px;
+
+            padding: 60px 20px;
+
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 65px;
+            height: 65px;
+
+            border-radius: 50%;
+
+            background: #f3f4f6;
+
+            margin: 0 auto 15px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 30px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+
+            color: #374151;
+
+            margin-bottom: 7px;
+        }
+
+        .empty-state p {
+            color: #9ca3af;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #9ca3af;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .orders-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .header {
+                padding: 12px 18px;
+            }
+
+            .header-title p {
+                display: none;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 550px) {
+
+            .header {
+                min-height: 65px;
+
+                padding: 12px 15px;
+            }
+
+            .header-left {
+                gap: 9px;
+            }
+
+            .logo {
+                width: 36px;
+                height: 36px;
+
+                font-size: 18px;
+            }
+
+            .header-title h1 {
+                font-size: 16px;
+            }
+
+            .waiter-info {
+                display: none;
+            }
+
+            .logout-btn {
+                padding: 8px 10px;
+
+                font-size: 11px;
+            }
+
+            .main {
+                padding: 15px;
+            }
+
+            .page-heading {
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .page-heading h2 {
+                font-size: 21px;
+            }
+
+            .refresh-btn {
+                padding: 8px 10px;
+
+                font-size: 11px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+    <div class="header-left">
+
+        <div class="logo">
+            🍽️
+        </div>
+
+        <div class="header-title">
+
+            <h1>
+                Waiter Dashboard
+            </h1>
+
+            <p>
+                Restaurant Order Management
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <div class="waiter-info">
+
+            <div class="waiter-name">
+                {{ staff_username|default:request.user.username }}
+            </div>
+
+            <div class="waiter-role">
+                Waiter
+            </div>
+
+        </div>
+
+
+        <a
+            href="{% url 'logout' %}"
+            class="logout-btn"
+        >
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="main">
+
+
+    <div class="page-heading">
+
+        <div>
+
+            <h2>
+                Orders Requiring Attention
+            </h2>
+
+            <p>
+                Serve orders that have been prepared by the kitchen.
+            </p>
+
+        </div>
+
+
+        <button
+            class="refresh-btn"
+            type="button"
+            onclick="window.location.reload();"
+        >
+            ↻ Refresh
+        </button>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary-grid">
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon icon-blue">
+                📋
+            </div>
+
+            <div class="summary-content">
+
+                <h3>
+                    {{ ready_orders }}
+                </h3>
+
+                <p>
+                    Ready to Serve
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon icon-yellow">
+                🍽️
+            </div>
+
+            <div class="summary-content">
+
+                <h3>
+                    {{ served_orders }}
+                </h3>
+
+                <p>
+                    Served
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon icon-green">
+                ✓
+            </div>
+
+            <div class="summary-content">
+
+                <h3>
+                    {{ total_orders }}
+                </h3>
+
+                <p>
+                    Total Orders
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ORDERS -->
+
+    <div class="section-header">
+
+        <h2>
+            Current Orders
+        </h2>
+
+        <span class="order-count">
+            {{ orders|length }} Orders
+        </span>
+
+    </div>
+
+
+    {% if orders %}
+
+        <div class="orders-grid">
+
+
+            {% for order in orders %}
+
+
+                <div class="order-card">
+
+
+                    <!-- ORDER HEADER -->
+
+                    <div class="order-header">
+
+                        <div class="order-top">
+
+                            <div class="order-number">
+                                Order #{{ order.id }}
+                            </div>
+
+
+                            {% if order.status == "ready" %}
+
+                                <span class="status status-ready">
+                                    Ready
+                                </span>
+
+                            {% elif order.status == "served" %}
+
+                                <span class="status status-served">
+                                    Served
+                                </span>
+
+                            {% elif order.status == "completed" %}
+
+                                <span class="status status-completed">
+                                    Completed
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="order-meta">
+
+                            <div class="meta-item">
+
+                                <strong>
+                                    Table:
+                                </strong>
+
+                                {% if order.table %}
+
+                                    {{ order.table.table_number }}
+
+                                {% else %}
+
+                                    No Table
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="meta-item">
+
+                                <strong>
+                                    Time:
+                                </strong>
+
+                                {{ order.created_at|date:"M d, Y h:i A" }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BODY -->
+
+                    <div class="order-body">
+
+
+                        <!-- CUSTOMER -->
+
+                        <div class="customer-box">
+
+                            <div class="customer-title">
+                                Customer
+                            </div>
+
+
+                            {% if order.customer_name %}
+
+                                <div class="customer-name">
+                                    {{ order.customer_name }}
+                                </div>
+
+                            {% else %}
+
+                                <div class="customer-name">
+                                    Walk-in Customer
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if order.customer_phone %}
+
+                                <div class="customer-phone">
+
+                                    📞
+                                    {{ order.customer_phone }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- ITEMS -->
+
+                        <div class="items-title">
+                            Order Items
+                        </div>
+
+
+                        <ul class="items-list">
+
+
+                            {% for item in order.items.all %}
+
+                                <li class="item">
+
+                                    <div class="item-left">
+
+                                        <div class="quantity">
+                                            {{ item.quantity }}
+                                        </div>
+
+
+                                        <div>
+
+                                            <div class="item-name">
+                                                {{ item.food.name }}
+                                            </div>
+
+
+                                            {% if item.special_instructions %}
+
+                                                <div class="item-instruction">
+                                                    {{ item.special_instructions }}
+                                                </div>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="item-price">
+
+                                        Rs.
+                                        {{ item.subtotal|floatformat:2 }}
+
+                                    </div>
+
+                                </li>
+
+                            {% empty %}
+
+                                <li class="item">
+
+                                    <div class="item-name">
+                                        No items found.
+                                    </div>
+
+                                </li>
+
+                            {% endfor %}
+
+
+                        </ul>
+
+
+                        <!-- SPECIAL INSTRUCTIONS -->
+
+                        {% if order.special_instructions %}
+
+                            <div class="instructions">
+
+                                <div class="instructions-title">
+                                    Special Instructions
+                                </div>
+
+                                <div class="instructions-text">
+                                    {{ order.special_instructions }}
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    <!-- FOOTER -->
+
+                    <div class="order-footer">
+
+
+                        <div>
+
+                            {% if order.payment_status == "paid" %}
+
+                                <span class="payment-status payment-paid">
+                                    ✓ Paid
+                                </span>
+
+                            {% else %}
+
+                                <span class="payment-status payment-unpaid">
+                                    Unpaid
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="total">
+
+                            <div class="total-label">
+                                Total
+                            </div>
+
+                            <div class="total-amount">
+
+                                Rs.
+                                {{ order.total_amount|floatformat:2 }}
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- WAITER ACTION -->
+
+                    {% if order.status == "ready" %}
+
+                        <div class="waiter-action">
+
+                            <form
+                                method="POST"
+                                action="{% url 'waiter_order_status' order.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="served"
+                                >
+
+                                <button type="submit">
+                                    🍽️ Mark as Served
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    {% elif order.status == "served" %}
+
+                        <div class="served-message">
+                            ✓ This order has been served
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    {% else %}
+
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                🍽️
+            </div>
+
+            <h3>
+                No Active Orders
+            </h3>
+
+            <p>
+                Orders marked ready by the kitchen will appear here.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+</main>
+
+
+<footer class="footer">
+
+    Waiter Dashboard &copy; {% now "Y" %}
+
+</footer>
+
+
+</body>
+
+</html>

@@ -245,7 +245,19 @@ urlpatterns = [
         views.kitchen_dashboard,
         name="kitchen_dashboard",
     ),
+    path(
+    "kitchen/orders/<int:order_id>/status/",
+    views.chef_order_status,
+    name="chef_order_status",
+),
+    path(
+    'kitchen/order-item/<int:item_id>/status/',
+    views.update_item_status,
+    name='update_item_status'
+),
 
+
+    
     # ========================================================
     # CATEGORY API
     # ========================================================
@@ -331,6 +343,12 @@ urlpatterns = [
         views.OrderStatusUpdateAPIView.as_view(),
         name="order-status-update",
     ),
+    path(
+    "waiter/orders/<int:order_id>/status/",
+    views.waiter_order_status,
+    name="waiter_order_status",
+),
+
 
     # ========================================================
     # PAYMENT API

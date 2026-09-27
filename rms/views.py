@@ -1,74 +1,21 @@
 from decimal import Decimal
-
-from django.shortcuts import (
-    render,
-    redirect,
-    get_object_or_404,
-)
-
-from django.utils import timezone
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import (login_required,user_passes_test,)
 from django.db import transaction
-
-from django.db.models import (
-    Sum,
-    Count,
-)
-
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout,
-)
-
-from django.contrib.auth.decorators import (
-    login_required,
-    user_passes_test,
-)
-
-from django.views.decorators.csrf import (
-    ensure_csrf_cookie,
-    csrf_exempt,
-)
-
+from django.db.models import Count, Sum
+from django.shortcuts import (get_object_or_404,redirect,render,)
+from django.utils import timezone
+from django.views.decorators.csrf import (csrf_exempt,ensure_csrf_cookie,)
+from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
-
-from rest_framework.decorators import api_view
-
 from rest_framework import status
-
-from rest_framework.generics import (
-    ListCreateAPIView,
-    RetrieveUpdateDestroyAPIView,
-)
-
-from rest_framework.response import Response
-
-from rest_framework.views import APIView
-
 from rest_framework.authtoken.models import Token
-
-
-from .models import (
-    Category,
-    Food,
-    RestaurantTable,
-    Order,
-    Payment,
-    OrderItem,
-    Cart,
-    StaffProfile,
-)
-
-from .serializers import (
-    CategorySerializer,
-    FoodSerializer,
-    RestaurantTableSerializer,
-    OrderSerializer,
-    PaymentSerializer,
-    OrderStatusUpdateSerializer,
-    CartSerializer,
-)
+from rest_framework.decorators import api_view
+from rest_framework.generics import (ListCreateAPIView,RetrieveUpdateDestroyAPIView,)
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import (Category,Food,RestaurantTable,Order,Payment,OrderItem,Cart,StaffProfile,)
+from .serializers import (CategorySerializer,FoodSerializer,RestaurantTableSerializer,OrderSerializer,PaymentSerializer,OrderStatusUpdateSerializer,CartSerializer,)
 
 
 # ============================================================
@@ -76,47 +23,34 @@ from .serializers import (
 # ============================================================
 
 def is_manager(user):
-
     return (
         user.is_authenticated
-        and user.groups.filter(
-            name="Manager"
-        ).exists()
+        and user.groups.filter(name="Manager").exists()
     )
 
 
 def is_reception(user):
-
     return (
         user.is_authenticated
-        and user.groups.filter(
-            name="Reception"
-        ).exists()
+        and user.groups.filter(name="Reception").exists()
     )
 
 
 def is_waiter(user):
-
     return (
         user.is_authenticated
-        and user.groups.filter(
-            name="Waiter"
-        ).exists()
+        and user.groups.filter(name="Waiter").exists()
     )
 
 
 def is_chef(user):
-
     return (
         user.is_authenticated
-        and user.groups.filter(
-            name="Chef"
-        ).exists()
+        and user.groups.filter(name="Chef").exists()
     )
 
 
 def is_staff_member(user):
-
     return (
         user.is_authenticated
         and user.groups.filter(
@@ -131,22 +65,58 @@ def is_staff_member(user):
 
 
 # ============================================================
+# COMMON STAFF CONTEXT
+# ============================================================
+
+def staff_context(request):
+    return {
+        "staff_username": request.user.username,
+        "staff_roles": list(
+            request.user.groups.values_list(
+                "name",
+                flat=True,
+            )
+        ),
+    }
+
+
+# ============================================================
 # LOGIN
 # ============================================================
 
 @ensure_csrf_cookie
 def login_view(request):
 
+    if request.user.is_authenticated:
+        roles = set(
+            request.user.groups.values_list(
+                "name",
+                flat=True,
+            )
+        )
+
+        if "Manager" in roles:
+            return redirect("manager_dashboard")
+
+        if "Reception" in roles:
+            return redirect("reception_dashboard")
+
+        if "Waiter" in roles:
+            return redirect("waiter_dashboard")
+
+        if "Chef" in roles:
+            return redirect("kitchen_dashboard")
+
     if request.method == "POST":
 
         username = request.POST.get(
             "username",
-            ""
+            "",
         ).strip()
 
         password = request.POST.get(
             "password",
-            ""
+            "",
         )
 
         if not username or not password:
@@ -220,24 +190,16 @@ def login_view(request):
         )
 
         if "Manager" in user_roles:
-            return redirect(
-                "manager_dashboard"
-            )
+            return redirect("manager_dashboard")
 
         if "Reception" in user_roles:
-            return redirect(
-                "reception_dashboard"
-            )
+            return redirect("reception_dashboard")
 
         if "Waiter" in user_roles:
-            return redirect(
-                "waiter_dashboard"
-            )
+            return redirect("waiter_dashboard")
 
         if "Chef" in user_roles:
-            return redirect(
-                "kitchen_dashboard"
-            )
+            return redirect("kitchen_dashboard")
 
         logout(request)
 
@@ -264,7 +226,6 @@ def logout_view(request):
 # ============================================================
 # CUSTOMER HOME
 # ============================================================
-
 def home(request):
 
     categories = Category.objects.all()
@@ -279,16 +240,6 @@ def home(request):
         RestaurantTable.objects
         .filter(is_available=True)
     )
-
-    selected_category = request.GET.get(
-        "category"
-    )
-
-    if selected_category:
-
-        foods = foods.filter(
-            category_id=selected_category
-        )
 
     if not request.session.session_key:
         request.session.create()
@@ -307,14 +258,63 @@ def home(request):
             "foods": foods,
             "tables": tables,
             "cart_count": cart_count,
-            "selected_category": (
-                int(selected_category)
-                if selected_category
-                else None
-            ),
         },
     )
 
+
+
+@login_required
+@user_passes_test(is_reception)
+def reception_customer_detail(
+    request,
+    customer_phone,
+):
+
+    orders = (
+        Order.objects
+        .filter(
+            customer_phone=customer_phone,
+            status__in=["served", "completed"],
+        )
+        .select_related("table")
+        .prefetch_related(
+            "items__food"
+        )
+        .order_by("-created_at")
+    )
+
+    customer = orders.first()
+
+    total_spent = sum(
+        order.total_amount
+        for order in orders
+    )
+
+    context = {
+        "customer_name": (
+            customer.customer_name
+            if customer
+            else ""
+        ),
+
+        "customer_phone": customer_phone,
+
+        "orders": orders,
+
+        "total_orders": orders.count(),
+
+        "total_spent": total_spent,
+    }
+
+    context.update(
+        staff_context(request)
+    )
+
+    return render(
+        request,
+        "reception/customer_detail.html",
+        context,
+    )
 
 # ============================================================
 # QR TABLE MENU
@@ -335,11 +335,9 @@ def qr_table_menu(
         request.session.create()
 
     request.session["qr_table_id"] = table.id
-
     request.session["qr_table_number"] = (
         table.table_number
     )
-
     request.session.modified = True
 
     foods = (
@@ -385,7 +383,6 @@ def table_menu(
         request.session.create()
 
     request.session["qr_table_id"] = table.id
-
     request.session["qr_table_number"] = (
         table.table_number
     )
@@ -471,7 +468,12 @@ def add_to_cart(
 
         cart_item.save()
 
-    return redirect("home")
+    return redirect(
+        request.META.get(
+            "HTTP_REFERER",
+            "home"
+        )
+    )
 
 
 # ============================================================
@@ -568,11 +570,8 @@ def checkout(request):
 # ============================================================
 # PLACE ORDER
 # ============================================================
-
+@require_POST
 def place_order(request):
-
-    if request.method != "POST":
-        return redirect("checkout")
 
     if not request.session.session_key:
         request.session.create()
@@ -595,11 +594,6 @@ def place_order(request):
 
     customer_phone = request.POST.get(
         "customer_phone",
-        "",
-    ).strip()
-
-    special_instructions = request.POST.get(
-        "special_instructions",
         "",
     ).strip()
 
@@ -634,32 +628,36 @@ def place_order(request):
 
     with transaction.atomic():
 
+        # Create the order
         order = Order.objects.create(
             table=table,
             customer_name=customer_name,
             customer_phone=customer_phone,
-            special_instructions=(
-                special_instructions
-            ),
             status="pending",
             payment_status="unpaid",
         )
 
+        # Create every order item
         for cart_item in cart_items:
+
+            # Get instruction for THIS food item
+            instruction = request.POST.get(
+                f"special_instructions_{cart_item.id}",
+                "",
+            ).strip()
 
             OrderItem.objects.create(
                 order=order,
                 food=cart_item.food,
                 quantity=cart_item.quantity,
                 price=cart_item.food.price,
-                special_instructions=(
-                    cart_item.special_instructions
-                    or ""
-                ),
+                special_instructions=instruction,
             )
 
+        # Clear cart
         cart_items.delete()
 
+    # Clear table session
     request.session.pop(
         "qr_table_id",
         None,
@@ -689,13 +687,28 @@ def place_order(request):
 @user_passes_test(is_manager)
 def manager_dashboard(request):
 
+    today = timezone.localdate()
+
     orders = (
         Order.objects
-        .prefetch_related(
-            "items__food"
-        )
         .select_related("table")
+        .prefetch_related("items__food")
         .order_by("-created_at")
+    )
+
+    today_orders = orders.filter(
+        created_at__date=today
+    )
+
+    today_revenue = (
+        Payment.objects
+        .filter(
+            paid_at__date=today
+        )
+        .aggregate(
+            total=Sum("amount")
+        )["total"]
+        or Decimal("0.00")
     )
 
     staff_members = (
@@ -704,57 +717,80 @@ def manager_dashboard(request):
         .order_by("user__username")
     )
 
+    tables = RestaurantTable.objects.all()
+
+    context = {
+
+        "orders": orders[:20],
+
+        "total_orders": orders.count(),
+
+        "today_orders": today_orders.count(),
+
+        "pending_orders": orders.filter(
+            status="pending"
+        ).count(),
+
+        "confirmed_orders": orders.filter(
+            status="confirmed"
+        ).count(),
+
+        "preparing_orders": orders.filter(
+            status="preparing"
+        ).count(),
+
+        "ready_orders": orders.filter(
+            status="ready"
+        ).count(),
+
+        "served_orders": orders.filter(
+            status="served"
+        ).count(),
+
+        "completed_orders": orders.filter(
+            status="completed"
+        ).count(),
+
+        "cancelled_orders": orders.filter(
+            status="cancelled"
+        ).count(),
+
+        "today_revenue": today_revenue,
+
+        "staff_members": staff_members,
+
+        "total_staff": staff_members.count(),
+
+        "total_foods": Food.objects.count(),
+
+        "available_foods": Food.objects.filter(
+            is_available=True
+        ).count(),
+
+        "total_categories": Category.objects.count(),
+
+        "total_tables": tables.count(),
+
+        "available_tables": tables.filter(
+            is_available=True
+        ).count(),
+
+        "staff_username": request.user.username,
+
+        "staff_roles": list(
+            request.user.groups.values_list(
+                "name",
+                flat=True,
+            )
+        ),
+    }
+
     return render(
         request,
         "manager/dashboard.html",
-        {
-            "orders": orders,
-
-            "total_orders":
-                orders.count(),
-
-            "pending_orders":
-                orders.filter(
-                    status="pending"
-                ).count(),
-
-            "confirmed_orders":
-                orders.filter(
-                    status="confirmed"
-                ).count(),
-
-            "preparing_orders":
-                orders.filter(
-                    status="preparing"
-                ).count(),
-
-            "ready_orders":
-                orders.filter(
-                    status="ready"
-                ).count(),
-
-            "completed_orders":
-                orders.filter(
-                    status="completed"
-                ).count(),
-
-            "staff_members":
-                staff_members,
-
-            "total_staff":
-                staff_members.count(),
-
-            "staff_username":
-                request.user.username,
-
-            "staff_roles": list(
-                request.user.groups.values_list(
-                    "name",
-                    flat=True,
-                )
-            ),
-        },
+        context,
     )
+
 
 
 # ============================================================
@@ -771,22 +807,18 @@ def staff_list(request):
         .order_by("user__username")
     )
 
+    context = {
+        "staff_members": staff_members,
+    }
+
+    context.update(
+        staff_context(request)
+    )
+
     return render(
         request,
         "manager/staff_list.html",
-        {
-            "staff_members": staff_members,
-
-            "staff_username":
-                request.user.username,
-
-            "staff_roles": list(
-                request.user.groups.values_list(
-                    "name",
-                    flat=True,
-                )
-            ),
-        },
+        context,
     )
 
 
@@ -804,22 +836,18 @@ def manager_food_list(request):
         .order_by("name")
     )
 
+    context = {
+        "foods": foods,
+    }
+
+    context.update(
+        staff_context(request)
+    )
+
     return render(
         request,
         "manager/food_list.html",
-        {
-            "foods": foods,
-
-            "staff_username":
-                request.user.username,
-
-            "staff_roles": list(
-                request.user.groups.values_list(
-                    "name",
-                    flat=True,
-                )
-            ),
-        },
+        context,
     )
 
 
@@ -988,6 +1016,7 @@ def manager_food_edit(
 
 @login_required
 @user_passes_test(is_manager)
+@require_POST
 def manager_food_delete(
     request,
     food_id,
@@ -998,8 +1027,7 @@ def manager_food_delete(
         id=food_id,
     )
 
-    if request.method == "POST":
-        food.delete()
+    food.delete()
 
     return redirect(
         "manager_food_list"
@@ -1019,22 +1047,18 @@ def manager_category_list(request):
         .order_by("category_name")
     )
 
+    context = {
+        "categories": categories,
+    }
+
+    context.update(
+        staff_context(request)
+    )
+
     return render(
         request,
         "manager/category_list.html",
-        {
-            "categories": categories,
-
-            "staff_username":
-                request.user.username,
-
-            "staff_roles": list(
-                request.user.groups.values_list(
-                    "name",
-                    flat=True,
-                )
-            ),
-        },
+        context,
     )
 
 
@@ -1109,12 +1133,11 @@ def manager_category_edit(
                 {
                     "category": category_obj,
                     "error":
-                        "Category name is required."
+                        "Category name is required.",
                 },
             )
 
         category_obj.category_name = name
-
         category_obj.save()
 
         return redirect(
@@ -1136,6 +1159,7 @@ def manager_category_edit(
 
 @login_required
 @user_passes_test(is_manager)
+@require_POST
 def manager_category_delete(
     request,
     category_id,
@@ -1146,8 +1170,7 @@ def manager_category_delete(
         id=category_id,
     )
 
-    if request.method == "POST":
-        category_obj.delete()
+    category_obj.delete()
 
     return redirect(
         "manager_category_list"
@@ -1164,29 +1187,23 @@ def manager_order_list(request):
 
     orders = (
         Order.objects
-        .prefetch_related(
-            "items__food"
-        )
+        .prefetch_related("items__food")
         .select_related("table")
         .order_by("-created_at")
+    )
+
+    context = {
+        "orders": orders,
+    }
+
+    context.update(
+        staff_context(request)
     )
 
     return render(
         request,
         "manager/order_list.html",
-        {
-            "orders": orders,
-
-            "staff_username":
-                request.user.username,
-
-            "staff_roles": list(
-                request.user.groups.values_list(
-                    "name",
-                    flat=True,
-                )
-            ),
-        },
+        context,
     )
 
 
@@ -1196,6 +1213,7 @@ def manager_order_list(request):
 
 @login_required
 @user_passes_test(is_manager)
+@require_POST
 def manager_order_status(
     request,
     order_id,
@@ -1206,32 +1224,30 @@ def manager_order_status(
         id=order_id,
     )
 
-    if request.method == "POST":
+    new_status = request.POST.get(
+        "status"
+    )
 
-        new_status = request.POST.get(
-            "status"
+    allowed_statuses = {
+        "pending",
+        "confirmed",
+        "preparing",
+        "ready",
+        "served",
+        "completed",
+        "cancelled",
+    }
+
+    if new_status in allowed_statuses:
+
+        order.status = new_status
+
+        order.save(
+            update_fields=[
+                "status",
+                "updated_at",
+            ]
         )
-
-        allowed_statuses = {
-            "pending",
-            "confirmed",
-            "preparing",
-            "ready",
-            "served",
-            "completed",
-            "cancelled",
-        }
-
-        if new_status in allowed_statuses:
-
-            order.status = new_status
-
-            order.save(
-                update_fields=[
-                    "status",
-                    "updated_at",
-                ]
-            )
 
     return redirect(
         "manager_order_list"
@@ -1251,22 +1267,18 @@ def manager_table_list(request):
         .order_by("table_number")
     )
 
+    context = {
+        "tables": tables,
+    }
+
+    context.update(
+        staff_context(request)
+    )
+
     return render(
         request,
         "manager/table_list.html",
-        {
-            "tables": tables,
-
-            "staff_username":
-                request.user.username,
-
-            "staff_roles": list(
-                request.user.groups.values_list(
-                    "name",
-                    flat=True,
-                )
-            ),
-        },
+        context,
     )
 
 
@@ -1362,7 +1374,7 @@ def manager_table_edit(
                 {
                     "table": table,
                     "error":
-                        "Table number is required."
+                        "Table number is required.",
                 },
             )
 
@@ -1378,7 +1390,7 @@ def manager_table_edit(
                 {
                     "table": table,
                     "error":
-                        "This table number already exists."
+                        "This table number already exists.",
                 },
             )
 
@@ -1412,6 +1424,7 @@ def manager_table_edit(
 
 @login_required
 @user_passes_test(is_manager)
+@require_POST
 def manager_table_delete(
     request,
     table_id,
@@ -1422,8 +1435,7 @@ def manager_table_delete(
         id=table_id,
     )
 
-    if request.method == "POST":
-        table.delete()
+    table.delete()
 
     return redirect(
         "manager_table_list"
@@ -1468,32 +1480,94 @@ def manager_table_qr(
 @user_passes_test(is_reception)
 def reception_dashboard(request):
 
+    today = timezone.localdate()
+
     orders = (
         Order.objects
-        .prefetch_related(
-            "items__food"
-        )
         .select_related("table")
+        .prefetch_related("items__food")
         .order_by("-created_at")
     )
+
+    today_orders = orders.filter(
+        created_at__date=today
+    )
+
+    today_revenue = (
+        Payment.objects
+        .filter(
+            paid_at__date=today
+        )
+        .aggregate(
+            total=Sum("amount")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+    context = {
+
+        "orders": orders[:20],
+
+        "today_orders": today_orders.count(),
+
+        "total_orders": orders.count(),
+
+        "pending_orders": orders.filter(
+            status="pending"
+        ).count(),
+
+        "confirmed_orders": orders.filter(
+            status="confirmed"
+        ).count(),
+
+        "preparing_orders": orders.filter(
+            status="preparing"
+        ).count(),
+
+        "ready_orders": orders.filter(
+            status="ready"
+        ).count(),
+
+        "served_orders": orders.filter(
+            status="served"
+        ).count(),
+
+        "completed_orders": orders.filter(
+            status="completed"
+        ).count(),
+
+        "unpaid_orders": orders.filter(
+            payment_status="unpaid"
+        ).count(),
+
+        "paid_orders": orders.filter(
+            payment_status="paid"
+        ).count(),
+
+        "today_revenue": today_revenue,
+
+        "total_tables": RestaurantTable.objects.count(),
+
+        "available_tables": RestaurantTable.objects.filter(
+            is_available=True
+        ).count(),
+
+        "staff_username": request.user.username,
+
+        "staff_roles": list(
+            request.user.groups.values_list(
+                "name",
+                flat=True,
+            )
+        ),
+    }
 
     return render(
         request,
         "reception/dashboard.html",
-        {
-            "orders": orders,
-
-            "staff_username":
-                request.user.username,
-
-            "staff_roles": list(
-                request.user.groups.values_list(
-                    "name",
-                    flat=True,
-                )
-            ),
-        },
+        context,
     )
+
 
 
 # ============================================================
@@ -1517,12 +1591,18 @@ def reception_customer_list(request):
         .order_by("customer_name")
     )
 
+    context = {
+        "customers": customers,
+    }
+
+    context.update(
+        staff_context(request)
+    )
+
     return render(
         request,
         "reception/customer_list.html",
-        {
-            "customers": customers,
-        },
+        context,
     )
 
 
@@ -1536,19 +1616,23 @@ def reception_order_list(request):
 
     orders = (
         Order.objects
-        .prefetch_related(
-            "items__food"
-        )
+        .prefetch_related("items__food")
         .select_related("table")
         .order_by("-created_at")
+    )
+
+    context = {
+        "orders": orders,
+    }
+
+    context.update(
+        staff_context(request)
     )
 
     return render(
         request,
         "reception/order_list.html",
-        {
-            "orders": orders,
-        },
+        context,
     )
 
 
@@ -1569,12 +1653,18 @@ def reception_payment_list(request):
         .order_by("-paid_at")
     )
 
+    context = {
+        "payments": payments,
+    }
+
+    context.update(
+        staff_context(request)
+    )
+
     return render(
         request,
         "reception/payment_list.html",
-        {
-            "payments": payments,
-        },
+        context,
     )
 
 
@@ -1591,14 +1681,19 @@ def reception_table_list(request):
         .order_by("table_number")
     )
 
+    context = {
+        "tables": tables,
+    }
+
+    context.update(
+        staff_context(request)
+    )
+
     return render(
         request,
         "reception/table_list.html",
-        {
-            "tables": tables,
-        },
+        context,
     )
-
 
 # ============================================================
 # WAITER DASHBOARD
@@ -1612,35 +1707,86 @@ def waiter_dashboard(request):
         Order.objects
         .filter(
             status__in=[
-                "confirmed",
-                "preparing",
                 "ready",
+                "served",
             ]
         )
-        .prefetch_related(
-            "items__food"
-        )
         .select_related("table")
-        .order_by("created_at")
+        .prefetch_related("items__food")
+        .order_by("-created_at")
     )
+
+    context = {
+        "orders": orders,
+
+        "ready_orders": Order.objects.filter(
+            status="ready"
+        ).count(),
+
+        "served_orders": Order.objects.filter(
+            status="served"
+        ).count(),
+
+        "total_orders": orders.count(),
+
+        "staff_username": request.user.username,
+
+        "staff_roles": list(
+            request.user.groups.values_list(
+                "name",
+                flat=True,
+            )
+        ),
+    }
 
     return render(
         request,
         "waiter/dashboard.html",
-        {
-            "orders": orders,
-
-            "staff_username":
-                request.user.username,
-
-            "staff_roles": list(
-                request.user.groups.values_list(
-                    "name",
-                    flat=True,
-                )
-            ),
-        },
+        context,
     )
+
+
+# ============================================================
+# WAITER ORDER STATUS
+# ============================================================
+
+@login_required
+@user_passes_test(is_waiter)
+@require_POST
+def waiter_order_status(request, order_id):
+
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+    )
+
+    new_status = request.POST.get("status")
+
+    allowed_transitions = {
+        "ready": ["served"],
+        "served": ["completed"],
+    }
+
+    allowed_statuses = allowed_transitions.get(
+        order.status,
+        []
+    )
+
+    if new_status in allowed_statuses:
+
+        order.status = new_status
+
+        order.save(
+            update_fields=[
+                "status",
+                "updated_at",
+            ]
+        )
+
+    return redirect(
+        "waiter_dashboard"
+    )
+
 
 
 # ============================================================
@@ -1655,121 +1801,106 @@ def kitchen_dashboard(request):
         Order.objects
         .filter(
             status__in=[
+                "pending",
                 "confirmed",
                 "preparing",
                 "ready",
             ]
         )
-        .prefetch_related(
-            "items__food"
-        )
         .select_related("table")
+        .prefetch_related("items__food")
         .order_by("created_at")
     )
+
+    context = {
+        "orders": orders,
+
+        "confirmed_orders": orders.filter(
+            status="confirmed"
+        ).count(),
+
+        "preparing_orders": orders.filter(
+            status="preparing"
+        ).count(),
+
+        "ready_orders": orders.filter(
+            status="ready"
+        ).count(),
+
+        "staff_username": request.user.username,
+
+        "staff_roles": list(
+            request.user.groups.values_list(
+                "name",
+                flat=True,
+            )
+        ),
+    }
 
     return render(
         request,
         "kitchen/dashboard.html",
-        {
-            "orders": orders,
-
-            "confirmed_orders":
-                orders.filter(
-                    status="confirmed"
-                ).count(),
-
-            "preparing_orders":
-                orders.filter(
-                    status="preparing"
-                ).count(),
-
-            "ready_orders":
-                orders.filter(
-                    status="ready"
-                ).count(),
-
-            "completed_orders":
-                Order.objects.filter(
-                    status="completed"
-                ).count(),
-
-            "staff_username":
-                request.user.username,
-
-            "staff_roles": list(
-                request.user.groups.values_list(
-                    "name",
-                    flat=True,
-                )
-            ),
-        },
+        context,
     )
+    
+@require_POST
+def update_item_status(request, item_id):
+    item = get_object_or_404(OrderItem, id=item_id)
 
+    status = request.POST.get('status')
+
+    if status in ['pending', 'preparing', 'ready', 'served']:
+        item.status = status
+        item.save(update_fields=['status'])
+
+    return redirect('kitchen_orders')
 
 # ============================================================
-# CHEF ORDER STATUS UPDATE
+# CHEF ORDER STATUS
 # ============================================================
 
 @login_required
 @user_passes_test(is_chef)
-def chef_order_status(
-    request,
-    order_id,
-):
+@require_POST
+def chef_order_status(request, order_id):
 
     order = get_object_or_404(
         Order,
         id=order_id,
     )
 
-    if request.method == "POST":
+    new_status = request.POST.get(
+        "status"
+    )
 
-        new_status = request.POST.get(
-            "status"
+    allowed_transitions = {
+        "confirmed": "preparing",
+        "pending": "preparing",
+        "preparing": "ready",
+    }
+
+    current_status = order.status
+
+    if (
+        current_status in allowed_transitions
+        and new_status == allowed_transitions[
+            current_status
+        ]
+    ):
+
+        order.status = new_status
+
+        order.save(
+            update_fields=[
+                "status",
+                "updated_at",
+            ]
         )
-
-        allowed_transitions = {
-
-            "confirmed": [
-                "preparing",
-            ],
-
-            "preparing": [
-                "ready",
-            ],
-
-            "ready": [
-                "completed",
-            ],
-
-            "completed": [],
-
-            "cancelled": [],
-        }
-
-        current_status = order.status
-
-        allowed_statuses = (
-            allowed_transitions.get(
-                current_status,
-                [],
-            )
-        )
-
-        if new_status in allowed_statuses:
-
-            order.status = new_status
-
-            order.save(
-                update_fields=[
-                    "status",
-                    "updated_at",
-                ]
-            )
 
     return redirect(
         "kitchen_dashboard"
     )
+
 
 
 # ============================================================
@@ -1990,9 +2121,7 @@ class OrderListCreateAPIView(
 
     queryset = (
         Order.objects
-        .prefetch_related(
-            "items__food"
-        )
+        .prefetch_related("items__food")
         .select_related("table")
         .all()
     )
@@ -2006,9 +2135,7 @@ class OrderDetailAPIView(
 
     queryset = (
         Order.objects
-        .prefetch_related(
-            "items__food"
-        )
+        .prefetch_related("items__food")
         .select_related("table")
         .all()
     )
@@ -2121,8 +2248,11 @@ class OrderStatusUpdateAPIView(
         return Response(
             {
                 "success": True,
+
                 "order_id": order.id,
+
                 "old_status": current_status,
+
                 "new_status": order.status,
             },
             status=status.HTTP_200_OK,
@@ -2177,14 +2307,20 @@ def staff_login(request):
         )
     )
 
-    if not user.groups.filter(
-        name__in=[
-            "Manager",
-            "Reception",
-            "Waiter",
-            "Chef",
-        ]
-    ).exists():
+    staff_roles = {
+        "Manager",
+        "Reception",
+        "Waiter",
+        "Chef",
+    }
+
+    user_roles = [
+        role
+        for role in roles
+        if role in staff_roles
+    ]
+
+    if not user_roles:
 
         return Response(
             {
@@ -2215,7 +2351,7 @@ def staff_login(request):
                 user.username,
 
             "roles":
-                roles,
+                user_roles,
         },
         status=status.HTTP_200_OK,
     )
@@ -2260,9 +2396,7 @@ class KitchenOrderAPIView(
                     "ready",
                 ]
             )
-            .prefetch_related(
-                "items__food"
-            )
+            .prefetch_related("items__food")
             .select_related("table")
             .order_by("created_at")
         )
@@ -2311,9 +2445,7 @@ class StaffOrderAPIView(
 
         orders = (
             Order.objects
-            .prefetch_related(
-                "items__food"
-            )
+            .prefetch_related("items__food")
             .select_related("table")
             .order_by("-created_at")
         )
@@ -2386,9 +2518,7 @@ def reception_dashboard_api(request):
     recent_orders = (
         Order.objects
         .select_related("table")
-        .prefetch_related(
-            "items__food"
-        )
+        .prefetch_related("items__food")
         .order_by("-created_at")[:5]
     )
 

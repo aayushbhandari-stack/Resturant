@@ -22,5 +22,4 @@ urlpatterns = [
         include("rms.urls"),
     ),
     
-    path("manager/", include("rms.urls")),
 ]

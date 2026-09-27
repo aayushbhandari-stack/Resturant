@@ -1,5 +1,6 @@
 from decimal import Decimal
 import uuid
+
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -70,12 +71,6 @@ class Food(models.Model):
 # RESTAURANT TABLE
 # =========================================================
 
-# ============================================================
-# TABLE CREATE
-# ============================================================
-# =========================================================
-# RESTAURANT TABLE
-# =========================================================
 class RestaurantTable(models.Model):
 
     table_number = models.PositiveIntegerField(
@@ -93,7 +88,7 @@ class RestaurantTable(models.Model):
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True,null=True,blank=True
+        auto_now_add=True,null=True,blank=False
     )
 
     updated_at = models.DateTimeField(
@@ -102,8 +97,6 @@ class RestaurantTable(models.Model):
 
     def __str__(self):
         return f"Table {self.table_number}"
-
-
 
 
 # =========================================================
@@ -151,6 +144,7 @@ class Cart(models.Model):
         return self.food.price * self.quantity
 
     class Meta:
+
         constraints = [
             models.UniqueConstraint(
                 fields=[
@@ -199,20 +193,30 @@ class StaffProfile(models.Model):
 
 class Order(models.Model):
 
+    # -----------------------------------------------------
+    # ORDER STATUS
+    # -----------------------------------------------------
+
     STATUS_CHOICES = [
         ("pending", "Pending"),
-        ("confirmed", "Confirmed"),
         ("preparing", "Preparing"),
         ("ready", "Ready"),
         ("served", "Served"),
-        ("completed", "Completed"),
         ("cancelled", "Cancelled"),
     ]
+
+    # -----------------------------------------------------
+    # PAYMENT STATUS
+    # -----------------------------------------------------
 
     PAYMENT_STATUS_CHOICES = [
         ("unpaid", "Unpaid"),
         ("paid", "Paid"),
     ]
+
+    # -----------------------------------------------------
+    # TABLE
+    # -----------------------------------------------------
 
     table = models.ForeignKey(
         RestaurantTable,
@@ -222,19 +226,32 @@ class Order(models.Model):
         blank=True
     )
 
+    # -----------------------------------------------------
+    # CUSTOMER INFORMATION
+    # -----------------------------------------------------
+
     customer_name = models.CharField(
         max_length=100,
         blank=True
     )
 
     customer_phone = models.CharField(
-        max_length=20,
-        blank=True
+        max_length=10,
+        blank=True,
+        null=True
     )
+
+    # -----------------------------------------------------
+    # SPECIAL INSTRUCTIONS
+    # -----------------------------------------------------
 
     special_instructions = models.TextField(
         blank=True
     )
+
+    # -----------------------------------------------------
+    # ORDER STATUS
+    # -----------------------------------------------------
 
     status = models.CharField(
         max_length=20,
@@ -242,11 +259,19 @@ class Order(models.Model):
         default="pending"
     )
 
+    # -----------------------------------------------------
+    # PAYMENT STATUS
+    # -----------------------------------------------------
+
     payment_status = models.CharField(
         max_length=20,
         choices=PAYMENT_STATUS_CHOICES,
         default="unpaid"
     )
+
+    # -----------------------------------------------------
+    # TIMESTAMPS
+    # -----------------------------------------------------
 
     created_at = models.DateTimeField(
         auto_now_add=True
@@ -256,7 +281,12 @@ class Order(models.Model):
         auto_now=True
     )
 
+    # -----------------------------------------------------
+    # STRING REPRESENTATION
+    # -----------------------------------------------------
+
     def __str__(self):
+
         if self.table:
             return (
                 f"Order #{self.id} - "
@@ -265,8 +295,13 @@ class Order(models.Model):
 
         return f"Order #{self.id}"
 
+    # -----------------------------------------------------
+    # TOTAL AMOUNT
+    # -----------------------------------------------------
+
     @property
     def total_amount(self):
+
         return sum(
             (
                 item.subtotal
@@ -290,8 +325,7 @@ class OrderItem(models.Model):
 
     food = models.ForeignKey(
         Food,
-        on_delete=models.PROTECT,
-        related_name="order_items"
+        on_delete=models.PROTECT
     )
 
     quantity = models.PositiveIntegerField(
@@ -299,6 +333,10 @@ class OrderItem(models.Model):
             MinValueValidator(1)
         ]
     )
+
+    # -----------------------------------------------------
+    # SAVE PRICE AT THE TIME OF ORDER
+    # -----------------------------------------------------
 
     price = models.DecimalField(
         max_digits=10,
@@ -311,9 +349,11 @@ class OrderItem(models.Model):
 
     @property
     def subtotal(self):
+
         return self.price * self.quantity
 
     def __str__(self):
+
         return (
             f"{self.food.name} x "
             f"{self.quantity}"
@@ -364,6 +404,7 @@ class Payment(models.Model):
     )
 
     def __str__(self):
+
         return (
             f"Payment for Order "
             f"#{self.order_id}"

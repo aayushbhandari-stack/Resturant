@@ -18,34 +18,34 @@
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-
             font-family:
                 Arial,
                 Helvetica,
                 sans-serif;
 
             background: #f4f6f8;
+
             color: #111827;
         }
 
 
-        /* =====================================================
+        /* =========================
            HEADER
-        ===================================================== */
+        ========================= */
 
         .header {
-            background: #222;
+            background: #111827;
 
             color: white;
 
-            min-height: 105px;
+            min-height: 75px;
 
-            padding: 25px 35px;
+            padding: 15px 30px;
 
             display: flex;
 
@@ -54,70 +54,69 @@
             align-items: center;
 
             box-shadow:
-                0 2px 8px rgba(0, 0, 0, 0.15);
+                0 2px 8px
+                rgba(0, 0, 0, 0.15);
         }
 
-
         .header-title {
-            margin: 0;
-
-            font-size: 28px;
+            font-size: 24px;
 
             font-weight: 700;
         }
 
-
         .header-subtitle {
-            margin-top: 6px;
+            margin-top: 4px;
 
-            color: #d1d5db;
+            color: #9ca3af;
 
-            font-size: 14px;
+            font-size: 12px;
         }
-
 
         .header-right {
             display: flex;
 
             align-items: center;
 
-            gap: 10px;
-
-            font-size: 15px;
+            gap: 12px;
         }
-
 
         .chef-name {
+            font-size: 14px;
+
             font-weight: 600;
         }
-
 
         .logout {
+            background: #dc2626;
+
             color: white;
 
-            text-decoration: underline;
+            padding: 8px 13px;
 
-            font-weight: 600;
+            border-radius: 7px;
+
+            font-size: 12px;
+
+            font-weight: 700;
         }
-
 
         .logout:hover {
-            color: #fca5a5;
+            background: #b91c1c;
         }
 
 
-        /* =====================================================
-           MAIN
-        ===================================================== */
+        /* =========================
+           CONTAINER
+        ========================= */
 
         .container {
             width: 100%;
 
             max-width: 1500px;
 
-            margin: 0 auto;
+            margin: auto;
 
-            padding: 40px 35px;
+            padding: 35px 30px;
         }
 
 
@@ -125,136 +124,101 @@
             margin-bottom: 30px;
         }
 
-
         .welcome h2 {
-            margin: 0;
-
-            font-size: 32px;
-
-            color: #111827;
+            font-size: 30px;
         }
-
 
         .welcome p {
             margin-top: 8px;
 
             color: #6b7280;
 
-            font-size: 16px;
+            font-size: 15px;
         }
 
 
-        /* =====================================================
-           STATISTICS
-        ===================================================== */
+        /* =========================
+           STATS
+        ========================= */
 
         .stats {
             display: grid;
 
             grid-template-columns:
-                repeat(4, 1fr);
+                repeat(3, 1fr);
 
             gap: 20px;
 
             margin-bottom: 35px;
         }
 
-
         .stat-card {
             background: white;
 
-            min-height: 135px;
+            min-height: 130px;
 
             padding: 25px;
 
             border-radius: 12px;
 
             box-shadow:
-                0 3px 12px rgba(0, 0, 0, 0.08);
+                0 3px 12px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.08
+                );
 
-            border-left: 6px solid #6b7280;
+            border-left: 6px solid;
         }
-
 
         .stat-number {
             display: block;
 
-            font-size: 32px;
+            font-size: 34px;
 
             font-weight: 700;
 
             margin-bottom: 10px;
         }
 
-
         .stat-label {
-            font-size: 16px;
+            font-size: 15px;
 
             font-weight: 600;
 
             color: #374151;
         }
 
-
-        /* =====================================================
-           CONFIRMED
-        ===================================================== */
-
         .confirmed {
             border-left-color: #2563eb;
         }
-
 
         .confirmed .stat-number {
             color: #2563eb;
         }
 
-
-        /* =====================================================
-           PREPARING
-        ===================================================== */
-
         .preparing {
             border-left-color: #f59e0b;
         }
-
 
         .preparing .stat-number {
             color: #d97706;
         }
 
-
-        /* =====================================================
-           COOKED
-        ===================================================== */
-
-        .cooked {
-            border-left-color: #8b5cf6;
-        }
-
-
-        .cooked .stat-number {
-            color: #7c3aed;
-        }
-
-
-        /* =====================================================
-           READY
-        ===================================================== */
-
         .ready {
             border-left-color: #16a34a;
         }
-
 
         .ready .stat-number {
             color: #16a34a;
         }
 
 
-        /* =====================================================
-           ORDERS SECTION
-        ===================================================== */
+        /* =========================
+           ORDERS CONTAINER
+        ========================= */
 
         .orders-container {
             background: white;
@@ -264,23 +228,22 @@
             padding: 30px;
 
             box-shadow:
-                0 3px 12px rgba(0, 0, 0, 0.07);
+                0 3px 12px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.07
+                );
         }
-
 
         .orders-header {
             margin-bottom: 25px;
         }
 
-
         .orders-header h2 {
-            margin: 0;
-
             font-size: 26px;
-
-            color: #111827;
         }
-
 
         .orders-header p {
             margin-top: 7px;
@@ -289,23 +252,26 @@
         }
 
 
-        /* =====================================================
-           ORDERS GRID
-        ===================================================== */
+        /* =========================
+           GRID
+        ========================= */
 
         .orders-grid {
             display: grid;
 
             grid-template-columns:
-                repeat(3, minmax(0, 1fr));
+                repeat(
+                    3,
+                    minmax(0, 1fr)
+                );
 
             gap: 22px;
         }
 
 
-        /* =====================================================
+        /* =========================
            ORDER CARD
-        ===================================================== */
+        ========================= */
 
         .order-card {
             background: white;
@@ -317,47 +283,57 @@
             padding: 22px;
 
             box-shadow:
-                0 2px 8px rgba(0, 0, 0, 0.06);
+                0 2px 8px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.06
+                );
 
             transition:
                 transform 0.15s ease,
                 box-shadow 0.15s ease;
         }
 
-
         .order-card:hover {
-            transform: translateY(-2px);
+            transform:
+                translateY(-2px);
 
             box-shadow:
-                0 6px 16px rgba(0, 0, 0, 0.10);
+                0 6px 16px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.10
+                );
         }
 
 
-        /* =====================================================
+        /* =========================
            ORDER HEADER
-        ===================================================== */
+        ========================= */
 
         .order-header {
             display: flex;
 
-            justify-content: space-between;
+            justify-content:
+                space-between;
 
-            align-items: flex-start;
+            align-items:
+                flex-start;
 
             gap: 15px;
 
             margin-bottom: 18px;
         }
 
-
         .order-number {
-            margin: 0;
-
             font-size: 21px;
 
             font-weight: 700;
         }
-
 
         .order-date {
             margin-top: 5px;
@@ -368,26 +344,27 @@
         }
 
 
-        /* =====================================================
-           STATUS BADGES
-        ===================================================== */
+        /* =========================
+           STATUS
+        ========================= */
 
         .status {
             display: inline-block;
 
-            padding: 7px 12px;
+            padding:
+                7px 12px;
 
             border-radius: 999px;
 
-            font-size: 12px;
+            font-size: 11px;
 
             font-weight: 700;
 
-            text-transform: uppercase;
+            text-transform:
+                uppercase;
 
             white-space: nowrap;
         }
-
 
         .status-confirmed {
             background: #dbeafe;
@@ -395,20 +372,11 @@
             color: #1d4ed8;
         }
 
-
         .status-preparing {
             background: #fef3c7;
 
             color: #92400e;
         }
-
-
-        .status-cooked {
-            background: #ede9fe;
-
-            color: #6d28d9;
-        }
-
 
         .status-ready {
             background: #dcfce7;
@@ -417,9 +385,9 @@
         }
 
 
-        /* =====================================================
-           ORDER INFORMATION
-        ===================================================== */
+        /* =========================
+           ORDER INFO
+        ========================= */
 
         .order-info {
             background: #f9fafb;
@@ -431,11 +399,11 @@
             margin-bottom: 20px;
         }
 
-
         .info-row {
             display: flex;
 
-            justify-content: space-between;
+            justify-content:
+                space-between;
 
             gap: 15px;
 
@@ -444,11 +412,9 @@
             font-size: 14px;
         }
 
-
         .info-label {
             color: #6b7280;
         }
-
 
         .info-value {
             color: #111827;
@@ -459,18 +425,18 @@
         }
 
 
-        /* =====================================================
+        /* =========================
            ITEMS
-        ===================================================== */
+        ========================= */
 
         .items-heading {
-            margin: 0 0 10px;
+            margin:
+                0 0 10px;
 
             font-size: 15px;
 
             font-weight: 700;
         }
-
 
         .items {
             list-style: none;
@@ -480,11 +446,11 @@
             padding: 0;
         }
 
-
         .item {
             display: flex;
 
-            justify-content: space-between;
+            justify-content:
+                space-between;
 
             align-items: center;
 
@@ -494,11 +460,9 @@
                 1px solid #eeeeee;
         }
 
-
         .item:last-child {
             border-bottom: none;
         }
-
 
         .item-name {
             font-size: 14px;
@@ -508,13 +472,13 @@
             color: #374151;
         }
 
-
         .item-quantity {
             background: #f3f4f6;
 
             color: #111827;
 
-            padding: 5px 9px;
+            padding:
+                5px 9px;
 
             border-radius: 6px;
 
@@ -524,9 +488,9 @@
         }
 
 
-        /* =====================================================
-           SPECIAL INSTRUCTIONS
-        ===================================================== */
+        /* =========================
+           INSTRUCTIONS
+        ========================= */
 
         .instructions {
             margin-top: 18px;
@@ -535,11 +499,11 @@
 
             background: #fff7ed;
 
-            border: 1px solid #fed7aa;
+            border:
+                1px solid #fed7aa;
 
             border-radius: 8px;
         }
-
 
         .instructions-title {
             font-size: 13px;
@@ -551,7 +515,6 @@
             margin-bottom: 5px;
         }
 
-
         .instructions-text {
             font-size: 14px;
 
@@ -561,9 +524,9 @@
         }
 
 
-        /* =====================================================
-           ACTION AREA
-        ===================================================== */
+        /* =========================
+           ACTION
+        ========================= */
 
         .action {
             margin-top: 20px;
@@ -574,12 +537,6 @@
                 1px solid #e5e7eb;
         }
 
-
-        .action form {
-            margin: 0;
-        }
-
-
         .action button {
             width: 100%;
 
@@ -587,7 +544,8 @@
 
             border-radius: 8px;
 
-            padding: 14px 18px;
+            padding:
+                14px 18px;
 
             font-size: 15px;
 
@@ -596,91 +554,52 @@
             cursor: pointer;
 
             color: white;
-
-            transition:
-                background 0.15s ease,
-                transform 0.1s ease;
         }
-
-
-        .action button:hover {
-            transform: translateY(-1px);
-        }
-
-
-        .action button:active {
-            transform: translateY(0);
-        }
-
-
-        /* =====================================================
-           BUTTON COLORS
-        ===================================================== */
 
         .btn-preparing {
             background: #f59e0b;
         }
 
-
         .btn-preparing:hover {
             background: #d97706;
         }
 
-
-        .btn-cooked {
-            background: #7c3aed;
-        }
-
-
-        .btn-cooked:hover {
-            background: #6d28d9;
-        }
-
-
         .btn-ready {
             background: #16a34a;
         }
-
 
         .btn-ready:hover {
             background: #15803d;
         }
 
 
-        .btn-complete {
-            background: #111827;
-        }
+        /* =========================
+           READY MESSAGE
+        ========================= */
 
+        .ready-message {
+            padding: 14px;
 
-        .btn-complete:hover {
-            background: #000000;
-        }
+            background: #f0fdf4;
 
-
-        /* =====================================================
-           COMPLETED MESSAGE
-        ===================================================== */
-
-        .completed-message {
-            padding: 13px;
+            border:
+                1px solid #bbf7d0;
 
             border-radius: 8px;
 
-            background: #f3f4f6;
+            color: #166534;
 
-            color: #374151;
-
-            text-align: center;
-
-            font-size: 14px;
+            font-size: 13px;
 
             font-weight: 700;
+
+            text-align: center;
         }
 
 
-        /* =====================================================
-           EMPTY STATE
-        ===================================================== */
+        /* =========================
+           EMPTY
+        ========================= */
 
         .empty {
             text-align: center;
@@ -688,22 +607,17 @@
             padding: 70px 20px;
         }
 
-
         .empty-icon {
             font-size: 55px;
 
             margin-bottom: 15px;
         }
 
-
         .empty h3 {
-            margin: 0;
-
             font-size: 22px;
 
             color: #374151;
         }
-
 
         .empty p {
             margin-top: 8px;
@@ -712,9 +626,9 @@
         }
 
 
-        /* =====================================================
+        /* =========================
            RESPONSIVE
-        ===================================================== */
+        ========================= */
 
         @media (max-width: 1100px) {
 
@@ -722,7 +636,6 @@
                 grid-template-columns:
                     repeat(2, 1fr);
             }
-
 
             .orders-grid {
                 grid-template-columns:
@@ -737,41 +650,37 @@
             .header {
                 padding: 20px;
 
-                flex-direction: column;
+                flex-direction:
+                    column;
 
-                align-items: flex-start;
+                align-items:
+                    flex-start;
 
                 gap: 12px;
             }
 
-
-            .header-right {
-                width: 100%;
-            }
-
-
             .container {
-                padding: 25px 18px;
+                padding:
+                    25px 18px;
             }
-
 
             .stats {
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    1fr;
             }
-
 
             .orders-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    1fr;
             }
-
 
             .orders-container {
                 padding: 20px;
             }
 
-
             .order-header {
-                flex-direction: column;
+                flex-direction:
+                    column;
             }
 
         }
@@ -784,10 +693,6 @@
 <body>
 
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <header class="header">
 
     <div>
@@ -796,9 +701,9 @@
             Kitchen Dashboard
         </h1>
 
-        <div class="header-subtitle">
-            Restaurant Kitchen Management
-        </div>
+        <p class="header-subtitle">
+            Restaurant Order Management
+        </p>
 
     </div>
 
@@ -806,10 +711,9 @@
     <div class="header-right">
 
         <span class="chef-name">
-            Chef: {{ staff_username }}
+            Chef:
+            {{ staff_username|default:request.user.username }}
         </span>
-
-        <span>|</span>
 
         <a
             href="{% url 'logout' %}"
@@ -823,17 +727,8 @@
 </header>
 
 
-
-<!-- =====================================================
-     MAIN
-===================================================== -->
-
 <main class="container">
 
-
-    <!-- =================================================
-         WELCOME
-    ================================================== -->
 
     <section class="welcome">
 
@@ -848,15 +743,12 @@
     </section>
 
 
-
-    <!-- =================================================
+    <!-- =========================
          STATISTICS
-    ================================================== -->
+    ========================== -->
 
     <section class="stats">
 
-
-        <!-- CONFIRMED -->
 
         <div class="stat-card confirmed">
 
@@ -865,13 +757,11 @@
             </span>
 
             <span class="stat-label">
-                Confirmed
+                Confirmed Orders
             </span>
 
         </div>
 
-
-        <!-- PREPARING -->
 
         <div class="stat-card preparing">
 
@@ -886,31 +776,14 @@
         </div>
 
 
-        <!-- COOKED -->
-
-        <div class="stat-card cooked">
-
-            <span class="stat-number">
-                {{ cooked_orders }}
-            </span>
-
-            <span class="stat-label">
-                Cooked
-            </span>
-
-        </div>
-
-
-        <!-- READY -->
-
         <div class="stat-card ready">
 
             <span class="stat-number">
-                {{ ready_to_serve_orders }}
+                {{ ready_orders }}
             </span>
 
             <span class="stat-label">
-                Ready to Serve
+                Ready for Waiter
             </span>
 
         </div>
@@ -919,10 +792,9 @@
     </section>
 
 
-
-    <!-- =================================================
+    <!-- =========================
          ORDERS
-    ================================================== -->
+    ========================== -->
 
     <section class="orders-container">
 
@@ -934,12 +806,10 @@
             </h2>
 
             <p>
-                Process each order from confirmation
-                to completion.
+                Process confirmed orders until they are ready for the waiter.
             </p>
 
         </div>
-
 
 
         {% if orders %}
@@ -950,10 +820,6 @@
 
                 {% for order in orders %}
 
-
-                    <!-- =================================
-                         ORDER CARD
-                    ================================== -->
 
                     <article class="order-card">
 
@@ -977,14 +843,11 @@
                             </div>
 
 
-                            <!-- STATUS -->
-
                             {% if order.status == "confirmed" %}
 
                                 <span class="status status-confirmed">
                                     Confirmed
                                 </span>
-
 
                             {% elif order.status == "preparing" %}
 
@@ -992,29 +855,19 @@
                                     Preparing
                                 </span>
 
-
-                            {% elif order.status == "cooked" %}
-
-                                <span class="status status-cooked">
-                                    Cooked
-                                </span>
-
-
-                            {% elif order.status == "ready_to_serve" %}
+                            {% elif order.status == "ready" %}
 
                                 <span class="status status-ready">
-                                    Ready to Serve
+                                    Ready
                                 </span>
 
                             {% endif %}
 
+
                         </div>
 
 
-
-                        <!-- =================================
-                             CUSTOMER INFORMATION
-                        ================================== -->
+                        <!-- CUSTOMER INFO -->
 
                         <div class="order-info">
 
@@ -1042,7 +895,6 @@
                             </div>
 
 
-
                             <div class="info-row">
 
                                 <span class="info-label">
@@ -1067,7 +919,6 @@
                             </div>
 
 
-
                             {% if order.customer_phone %}
 
                                 <div class="info-row">
@@ -1077,9 +928,7 @@
                                     </span>
 
                                     <span class="info-value">
-
                                         {{ order.customer_phone }}
-
                                     </span>
 
                                 </div>
@@ -1090,10 +939,7 @@
                         </div>
 
 
-
-                        <!-- =================================
-                             ORDER ITEMS
-                        ================================== -->
+                        <!-- ITEMS -->
 
                         <h4 class="items-heading">
                             Order Items
@@ -1105,24 +951,22 @@
 
                             {% for item in order.items.all %}
 
+
                                 <li class="item">
 
                                     <span class="item-name">
-
                                         {{ item.food.name }}
-
                                     </span>
 
-
                                     <span class="item-quantity">
-
                                         × {{ item.quantity }}
-
                                     </span>
 
                                 </li>
 
+
                             {% empty %}
+
 
                                 <li class="item">
 
@@ -1132,16 +976,14 @@
 
                                 </li>
 
+
                             {% endfor %}
 
 
                         </ul>
 
 
-
-                        <!-- =================================
-                             ORDER SPECIAL INSTRUCTIONS
-                        ================================== -->
+                        <!-- SPECIAL INSTRUCTIONS -->
 
                         {% if order.special_instructions %}
 
@@ -1151,11 +993,8 @@
                                     Special Instructions
                                 </div>
 
-
                                 <div class="instructions-text">
-
                                     {{ order.special_instructions }}
-
                                 </div>
 
                             </div>
@@ -1163,17 +1002,10 @@
                         {% endif %}
 
 
-
-                        <!-- =================================
-                             CHEF ACTION
-                        ================================== -->
+                        <!-- ACTION -->
 
                         <div class="action">
 
-
-                            <!-- =================================
-                                 CONFIRMED → PREPARING
-                            ================================== -->
 
                             {% if order.status == "confirmed" %}
 
@@ -1191,20 +1023,15 @@
                                         value="preparing"
                                     >
 
-
                                     <button
                                         type="submit"
                                         class="btn-preparing"
                                     >
-                                        Start Preparing
+                                        👨‍🍳 Start Preparing
                                     </button>
 
                                 </form>
 
-
-                            <!-- =================================
-                                 PREPARING → COOKED
-                            ================================== -->
 
                             {% elif order.status == "preparing" %}
 
@@ -1219,87 +1046,29 @@
                                     <input
                                         type="hidden"
                                         name="status"
-                                        value="cooked"
+                                        value="ready"
                                     >
-
-
-                                    <button
-                                        type="submit"
-                                        class="btn-cooked"
-                                    >
-                                        Mark as Cooked
-                                    </button>
-
-                                </form>
-
-
-                            <!-- =================================
-                                 COOKED → READY TO SERVE
-                            ================================== -->
-
-                            {% elif order.status == "cooked" %}
-
-
-                                <form
-                                    method="POST"
-                                    action="{% url 'chef_order_status' order.id %}"
-                                >
-
-                                    {% csrf_token %}
-
-                                    <input
-                                        type="hidden"
-                                        name="status"
-                                        value="ready_to_serve"
-                                    >
-
 
                                     <button
                                         type="submit"
                                         class="btn-ready"
                                     >
-                                        Ready to Serve
+                                        ✅ Mark Ready
                                     </button>
 
                                 </form>
 
 
-                            <!-- =================================
-                                 READY TO SERVE → COMPLETED
-                            ================================== -->
-
-                            {% elif order.status == "ready_to_serve" %}
+                            {% elif order.status == "ready" %}
 
 
-                                <form
-                                    method="POST"
-                                    action="{% url 'chef_order_status' order.id %}"
-                                >
+                                <div class="ready-message">
 
-                                    {% csrf_token %}
+                                    ✓ Order is ready.
+                                    Waiting for waiter.
 
-                                    <input
-                                        type="hidden"
-                                        name="status"
-                                        value="completed"
-                                    >
-
-
-                                    <button
-                                        type="submit"
-                                        class="btn-complete"
-                                    >
-                                        Complete Order
-                                    </button>
-
-                                </form>
-
-
-                            {% else %}
-
-                                <div class="completed-message">
-                                    No action required
                                 </div>
+
 
                             {% endif %}
 
@@ -1319,10 +1088,6 @@
         {% else %}
 
 
-            <!-- =============================================
-                 NO ORDERS
-            ============================================== -->
-
             <div class="empty">
 
                 <div class="empty-icon">
@@ -1334,7 +1099,7 @@
                 </h3>
 
                 <p>
-                    New confirmed customer orders will appear here.
+                    Confirmed customer orders will appear here.
                 </p>
 
             </div>
