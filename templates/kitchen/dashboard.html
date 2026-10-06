@@ -1,21 +1,12 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Kitchen Dashboard</title>
 
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -23,16 +14,10 @@
         }
 
         body {
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
+            font-family: Arial, Helvetica, sans-serif;
             background: #f4f6f8;
-
-            color: #111827;
+            color: #172033;
         }
-
 
         /* =========================
            HEADER
@@ -40,276 +25,172 @@
 
         .header {
             background: #111827;
-
             color: white;
-
-            min-height: 75px;
-
-            padding: 15px 30px;
-
+            padding: 20px 38px;
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
-            box-shadow:
-                0 2px 8px
-                rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        .header-title {
-            font-size: 24px;
-
-            font-weight: 700;
+        .header-left h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
         }
 
-        .header-subtitle {
-            margin-top: 4px;
-
+        .header-left p {
             color: #9ca3af;
-
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .header-right {
             display: flex;
-
             align-items: center;
-
-            gap: 12px;
+            gap: 20px;
         }
 
         .chef-name {
-            font-size: 14px;
-
-            font-weight: 600;
+            font-weight: bold;
         }
 
-        .logout {
+        .logout-btn {
             background: #dc2626;
-
             color: white;
-
-            padding: 8px 13px;
-
+            text-decoration: none;
+            padding: 10px 18px;
             border-radius: 7px;
-
-            font-size: 12px;
-
-            font-weight: 700;
+            font-weight: bold;
         }
 
-        .logout:hover {
+        .logout-btn:hover {
             background: #b91c1c;
         }
 
-
         /* =========================
-           CONTAINER
+           MAIN
         ========================= */
 
         .container {
-            width: 100%;
-
-            max-width: 1500px;
-
-            margin: auto;
-
-            padding: 35px 30px;
+            width: 94%;
+            max-width: 1600px;
+            margin: 45px auto;
         }
-
 
         .welcome {
             margin-bottom: 30px;
         }
 
         .welcome h2 {
-            font-size: 30px;
+            font-size: 34px;
+            margin-bottom: 10px;
         }
 
         .welcome p {
-            margin-top: 8px;
-
-            color: #6b7280;
-
-            font-size: 15px;
+            color: #64748b;
+            font-size: 17px;
         }
 
-
         /* =========================
-           STATS
+           STAT CARDS
         ========================= */
 
         .stats {
             display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 20px;
-
-            margin-bottom: 35px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            margin-bottom: 45px;
         }
 
         .stat-card {
             background: white;
-
-            min-height: 130px;
-
-            padding: 25px;
-
-            border-radius: 12px;
-
-            box-shadow:
-                0 3px 12px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    0.08
-                );
-
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
             border-left: 6px solid;
         }
 
-        .stat-number {
-            display: block;
-
-            font-size: 34px;
-
-            font-weight: 700;
-
-            margin-bottom: 10px;
-        }
-
-        .stat-label {
-            font-size: 15px;
-
-            font-weight: 600;
-
-            color: #374151;
-        }
-
-        .confirmed {
+        .stat-card.pending {
             border-left-color: #2563eb;
         }
 
-        .confirmed .stat-number {
-            color: #2563eb;
-        }
-
-        .preparing {
+        .stat-card.preparing {
             border-left-color: #f59e0b;
         }
 
-        .preparing .stat-number {
-            color: #d97706;
+        .stat-card.ready {
+            border-left-color: #16a34a;
         }
 
-        .ready {
-            border-left-color: #16a34a;
+        .stat-number {
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .pending .stat-number {
+            color: #2563eb;
+        }
+
+        .preparing .stat-number {
+            color: #f59e0b;
         }
 
         .ready .stat-number {
             color: #16a34a;
         }
 
+        .stat-title {
+            font-size: 17px;
+            font-weight: bold;
+        }
 
         /* =========================
-           ORDERS CONTAINER
+           KITCHEN SECTION
         ========================= */
 
-        .orders-container {
+        .kitchen-section {
             background: white;
-
-            border-radius: 14px;
-
-            padding: 30px;
-
-            box-shadow:
-                0 3px 12px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    0.07
-                );
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
         }
 
-        .orders-header {
-            margin-bottom: 25px;
+        .section-header {
+            margin-bottom: 28px;
         }
 
-        .orders-header h2 {
-            font-size: 26px;
+        .section-header h2 {
+            font-size: 28px;
+            margin-bottom: 8px;
         }
 
-        .orders-header p {
-            margin-top: 7px;
-
-            color: #6b7280;
+        .section-header p {
+            color: #64748b;
         }
-
 
         /* =========================
-           GRID
+           ORDERS GRID
         ========================= */
 
         .orders-grid {
             display: grid;
-
-            grid-template-columns:
-                repeat(
-                    3,
-                    minmax(0, 1fr)
-                );
-
-            gap: 22px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
         }
 
-
-        /* =========================
-           ORDER CARD
-        ========================= */
-
         .order-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 24px;
             background: white;
-
-            border: 1px solid #e5e7eb;
-
-            border-radius: 12px;
-
-            padding: 22px;
-
-            box-shadow:
-                0 2px 8px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    0.06
-                );
-
-            transition:
-                transform 0.15s ease,
-                box-shadow 0.15s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+            transition: 0.2s;
         }
 
         .order-card:hover {
-            transform:
-                translateY(-2px);
-
-            box-shadow:
-                0 6px 16px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    0.10
-                );
+            transform: translateY(-2px);
+            box-shadow: 0 7px 18px rgba(0,0,0,0.10);
         }
-
 
         /* =========================
            ORDER HEADER
@@ -317,314 +198,192 @@
 
         .order-header {
             display: flex;
-
-            justify-content:
-                space-between;
-
-            align-items:
-                flex-start;
-
-            gap: 15px;
-
-            margin-bottom: 18px;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
         }
 
         .order-number {
-            font-size: 21px;
-
-            font-weight: 700;
+            font-size: 23px;
+            font-weight: bold;
         }
 
         .order-date {
-            margin-top: 5px;
-
-            color: #6b7280;
-
-            font-size: 13px;
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 7px;
         }
 
-
         /* =========================
-           STATUS
+           STATUS BADGES
         ========================= */
 
         .status {
-            display: inline-block;
-
-            padding:
-                7px 12px;
-
-            border-radius: 999px;
-
-            font-size: 11px;
-
-            font-weight: 700;
-
-            text-transform:
-                uppercase;
-
-            white-space: nowrap;
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
-        .status-confirmed {
+        .status-pending {
             background: #dbeafe;
-
             color: #1d4ed8;
         }
 
         .status-preparing {
             background: #fef3c7;
-
-            color: #92400e;
+            color: #b45309;
         }
 
         .status-ready {
             background: #dcfce7;
-
-            color: #166534;
+            color: #15803d;
         }
 
-
         /* =========================
-           ORDER INFO
+           CUSTOMER INFO
         ========================= */
 
-        .order-info {
-            background: #f9fafb;
-
-            border-radius: 8px;
-
-            padding: 14px;
-
-            margin-bottom: 20px;
+        .customer-info {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 22px;
         }
 
         .info-row {
             display: flex;
-
-            justify-content:
-                space-between;
-
+            justify-content: space-between;
             gap: 15px;
+            margin-bottom: 10px;
+        }
 
-            padding: 5px 0;
-
-            font-size: 14px;
+        .info-row:last-child {
+            margin-bottom: 0;
         }
 
         .info-label {
-            color: #6b7280;
+            color: #64748b;
         }
 
         .info-value {
-            color: #111827;
-
-            font-weight: 600;
-
+            font-weight: bold;
             text-align: right;
         }
 
-
         /* =========================
-           ITEMS
+           ORDER ITEMS
         ========================= */
 
-        .items-heading {
-            margin:
-                0 0 10px;
-
-            font-size: 15px;
-
-            font-weight: 700;
+        .items-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
 
-        .items {
-            list-style: none;
-
-            margin: 0;
-
-            padding: 0;
-        }
-
-        .item {
+        .order-item {
             display: flex;
-
-            justify-content:
-                space-between;
-
+            justify-content: space-between;
             align-items: center;
-
-            padding: 10px 0;
-
-            border-bottom:
-                1px solid #eeeeee;
+            padding: 13px 0;
+            border-bottom: 1px solid #e5e7eb;
         }
 
-        .item:last-child {
-            border-bottom: none;
+        .food-name {
+            font-weight: bold;
         }
 
-        .item-name {
-            font-size: 14px;
-
-            font-weight: 600;
-
-            color: #374151;
-        }
-
-        .item-quantity {
-            background: #f3f4f6;
-
-            color: #111827;
-
-            padding:
-                5px 9px;
-
-            border-radius: 6px;
-
+        .quantity {
+            background: #f1f5f9;
+            padding: 6px 10px;
+            border-radius: 7px;
+            font-weight: bold;
             font-size: 13px;
-
-            font-weight: 700;
         }
-
 
         /* =========================
-           INSTRUCTIONS
+           SPECIAL INSTRUCTIONS
         ========================= */
 
-        .instructions {
-            margin-top: 18px;
-
-            padding: 13px;
-
+        .special-instructions {
             background: #fff7ed;
-
-            border:
-                1px solid #fed7aa;
-
+            border: 1px solid #fed7aa;
             border-radius: 8px;
+            padding: 12px;
+            margin-top: 18px;
+            color: #9a3412;
         }
 
-        .instructions-title {
-            font-size: 13px;
-
-            font-weight: 700;
-
-            color: #9a3412;
-
+        .special-title {
+            font-weight: bold;
             margin-bottom: 5px;
         }
 
-        .instructions-text {
-            font-size: 14px;
-
-            color: #7c2d12;
-
-            line-height: 1.5;
-        }
-
-
         /* =========================
-           ACTION
+           BUTTONS
         ========================= */
 
-        .action {
-            margin-top: 20px;
-
-            padding-top: 18px;
-
-            border-top:
-                1px solid #e5e7eb;
+        .action-area {
+            margin-top: 22px;
         }
 
-        .action button {
+        .action-btn {
             width: 100%;
-
             border: none;
-
-            border-radius: 8px;
-
-            padding:
-                14px 18px;
-
-            font-size: 15px;
-
-            font-weight: 700;
-
-            cursor: pointer;
-
+            border-radius: 9px;
+            padding: 15px;
             color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
-        .btn-preparing {
+        .start-btn {
             background: #f59e0b;
         }
 
-        .btn-preparing:hover {
+        .start-btn:hover {
             background: #d97706;
         }
 
-        .btn-ready {
+        .ready-btn {
             background: #16a34a;
         }
 
-        .btn-ready:hover {
+        .ready-btn:hover {
             background: #15803d;
         }
-
 
         /* =========================
            READY MESSAGE
         ========================= */
 
         .ready-message {
-            padding: 14px;
-
             background: #f0fdf4;
-
-            border:
-                1px solid #bbf7d0;
-
-            border-radius: 8px;
-
-            color: #166534;
-
-            font-size: 13px;
-
-            font-weight: 700;
-
+            border: 1px solid #86efac;
+            color: #15803d;
+            border-radius: 9px;
+            padding: 15px;
             text-align: center;
+            font-weight: bold;
         }
-
 
         /* =========================
-           EMPTY
+           EMPTY STATE
         ========================= */
 
-        .empty {
+        .empty-state {
             text-align: center;
-
             padding: 70px 20px;
+            color: #64748b;
         }
 
-        .empty-icon {
-            font-size: 55px;
-
-            margin-bottom: 15px;
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #334155;
         }
-
-        .empty h3 {
-            font-size: 22px;
-
-            color: #374151;
-        }
-
-        .empty p {
-            margin-top: 8px;
-
-            color: #6b7280;
-        }
-
 
         /* =========================
            RESPONSIVE
@@ -632,93 +391,66 @@
 
         @media (max-width: 1100px) {
 
-            .stats {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
             .orders-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
 
         }
 
+        @media (max-width: 750px) {
 
-        @media (max-width: 700px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
 
             .header {
-                padding: 20px;
+                padding: 18px;
+            }
 
-                flex-direction:
-                    column;
+            .header-left h1 {
+                font-size: 22px;
+            }
 
-                align-items:
-                    flex-start;
-
-                gap: 12px;
+            .chef-name {
+                display: none;
             }
 
             .container {
-                padding:
-                    25px 18px;
+                width: 92%;
             }
 
-            .stats {
-                grid-template-columns:
-                    1fr;
-            }
-
-            .orders-grid {
-                grid-template-columns:
-                    1fr;
-            }
-
-            .orders-container {
+            .kitchen-section {
                 padding: 20px;
             }
 
-            .order-header {
-                flex-direction:
-                    column;
-            }
-
         }
-
     </style>
-
 </head>
-
 
 <body>
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header class="header">
 
-    <div>
-
-        <h1 class="header-title">
-            Kitchen Dashboard
-        </h1>
-
-        <p class="header-subtitle">
-            Restaurant Order Management
-        </p>
-
+    <div class="header-left">
+        <h1>Kitchen Dashboard</h1>
+        <p>Restaurant Order Management</p>
     </div>
-
 
     <div class="header-right">
 
         <span class="chef-name">
-            Chef:
-            {{ staff_username|default:request.user.username }}
+            Chef: {{ staff_username }}
         </span>
 
-        <a
-            href="{% url 'logout' %}"
-            class="logout"
-        >
+        <a href="{% url 'logout' %}" class="logout-btn">
             Logout
         </a>
 
@@ -727,10 +459,15 @@
 </header>
 
 
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
 <main class="container">
 
+    <!-- WELCOME -->
 
-    <section class="welcome">
+    <div class="welcome">
 
         <h2>
             Welcome, Chef 👨‍🍳
@@ -740,380 +477,342 @@
             Manage customer orders through the kitchen workflow.
         </p>
 
-    </section>
+    </div>
 
 
-    <!-- =========================
+    <!-- =================================================
          STATISTICS
-    ========================== -->
+    ================================================== -->
 
-    <section class="stats">
+    <div class="stats">
 
+        <!-- PENDING -->
 
-        <div class="stat-card confirmed">
+        <div class="stat-card pending">
 
-            <span class="stat-number">
-                {{ confirmed_orders }}
-            </span>
+            <div class="stat-number">
+                {{ pending_orders }}
+            </div>
 
-            <span class="stat-label">
-                Confirmed Orders
-            </span>
+            <div class="stat-title">
+                Pending Orders
+            </div>
 
         </div>
 
+
+        <!-- PREPARING -->
 
         <div class="stat-card preparing">
 
-            <span class="stat-number">
+            <div class="stat-number">
                 {{ preparing_orders }}
-            </span>
+            </div>
 
-            <span class="stat-label">
+            <div class="stat-title">
                 Preparing
-            </span>
+            </div>
 
         </div>
 
+
+        <!-- READY -->
 
         <div class="stat-card ready">
 
-            <span class="stat-number">
+            <div class="stat-number">
                 {{ ready_orders }}
-            </span>
+            </div>
 
-            <span class="stat-label">
+            <div class="stat-title">
                 Ready for Waiter
-            </span>
+            </div>
 
         </div>
 
-
-    </section>
-
-
-    <!-- =========================
-         ORDERS
-    ========================== -->
-
-    <section class="orders-container">
+    </div>
 
 
-        <div class="orders-header">
+    <!-- =================================================
+         KITCHEN ORDERS
+    ================================================== -->
+
+    <section class="kitchen-section">
+
+        <div class="section-header">
 
             <h2>
                 Kitchen Orders
             </h2>
 
             <p>
-                Process confirmed orders until they are ready for the waiter.
+                Process pending orders until they are ready for the waiter.
             </p>
 
         </div>
 
 
+        <!-- =================================================
+             ORDERS
+        ================================================== -->
+
         {% if orders %}
 
+        <div class="orders-grid">
 
-            <div class="orders-grid">
+            {% for order in orders %}
 
+            <div class="order-card">
 
-                {% for order in orders %}
+                <!-- ORDER HEADER -->
 
+                <div class="order-header">
 
-                    <article class="order-card">
+                    <div>
 
-
-                        <!-- ORDER HEADER -->
-
-                        <div class="order-header">
-
-                            <div>
-
-                                <h3 class="order-number">
-                                    Order #{{ order.id }}
-                                </h3>
-
-                                <div class="order-date">
-
-                                    {{ order.created_at|date:"M d, Y - h:i A" }}
-
-                                </div>
-
-                            </div>
-
-
-                            {% if order.status == "confirmed" %}
-
-                                <span class="status status-confirmed">
-                                    Confirmed
-                                </span>
-
-                            {% elif order.status == "preparing" %}
-
-                                <span class="status status-preparing">
-                                    Preparing
-                                </span>
-
-                            {% elif order.status == "ready" %}
-
-                                <span class="status status-ready">
-                                    Ready
-                                </span>
-
-                            {% endif %}
-
-
+                        <div class="order-number">
+                            Order #{{ order.id }}
                         </div>
 
-
-                        <!-- CUSTOMER INFO -->
-
-                        <div class="order-info">
-
-
-                            <div class="info-row">
-
-                                <span class="info-label">
-                                    Customer
-                                </span>
-
-                                <span class="info-value">
-
-                                    {% if order.customer_name %}
-
-                                        {{ order.customer_name }}
-
-                                    {% else %}
-
-                                        Walk-in Customer
-
-                                    {% endif %}
-
-                                </span>
-
-                            </div>
-
-
-                            <div class="info-row">
-
-                                <span class="info-label">
-                                    Table
-                                </span>
-
-                                <span class="info-value">
-
-                                    {% if order.table %}
-
-                                        Table
-                                        {{ order.table.table_number }}
-
-                                    {% else %}
-
-                                        No Table
-
-                                    {% endif %}
-
-                                </span>
-
-                            </div>
-
-
-                            {% if order.customer_phone %}
-
-                                <div class="info-row">
-
-                                    <span class="info-label">
-                                        Phone
-                                    </span>
-
-                                    <span class="info-value">
-                                        {{ order.customer_phone }}
-                                    </span>
-
-                                </div>
-
-                            {% endif %}
-
-
+                        <div class="order-date">
+                            {{ order.created_at|date:"M d, Y - h:i A" }}
                         </div>
 
-
-                        <!-- ITEMS -->
-
-                        <h4 class="items-heading">
-                            Order Items
-                        </h4>
+                    </div>
 
 
-                        <ul class="items">
+                    <!-- STATUS -->
+
+                    {% if order.status == "pending" %}
+
+                        <span class="status status-pending">
+                            Pending
+                        </span>
+
+                    {% elif order.status == "preparing" %}
+
+                        <span class="status status-preparing">
+                            Preparing
+                        </span>
+
+                    {% elif order.status == "ready" %}
+
+                        <span class="status status-ready">
+                            Ready
+                        </span>
+
+                    {% endif %}
+
+                </div>
 
 
-                            {% for item in order.items.all %}
+                <!-- CUSTOMER INFORMATION -->
+
+                <div class="customer-info">
+
+                    <div class="info-row">
+
+                        <span class="info-label">
+                            Customer
+                        </span>
+
+                        <span class="info-value">
+                            {{ order.customer_name|default:"Walk-in Customer" }}
+                        </span>
+
+                    </div>
 
 
-                                <li class="item">
+                    <div class="info-row">
 
-                                    <span class="item-name">
-                                        {{ item.food.name }}
-                                    </span>
+                        <span class="info-label">
+                            Table
+                        </span>
 
-                                    <span class="item-quantity">
-                                        × {{ item.quantity }}
-                                    </span>
+                        <span class="info-value">
 
-                                </li>
-
-
-                            {% empty %}
-
-
-                                <li class="item">
-
-                                    <span class="item-name">
-                                        No items
-                                    </span>
-
-                                </li>
-
-
-                            {% endfor %}
-
-
-                        </ul>
-
-
-                        <!-- SPECIAL INSTRUCTIONS -->
-
-                        {% if order.special_instructions %}
-
-                            <div class="instructions">
-
-                                <div class="instructions-title">
-                                    Special Instructions
-                                </div>
-
-                                <div class="instructions-text">
-                                    {{ order.special_instructions }}
-                                </div>
-
-                            </div>
-
-                        {% endif %}
-
-
-                        <!-- ACTION -->
-
-                        <div class="action">
-
-
-                            {% if order.status == "confirmed" %}
-
-
-                                <form
-                                    method="POST"
-                                    action="{% url 'chef_order_status' order.id %}"
-                                >
-
-                                    {% csrf_token %}
-
-                                    <input
-                                        type="hidden"
-                                        name="status"
-                                        value="preparing"
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        class="btn-preparing"
-                                    >
-                                        👨‍🍳 Start Preparing
-                                    </button>
-
-                                </form>
-
-
-                            {% elif order.status == "preparing" %}
-
-
-                                <form
-                                    method="POST"
-                                    action="{% url 'chef_order_status' order.id %}"
-                                >
-
-                                    {% csrf_token %}
-
-                                    <input
-                                        type="hidden"
-                                        name="status"
-                                        value="ready"
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        class="btn-ready"
-                                    >
-                                        ✅ Mark Ready
-                                    </button>
-
-                                </form>
-
-
-                            {% elif order.status == "ready" %}
-
-
-                                <div class="ready-message">
-
-                                    ✓ Order is ready.
-                                    Waiting for waiter.
-
-                                </div>
-
-
+                            {% if order.table %}
+                                Table {{ order.table.table_number }}
+                            {% else %}
+                                -
                             {% endif %}
 
+                        </span>
 
-                        </div>
+                    </div>
 
 
-                    </article>
+                    <div class="info-row">
 
+                        <span class="info-label">
+                            Phone
+                        </span>
+
+                        <span class="info-value">
+                            {{ order.customer_phone|default:"-" }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ORDER ITEMS -->
+
+                <div class="items-title">
+                    Order Items
+                </div>
+
+
+                {% for item in order.items.all %}
+
+                <div class="order-item">
+
+                    <span class="food-name">
+                        {{ item.food.name }}
+                    </span>
+
+                    <span class="quantity">
+                        × {{ item.quantity }}
+                    </span>
+
+                </div>
 
                 {% endfor %}
 
 
+                <!-- SPECIAL INSTRUCTIONS -->
+
+                {% if order.special_instructions %}
+
+                <div class="special-instructions">
+
+                    <div class="special-title">
+                        Special Instructions
+                    </div>
+
+                    {{ order.special_instructions }}
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- ITEM SPECIAL INSTRUCTIONS -->
+
+                {% for item in order.items.all %}
+
+                    {% if item.special_instructions %}
+
+                    <div class="special-instructions">
+
+                        <div class="special-title">
+                            {{ item.food.name }}
+                        </div>
+
+                        {{ item.special_instructions }}
+
+                    </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                <!-- =================================================
+                     ACTION BUTTONS
+                ================================================== -->
+
+                <div class="action-area">
+
+                    {% if order.status == "pending" %}
+
+                        <form
+                            method="POST"
+                            action="{% url 'chef_order_status' order.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <input
+                                type="hidden"
+                                name="status"
+                                value="preparing"
+                            >
+
+                            <button
+                                type="submit"
+                                class="action-btn start-btn"
+                            >
+                                👨‍🍳 Start Preparing
+                            </button>
+
+                        </form>
+
+
+                    {% elif order.status == "preparing" %}
+
+                        <form
+                            method="POST"
+                            action="{% url 'chef_order_status' order.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <input
+                                type="hidden"
+                                name="status"
+                                value="ready"
+                            >
+
+                            <button
+                                type="submit"
+                                class="action-btn ready-btn"
+                            >
+                                ✅ Mark Ready
+                            </button>
+
+                        </form>
+
+
+                    {% elif order.status == "ready" %}
+
+                        <div class="ready-message">
+                            ✓ Order is ready. Waiting for waiter.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
             </div>
+
+            {% endfor %}
+
+        </div>
 
 
         {% else %}
 
+        <!-- EMPTY STATE -->
 
-            <div class="empty">
+        <div class="empty-state">
 
-                <div class="empty-icon">
-                    🍳
-                </div>
+            <h3>
+                No Kitchen Orders
+            </h3>
 
-                <h3>
-                    No active orders
-                </h3>
+            <p>
+                There are currently no pending or active kitchen orders.
+            </p>
 
-                <p>
-                    Confirmed customer orders will appear here.
-                </p>
-
-            </div>
-
+        </div>
 
         {% endif %}
 
-
     </section>
-
 
 </main>
 
-
 </body>
-
 </html>
