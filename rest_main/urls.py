@@ -9,21 +9,12 @@ urlpatterns = [
     # ADMIN
     # ========================================================
 
-    path(
-        "admin/",
-        admin.site.urls,
-    ),
-
+    path("admin/",admin.site.urls,),
     # ========================================================
     # RMS APPLICATION
     # ========================================================
 
-    path(
-        "",
-        include("rms.urls"),
-    ),
-    
-    
+    path("",include("rms.urls"),),    
 ]
 if settings.DEBUG:
     urlpatterns += static(
